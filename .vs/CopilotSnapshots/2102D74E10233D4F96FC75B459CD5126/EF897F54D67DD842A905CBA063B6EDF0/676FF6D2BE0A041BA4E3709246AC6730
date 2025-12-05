@@ -1,0 +1,156 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using RunaTalento.Data;
+using RunaTalento.Models;
+
+namespace RunaTalento.Controllers
+{
+    /// <summary>
+    /// Controlador principal del panel de docente
+    /// </summary>
+    [Authorize(Roles = "Docente")]
+    public class DocenteController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public DocenteController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        {
+            _context = context;
+            _userManager = userManager;
+        }
+
+        private async Task CargarDatosDocente()
+        {
+            var userId = _userManager.GetUserId(User);
+            var docente = await _context.Users.FindAsync(userId);
+            if (docente != null)
+            {
+                ViewBag.NombreCompleto = $"Prof. {docente.Nombres} {docente.Apellidos}";
+                var nombres = docente.Nombres?.Split(' ');
+                var apellidos = docente.Apellidos?.Split(' ');
+                ViewBag.Iniciales = $"{nombres?[0]?.Substring(0, 1)}{apellidos?[0]?.Substring(0, 1)}";
+            }
+        }
+
+        // GET: Docente (Página principal - redirige a Crear Actividad)
+        public IActionResult Index()
+        {
+            return RedirectToAction(nameof(CrearActividad));
+        }
+
+        // GET: Docente/CrearActividad
+        public async Task<IActionResult> CrearActividad()
+        {
+            await CargarDatosDocente();
+            
+            // Obtener los cursos del docente actual
+            var userId = _userManager.GetUserId(User);
+            var cursos = await _context.Curso
+                .Where(c => c.IdDocente == userId)
+                .ToListAsync();
+            
+            ViewData["IdCurso"] = new SelectList(cursos, "IdCurso", "Nombre");
+            return View();
+        }
+
+        // POST: Docente/CrearActividad
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CrearActividad([Bind("Titulo,Descripcion,Puntaje,IdCurso")] Actividad actividad)
+        {
+            if (ModelState.IsValid)
+            {
+                actividad.FechaCreacion = DateTime.Now;
+                _context.Add(actividad);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Actividad creada exitosamente";
+                return RedirectToAction(nameof(CrearActividad));
+            }
+
+            await CargarDatosDocente();
+            var userId = _userManager.GetUserId(User);
+            var cursos = await _context.Curso
+                .Where(c => c.IdDocente == userId)
+                .ToListAsync();
+            ViewData["IdCurso"] = new SelectList(cursos, "IdCurso", "Nombre", actividad.IdCurso);
+            return View(actividad);
+        }
+
+        // GET: Docente/OtorgarMedallas
+        public async Task<IActionResult> OtorgarMedallas()
+        {
+            await CargarDatosDocente();
+            
+            ViewData["IdMedalla"] = new SelectList(_context.Medalla, "IdMedalla", "Nombre");
+            var estudiantes = await _userManager.GetUsersInRoleAsync("Estudiante");
+            ViewData["IdEstudiante"] = new SelectList(estudiantes, "Id", "Email");
+            
+            return View();
+        }
+
+        // POST: Docente/OtorgarMedallas
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> OtorgarMedallas([Bind("IdMedalla,IdEstudiante")] MedallaEstudiante medallaEstudiante, string Motivo)
+        {
+            if (ModelState.IsValid)
+            {
+                // Verificar si el estudiante ya tiene esta medalla
+                var existente = await _context.MedallaEstudiante
+                    .FirstOrDefaultAsync(me => me.IdMedalla == medallaEstudiante.IdMedalla 
+                                            && me.IdEstudiante == medallaEstudiante.IdEstudiante);
+
+                if (existente != null)
+                {
+                    TempData["Warning"] = "El estudiante ya tiene esta medalla";
+                }
+                else
+                {
+                    medallaEstudiante.FechaOtorgada = DateTime.Now;
+                    _context.Add(medallaEstudiante);
+                    await _context.SaveChangesAsync();
+                    TempData["Success"] = "Medalla otorgada exitosamente";
+                }
+                
+                return RedirectToAction(nameof(OtorgarMedallas));
+            }
+
+            await CargarDatosDocente();
+            ViewData["IdMedalla"] = new SelectList(_context.Medalla, "IdMedalla", "Nombre", medallaEstudiante.IdMedalla);
+            var estudiantes = await _userManager.GetUsersInRoleAsync("Estudiante");
+            ViewData["IdEstudiante"] = new SelectList(estudiantes, "Id", "Email", medallaEstudiante.IdEstudiante);
+            
+            return View(medallaEstudiante);
+        }
+
+        // GET: Docente/VerRanking
+        public async Task<IActionResult> VerRanking()
+        {
+            await CargarDatosDocente();
+            
+            // Obtener todos los estudiantes ordenados por puntaje
+            var estudiantes = await _context.Users
+                .Where(u => u.PuntajeTotal >= 0)
+                .OrderByDescending(u => u.PuntajeTotal)
+                .ThenBy(u => u.Nombres)
+                .Take(100)
+                .Select(u => new
+                {
+                    u.Id,
+                    u.Nombres,
+                    u.Apellidos,
+                    u.Email,
+                    u.PuntajeTotal,
+                    u.IdNivel,
+                    MedallasCount = _context.MedallaEstudiante.Count(me => me.IdEstudiante == u.Id)
+                })
+                .ToListAsync();
+
+            return View(estudiantes);
+        }
+    }
+}

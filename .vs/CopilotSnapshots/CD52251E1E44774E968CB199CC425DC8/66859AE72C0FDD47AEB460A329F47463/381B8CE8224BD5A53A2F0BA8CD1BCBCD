@@ -1,0 +1,45 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using RunaTalento.Data;
+
+namespace RunaTalento.Controllers
+{
+    /// <summary>
+    /// Controlador para mostrar el ranking de estudiantes
+    /// </summary>
+    [Authorize]
+    public class RankingController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+
+        public RankingController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        // GET: Ranking
+        public async Task<IActionResult> Index()
+        {
+            // Obtener todos los estudiantes ordenados por puntaje
+            var estudiantes = await _context.Users
+                .Where(u => u.PuntajeTotal > 0)
+                .OrderByDescending(u => u.PuntajeTotal)
+                .ThenBy(u => u.Nombres)
+                .Take(100)
+                .Select(u => new
+                {
+                    u.Id,
+                    u.Nombres,
+                    u.Apellidos,
+                    u.Email,
+                    u.PuntajeTotal,
+                    u.IdNivel,
+                    MedallasCount = _context.MedallaEstudiante.Count(me => me.IdEstudiante == u.Id)
+                })
+                .ToListAsync();
+
+            return View(estudiantes);
+        }
+    }
+}

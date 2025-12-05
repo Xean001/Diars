@@ -1,0 +1,209 @@
+@model IEnumerable<RunaTalento.Models.ActividadEstudiante>
+@{
+    ViewData["Title"] = "Calificar Actividades";
+    Layout = "~/Views/Shared/_LayoutDocente.cshtml";
+}
+
+<div class="docente-card">
+    <div class="card-header-custom">
+        <i class="bi bi-clipboard-check"></i>
+        <h3>Calificar Actividades Entregadas</h3>
+    </div>
+    <p class="card-subtitle">Revisa y califica las actividades entregadas por tus estudiantes</p>
+
+    @* ? MOSTRAR INFORMACIÓN SOBRE ESTRATEGIAS DE CALIFICACIÓN *@
+    <div class="alert alert-info mb-3">
+        <h6><i class="bi bi-info-circle"></i> Estrategias de Calificación </h6>
+        <ul class="mb-0 small">
+            <li><strong>Estándar:</strong> Puntaje sin modificaciones</li>
+            <li><strong>Bonificación:</strong> +10% si se entregó antes de la fecha límite</li>
+            <li><strong>Penalización:</strong> -20% si se entregó después de la fecha límite</li>
+        </ul>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Estudiante</th>
+                        <th>Actividad</th>
+                        <th>Curso</th>
+                        <th>Fecha Entrega</th>
+                        <th>Estado</th>
+                        <th>Documento</th>
+                        <th>Puntaje Máximo</th>
+                        <th>Calificación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        var estabaVencida = item.Actividad?.FechaLimite.HasValue == true && item.FechaEntrega > item.Actividad.FechaLimite.Value;
+                        var estaVencida = item.Actividad?.FechaLimite.HasValue == true && DateTime.Now > item.Actividad.FechaLimite.Value;
+
+                        <tr class="@(estabaVencida ? "table-warning" : "")">
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="ranking-avatar" style="width: 40px; height: 40px; font-size: 0.9rem;">
+                                        @{
+                                            var nombres = item.Estudiante?.Nombres?.Split(' ');
+                                            var apellidos = item.Estudiante?.Apellidos?.Split(' ');
+                                            var iniciales = $"{nombres?[0]?.Substring(0, 1)}{apellidos?[0]?.Substring(0, 1)}";
+                                        }
+                                        @iniciales
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold">@item.Estudiante?.Nombres @item.Estudiante?.Apellidos</div>
+                                        <small class="text-muted">@item.Estudiante?.Email</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <strong>@item.Actividad?.Titulo</strong>
+                                @if (!string.IsNullOrEmpty(item.Actividad?.Descripcion))
+                                {
+                                    <br />
+                                    <small class="text-muted">@(item.Actividad.Descripcion.Length > 50 ? item.Actividad.Descripcion.Substring(0, 50) + "..." : item.Actividad.Descripcion)</small>
+                                }
+                                @if (item.Actividad?.FechaLimite != null)
+                                {
+                                    <br />
+                                    <small class="text-muted">
+                                        <i class="bi bi-calendar-event"></i>
+                                        Fecha límite: @item.Actividad.FechaLimite.Value.ToString("dd/MM/yyyy HH:mm")
+                                    </small>
+                                }
+                            </td>
+                            <td>
+                                <span class="badge bg-info">@item.Actividad?.Curso?.Nombre</span>
+                            </td>
+                            <td>
+                                <small>@item.FechaEntrega.ToString("dd/MM/yyyy HH:mm")</small>
+                            </td>
+                            <td>
+                                @if (estabaVencida)
+                                {
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="bi bi-exclamation-triangle"></i> Entregada tarde
+                                    </span>
+                                }
+                                else if (estaVencida)
+                                {
+                                    <span class="badge bg-secondary">
+                                        <i class="bi bi-clock-history"></i> Actividad vencida
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle"></i> A tiempo
+                                    </span>
+                                }
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(item.UrlDocumento))
+                                {
+                                    <a href="@item.UrlDocumento" target="_blank" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i> Ver Documento
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">
+                                        <i class="bi bi-dash-circle"></i> Sin documento
+                                    </span>
+                                }
+                            </td>
+                            <td>
+                                <span class="badge" style="background: linear-gradient(135deg, #fef3c7, #fde68a); color: #92400e; font-size: 0.9rem;">
+                                    <i class="bi bi-star-fill"></i> @item.Actividad?.Puntaje pts
+                                </span>
+                            </td>
+                            <td>
+                                
+                                <form asp-action="Calificar" method="post" class="d-flex flex-column gap-2">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="idActividadEstudiante" value="@item.IdActividadEstudiante" />
+                                    
+                                    <div class="d-flex align-items-center gap-2">
+                                        <input type="number"
+                                               name="puntajeObtenido"
+                                               class="form-control form-control-sm"
+                                               style="width: 80px;"
+                                               min="0"
+                                               max="@item.Actividad?.Puntaje"
+                                               placeholder="0-@item.Actividad?.Puntaje"
+                                               required />
+                                        
+                                        <button type="submit" class="btn btn-sm btn-primary-custom">
+                                            <i class="bi bi-check-circle-fill"></i> Calificar
+                                        </button>
+                                    </div>
+
+                                    @* ? SELECTOR DE ESTRATEGIA *@
+                                    <select name="estrategiaCalificacion" class="form-select form-select-sm" style="font-size: 0.8rem;">
+                                        <option value="estandar" selected>?? Estándar</option>
+                                        <option value="bonificacion">?? Con Bonificación (+10%)</option>
+                                        <option value="penalizacion">?? Con Penalización (-20%)</option>
+                                    </select>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-inbox" style="font-size: 4rem; color: #cbd5e1;"></i>
+            <h4 class="mt-3 text-muted">No hay actividades pendientes de calificación</h4>
+            <p class="text-muted">Las actividades entregadas por los estudiantes aparecerán aquí</p>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('input[name="puntajeObtenido"]').forEach(input => {
+            input.addEventListener('input', function(e) {
+                const max = parseInt(e.target.max);
+                const value = parseInt(e.target.value);
+
+                if (value > max) {
+                    e.target.value = max;
+                }
+
+                if (value < 0) {
+                    e.target.value = 0;
+                }
+
+                if (value >= 0 && value <= max) {
+                    if (value === max) {
+                        e.target.style.borderColor = '#22c55e';
+                    } else if (value >= max * 0.7) {
+                        e.target.style.borderColor = '#14b8a6';
+                    } else if (value >= max * 0.5) {
+                        e.target.style.borderColor = '#fbbf24';
+                    } else {
+                        e.target.style.borderColor = '#fb923c';
+                    }
+                }
+            });
+        });
+
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                const puntaje = this.querySelector('input[name="puntajeObtenido"]').value;
+                if (!puntaje || puntaje === '') {
+                    e.preventDefault();
+                    alert('Por favor ingresa un puntaje');
+                    return false;
+                }
+            });
+        });
+    </script>
+}

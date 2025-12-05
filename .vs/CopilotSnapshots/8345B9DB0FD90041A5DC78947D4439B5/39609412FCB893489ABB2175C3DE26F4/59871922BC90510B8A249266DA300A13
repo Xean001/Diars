@@ -1,0 +1,20 @@
+﻿@{
+    ViewData["Title"] = "Mi Perfil";
+    Layout = "~/Views/Shared/_LayoutEstudiante.cshtml";
+    var estudiante = ViewBag.Estudiante as RunaTalento.Models.ApplicationUser;
+    var medallas = ViewBag.Medallas as List<RunaTalento.Models.MedallaEstudiante>;
+    var incentivos = ViewBag.Incentivos as List<RunaTalento.Models.IncentivoEstudiante>;
+    var actividades = ViewBag.ActividadesCompletadas as List<RunaTalento.Models.ActividadEstudiante>;
+    var nivelActual = ViewBag.NivelActual as RunaTalento.Models.Nivel;
+    var siguienteNivel = ViewBag.SiguienteNivel as RunaTalento.Models.Nivel;
+    var porcentajeProgreso = ViewBag.PorcentajeProgresoNivel ?? 0;
+    var totalActividades = ViewBag.TotalActividades ?? 0;
+    var totalMedallas = ViewBag.TotalMedallas ?? 0;
+}
+
+<div class="row g-4">
+    <!-- Columna izquierda: Progreso Académico -->
+    <div class="col-lg-6">
+        <div class="perfil-section">
+            <div class="d-flex align-items-center mb-2">
+                <i class="bi bi-star

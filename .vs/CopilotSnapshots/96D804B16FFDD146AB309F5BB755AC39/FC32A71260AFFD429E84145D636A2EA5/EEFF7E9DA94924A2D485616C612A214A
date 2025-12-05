@@ -1,0 +1,66 @@
+﻿@model IEnumerable<RunaTalento.Models.MedallaEstudiante>
+
+@{
+    ViewData["Title"] = "Medallas Otorgadas";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-trophy"></i> Medallas Otorgadas a Estudiantes</h1>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Otorgar Medalla
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="card shadow">
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead class="table-warning">
+                    <tr>
+                        <th>Estudiante</th>
+                        <th>Medalla</th>
+                        <th>Fecha Otorgada</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <i class="bi bi-person-circle"></i>
+                                <strong>@item.Estudiante?.Nombres @item.Estudiante?.Apellidos</strong>
+                                <br/>
+                                <small class="text-muted">@item.Estudiante?.Email</small>
+                            </td>
+                            <td>
+                                <i class="bi bi-award-fill text-warning"></i> @item.Medalla?.Nombre
+                            </td>
+                            <td>
+                                <i class="bi bi-calendar"></i> @item.FechaOtorgada.ToString("dd/MM/yyyy HH:mm")
+                            </td>
+                            <td class="text-center">
+                                <a asp-action="Details" asp-route-id="@item.IdMedallaEstudiante" 
+                                   class="btn btn-sm btn-info" title="Ver detalles">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.IdMedallaEstudiante" 
+                                   class="btn btn-sm btn-danger" title="Revocar medalla">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

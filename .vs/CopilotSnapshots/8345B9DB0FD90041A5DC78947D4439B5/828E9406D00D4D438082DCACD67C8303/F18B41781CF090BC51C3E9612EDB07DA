@@ -1,0 +1,450 @@
+﻿@{
+    ViewData["Title"] = "Mi Perfil";
+    Layout = "~/Views/Shared/_LayoutEstudiante.cshtml";
+    var estudiante = ViewBag.Estudiante as RunaTalento.Models.ApplicationUser;
+    var medallas = ViewBag.Medallas as List<RunaTalento.Models.MedallaEstudiante>;
+    var incentivos = ViewBag.Incentivos as List<RunaTalento.Models.IncentivoEstudiante>;
+    var actividades = ViewBag.ActividadesCompletadas as List<RunaTalento.Models.ActividadEstudiante>;
+    var nivelActual = ViewBag.NivelActual as RunaTalento.Models.Nivel;
+    var siguienteNivel = ViewBag.SiguienteNivel as RunaTalento.Models.Nivel;
+    var porcentajeProgreso = ViewBag.PorcentajeProgresoNivel ?? 0;
+    var totalActividades = ViewBag.TotalActividades ?? 0;
+    var totalMedallas = ViewBag.TotalMedallas ?? 0;
+}
+
+<div class="row g-4">
+    <!-- Columna izquierda: Progreso Académico -->
+    <div class="col-lg-6">
+        <div class="perfil-section">
+            <div class="d-flex align-items-center mb-2">
+                <i class="bi bi-star-fill text-purple me-2" style="font-size: 1.5rem;"></i>
+                <h4 class="mb-0">Progreso Académico</h4>
+            </div>
+            <p class="text-muted mb-4">Tu avance en el sistema</p>
+
+            <!-- Puntos Totales -->
+            <div class="progreso-card mb-4">
+                <div class="d-flex align-items-center justify-content-center mb-2">
+                    <i class="bi bi-star-fill" style="font-size: 3rem; color: #f59e0b;"></i>
+                </div>
+                <h2 class="puntos-totales">@estudiante?.PuntajeTotal</h2>
+                <p class="mb-0" style="color: #92400e; font-weight: 600;">Puntos Totales</p>
+            </div>
+
+            <!-- Nivel Actual -->
+            @if (nivelActual != null)
+            {
+                <div class="text-center mb-4">
+                    <div class="nivel-badge mb-3">
+                        <div class="nivel-numero">@nivelActual.IdNivel</div>
+                        <span>Nivel Actual</span>
+                    </div>
+                    <p class="mt-2 mb-1 fw-semibold" style="color: #1e293b;">@nivelActual.Nombre</p>
+                    <small class="text-muted">@nivelActual.PuntajeMinimo - @nivelActual.PuntajeMaximo pts</small>
+                </div>
+
+                @{
+                    var puntosEnNivel = estudiante.PuntajeTotal - nivelActual.PuntajeMinimo;
+                    var rangoNivel = nivelActual.PuntajeMaximo - nivelActual.PuntajeMinimo;
+                    var porcentajeNivel = rangoNivel > 0 ? (int)((puntosEnNivel * 100.0) / rangoNivel) : 0;
+                    porcentajeNivel = Math.Max(0, Math.Min(100, porcentajeNivel));
+                }
+
+                <div class="progreso-nivel-card mb-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-bar-chart-fill me-2" style="color: #8b5cf6; font-size: 1.2rem;"></i>
+                        <h5 class="mb-0" style="color: #1e293b; font-weight: 600;">Progreso de Nivel</h5>
+                    </div>
+
+                    <div class="nivel-progreso-visual mb-3">
+                        <div class="nivel-progreso-bar">
+                            <div class="nivel-progreso-fill" style="width: @porcentajeNivel%">
+                                <span class="nivel-progreso-text">@porcentajeNivel%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <div class="text-start">
+                            <small class="text-muted">Inicio</small>
+                            <div class="fw-bold" style="color: #64748b; font-size: 0.9rem;">
+                                <i class="bi bi-star"></i> @nivelActual.PuntajeMinimo pts
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <small class="text-muted">Tu puntaje</small>
+                            <div class="fw-bold" style="color: #8b5cf6; font-size: 1rem;">
+                                <i class="bi bi-star-fill"></i> @estudiante.PuntajeTotal pts
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted">Tope</small>
+                            <div class="fw-bold" style="color: #64748b; font-size: 0.9rem;">
+                                <i class="bi bi-star-fill"></i> @nivelActual.PuntajeMaximo pts
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert mb-0" style="background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%); border: 1px solid #c4b5fd; border-radius: 8px;">
+                        <small>
+                            <i class="bi bi-info-circle-fill" style="color: #7c3aed;"></i>
+                            @if (porcentajeNivel >= 75)
+                            {
+                                <strong style="color: #7c3aed;">¡Casi completas este nivel!</strong>
+                                <span style="color: #6d28d9;">Te faltan @(nivelActual.PuntajeMaximo - estudiante.PuntajeTotal) puntos.</span>
+                            }
+                            else if (porcentajeNivel >= 50)
+                            {
+                                <strong style="color: #7c3aed;">¡Vas por la mitad!</strong>
+                                <span style="color: #6d28d9;">Llevas @puntosEnNivel de @rangoNivel puntos.</span>
+                            }
+                            else if (porcentajeNivel >= 25)
+                            {
+                                <strong style="color: #7c3aed;">¡Buen progreso!</strong>
+                                <span style="color: #6d28d9;">Sigue acumulando puntos.</span>
+                            }
+                            else
+                            {
+                                <strong style="color: #7c3aed;">¡Recién comenzando!</strong>
+                                <span style="color: #6d28d9;">Completa actividades para progresar.</span>
+                            }
+                        </small>
+                    </div>
+                </div>
+
+                @if (siguienteNivel != null)
+                {
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <small class="text-muted">Progreso al siguiente nivel</small>
+                            <small class="fw-bold" style="color: var(--purple-primary);">@(siguienteNivel.PuntajeMinimo - estudiante.PuntajeTotal) pts para subir</small>
+                        </div>
+                        <div class="progress-bar-custom">
+                            <div class="progress" style="width: @porcentajeProgreso%">
+                                @porcentajeProgreso%
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    Aún no tienes un nivel asignado. ¡Completa actividades para obtener tu primer nivel!
+                </div>
+            }
+        </div>
+
+        <!-- Logros Desbloqueados -->
+        <div class="perfil-section">
+            <div class="d-flex align-items-center mb-2">
+                <i class="bi bi-unlock-fill text-success me-2" style="font-size: 1.5rem;"></i>
+                <h4 class="mb-0">Logros Desbloqueados</h4>
+            </div>
+            <p class="text-muted mb-4">Reconocimientos obtenidos</p>
+
+            <div class="logros-list">
+                @if (totalActividades >= 10)
+                {
+                    <div class="logro-item">
+                        <i class="bi bi-unlock-fill"></i>
+                        <div>
+                            <strong>10 actividades completadas</strong>
+                            <br><small class="text-muted">¡Excelente dedicación!</small>
+                        </div>
+                    </div>
+                }
+                @if (totalActividades >= 1)
+                {
+                    <div class="logro-item">
+                        <i class="bi bi-unlock-fill"></i>
+                        <div>
+                            <strong>Racha de 7 días</strong>
+                            <br><small class="text-muted">Mantén tu constancia</small>
+                        </div>
+                    </div>
+                }
+                @if (totalMedallas >= 1)
+                {
+                    <div class="logro-item">
+                        <i class="bi bi-unlock-fill"></i>
+                        <div>
+                            <strong>Top 5 del ranking</strong>
+                            <br><small class="text-muted">¡Sigue así!</small>
+                        </div>
+                    </div>
+                }
+                
+                @if (totalActividades == 0 && totalMedallas == 0)
+                {
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Completa actividades para desbloquear logros
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Columna derecha: Mis Medallas e Incentivos -->
+    <div class="col-lg-6">
+        <!-- Mis Medallas -->
+        <div class="perfil-section">
+            <div class="d-flex align-items-center mb-2">
+                <i class="bi bi-award-fill me-2" style="font-size: 1.5rem; color: #f59e0b;"></i>
+                <h4 class="mb-0">Mis Medallas</h4>
+            </div>
+            <p class="text-muted mb-4">Reconocimientos obtenidos</p>
+
+            @if (medallas != null && medallas.Any())
+            {
+                <div class="medallas-grid">
+                    @foreach (var medallaEst in medallas)
+                    {
+                        <div class="medalla-item">
+                            <div class="medalla-icon">
+                                @if (!string.IsNullOrEmpty(medallaEst.Medalla?.ImagenUrl))
+                                {
+                                    <img src="@medallaEst.Medalla.ImagenUrl" alt="@medallaEst.Medalla?.Nombre" style="width: 60px; height: 60px;">
+                                }
+                                else
+                                {
+                                    <i class="bi bi-award-fill"></i>
+                                }
+                            </div>
+                            <div class="medalla-nombre">@medallaEst.Medalla?.Nombre</div>
+                            <div class="medalla-fecha">
+                                <i class="bi bi-calendar3"></i> @medallaEst.FechaOtorgada.ToString("dd-MM-yyyy")
+                            </div>
+                            <div class="medalla-tipo medalla-oro">Oro</div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="bi bi-award" style="font-size: 4rem; color: var(--gray-text);"></i>
+                    <h5 class="mt-3 mb-2">Aún no tienes medallas</h5>
+                    <p class="text-muted mb-0">Completa actividades y logra objetivos para obtener medallas</p>
+                </div>
+            }
+        </div>
+
+        <!-- Mis Incentivos -->
+        <div class="perfil-section">
+            <div class="d-flex align-items-center mb-2">
+                <i class="bi bi-gift-fill me-2" style="font-size: 1.5rem; color: #14b8a6;"></i>
+                <h4 class="mb-0">Mis Incentivos</h4>
+            </div>
+            <p class="text-muted mb-4">Recompensas automáticas obtenidas</p>
+
+            @if (incentivos != null && incentivos.Any())
+            {
+                <div class="incentivos-estudiante-grid">
+                    @foreach (var incentivoEst in incentivos)
+                    {
+                        <div class="incentivo-estudiante-item">
+                            <div class="incentivo-estudiante-icon">
+                                @if (!string.IsNullOrEmpty(incentivoEst.Incentivo?.IconoUrl))
+                                {
+                                    <i class="@incentivoEst.Incentivo.IconoUrl"></i>
+                                }
+                                else
+                                {
+                                    <i class="bi bi-gift-fill"></i>
+                                }
+                            </div>
+                            <div class="incentivo-estudiante-info">
+                                <div class="incentivo-estudiante-nombre">@incentivoEst.Incentivo?.Nombre</div>
+                                <div class="incentivo-estudiante-descripcion">
+                                    @(incentivoEst.Incentivo?.Descripcion ?? "Recompensa especial")
+                                </div>
+                                <div class="incentivo-estudiante-detalles">
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-star-fill"></i> @incentivoEst.PuntajeAlObtener pts
+                                    </span>
+                                    <span class="text-muted" style="font-size: 0.85rem;">
+                                        <i class="bi bi-calendar3"></i> @incentivoEst.FechaOtorgado.ToString("dd/MM/yyyy")
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="bi bi-gift" style="font-size: 4rem; color: var(--gray-text);"></i>
+                    <h5 class="mt-3 mb-2">Aún no tienes incentivos</h5>
+                    <p class="text-muted mb-0">Los incentivos se otorgan automáticamente al alcanzar ciertos puntos</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .incentivos-estudiante-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .incentivo-estudiante-item {
+        background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
+        border: 2px solid #14b8a6;
+        border-radius: 12px;
+        padding: 16px;
+        display: flex;
+        gap: 16px;
+        align-items: start;
+        transition: all 0.3s ease;
+    }
+
+    .incentivo-estudiante-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(20, 184, 166, 0.2);
+    }
+
+    .incentivo-estudiante-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        color: white;
+        flex-shrink: 0;
+        box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);
+    }
+
+    .incentivo-estudiante-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .incentivo-estudiante-nombre {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 4px;
+    }
+
+    .incentivo-estudiante-descripcion {
+        font-size: 0.9rem;
+        color: #64748b;
+        margin-bottom: 10px;
+        line-height: 1.4;
+    }
+
+    .incentivo-estudiante-detalles {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .incentivo-estudiante-detalles .badge {
+        font-size: 0.85rem;
+        padding: 4px 10px;
+    }
+
+    /* Estilos para Progreso de Nivel */
+    .progreso-nivel-card {
+        background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+        border: 2px solid #c4b5fd;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.1);
+        animation: slideInUp 0.6s ease-out;
+    }
+
+    .nivel-progreso-bar {
+        width: 100%;
+        height: 32px;
+        background: linear-gradient(135deg, #e0e7ff 0%, #ddd6fe 100%);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .nivel-progreso-fill {
+        height: 100%;
+        background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: width 1s ease-in-out;
+        box-shadow: 0 2px 8px rgba(139, 92, 246, 0.4);
+        min-width: 40px;
+        position: relative;
+    }
+
+    .nivel-progreso-fill::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3) 50%, transparent);
+        animation: shimmer 2s infinite;
+    }
+
+    @@keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+
+    .nivel-progreso-text {
+        color: white;
+        font-weight: 700;
+        font-size: 0.85rem;
+        z-index: 1;
+        position: relative;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    @@keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .incentivo-estudiante-item {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .incentivo-estudiante-icon {
+            width: 80px;
+            height: 80px;
+            font-size: 2.5rem;
+        }
+
+        .progreso-nivel-card {
+            padding: 16px;
+        }
+
+        .nivel-progreso-bar {
+            height: 28px;
+        }
+
+        .nivel-progreso-text {
+            font-size: 0.75rem;
+        }
+    }
+</style>

@@ -1,0 +1,53 @@
+using Microsoft.AspNetCore.Identity;
+using RunaTalento.Models;
+
+namespace RunaTalento.Middleware
+{
+    /// <summary>
+    /// Middleware para validar que los usuarios activos en sesión tengan estado "Activo"
+    /// Si un usuario tiene estado "Inactivo", cierra automáticamente su sesión
+    /// </summary>
+    public class CheckUserActiveMiddleware
+    {
+        private readonly RequestDelegate _next;
+
+        public CheckUserActiveMiddleware(RequestDelegate next)
+        {
+            _next = next;
+        }
+
+        public async Task InvokeAsync(HttpContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        {
+            // Solo validar si el usuario está autenticado
+            if (context.User.Identity?.IsAuthenticated == true)
+            {
+                // Obtener el usuario actual
+                var user = await userManager.GetUserAsync(context.User);
+
+                // Si el usuario existe y su estado NO es "Activo", cerrar sesión
+                if (user != null && user.Estado != "Activo")
+                {
+                    await signInManager.SignOutAsync();
+                    
+                    // Redirigir al login con mensaje
+                    context.Response.Redirect("/Identity/Account/Login?mensaje=cuenta-inactiva");
+                    return;
+                }
+            }
+
+            // Continuar con el siguiente middleware
+            await _next(context);
+        }
+    }
+
+    /// <summary>
+    /// Extensión para agregar el middleware al pipeline
+    /// </summary>
+    public static class CheckUserActiveMiddlewareExtensions
+    {
+        public static IApplicationBuilder UseCheckUserActive(this IApplicationBuilder builder)
+        {
+            return builder.UseMiddleware<CheckUserActiveMiddleware>();
+        }
+    }
+}

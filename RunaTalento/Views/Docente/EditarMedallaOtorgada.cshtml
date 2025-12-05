@@ -1,0 +1,101 @@
+@model RunaTalento.Models.MedallaEstudiante
+@{
+    ViewData["Title"] = "Editar Medalla Otorgada";
+    Layout = "~/Views/Shared/_LayoutDocente.cshtml";
+}
+
+<div class="medalla-form-card">
+    <div class="card-header-custom">
+        <i class="bi bi-pencil-fill"></i>
+        <h3>Editar Medalla Otorgada</h3>
+    </div>
+    <p class="card-subtitle">Modifica el tipo de medalla otorgada al estudiante</p>
+
+    <div class="alert alert-info" role="alert">
+        <i class="bi bi-info-circle-fill"></i>
+        <strong>Nota:</strong> Solo puedes cambiar el tipo de medalla. El estudiante y la fecha de otorgamiento no se pueden modificar.
+    </div>
+
+    <form asp-action="EditarMedallaOtorgada" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="IdMedallaEstudiante" />
+        <input type="hidden" asp-for="IdEstudiante" />
+        <input type="hidden" asp-for="IdDocente" />
+
+        <div class="row">
+            <!-- Información del Estudiante (solo lectura) -->
+            <div class="col-md-12 mb-4">
+                <label class="form-label">
+                    Estudiante
+                </label>
+                <div class="form-control select-custom" style="background-color: #f8f9fa; cursor: not-allowed;">
+                    <i class="bi bi-person-circle text-primary"></i>
+                    <strong>@Model.Estudiante?.Nombres @Model.Estudiante?.Apellidos</strong>
+                    <br />
+                    <small class="text-muted">@Model.Estudiante?.Email</small>
+                </div>
+                <small class="form-text text-muted">
+                    <i class="bi bi-lock-fill"></i>
+                    El estudiante no puede ser modificado
+                </small>
+            </div>
+
+            <!-- Fecha de Otorgamiento (solo lectura) -->
+            <div class="col-md-12 mb-4">
+                <label class="form-label">
+                    Fecha de Otorgamiento Original
+                </label>
+                <div class="form-control select-custom" style="background-color: #f8f9fa; cursor: not-allowed;">
+                    <i class="bi bi-calendar3"></i> @Model.FechaOtorgada.ToString("dd/MM/yyyy")
+                    &nbsp;|&nbsp;
+                    <i class="bi bi-clock"></i> @Model.FechaOtorgada.ToString("HH:mm")
+                </div>
+                <small class="form-text text-muted">
+                    <i class="bi bi-lock-fill"></i>
+                    La fecha se mantiene intacta
+                </small>
+            </div>
+
+            <!-- Tipo de Medalla (editable) -->
+            <div class="col-md-12 mb-4">
+                <label asp-for="IdMedalla" class="form-label">
+                    Tipo de Medalla <span class="text-danger">*</span>
+                </label>
+                <select asp-for="IdMedalla" 
+                        class="form-select select-custom" 
+                        asp-items="@((SelectList)ViewData["IdMedalla"])"
+                        required>
+                    <option value="">Selecciona el tipo de medalla</option>
+                </select>
+                <span asp-validation-for="IdMedalla" class="text-danger"></span>
+                <small class="form-text">
+                    <i class="bi bi-pencil-fill"></i>
+                    Cambia el tipo de medalla otorgada
+                </small>
+            </div>
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="d-flex justify-content-between mt-4">
+            <a asp-action="OtorgarMedallas" class="btn btn-secondary-custom">
+                <i class="bi bi-x-circle"></i> Cancelar
+            </a>
+            <button type="submit" class="btn btn-award">
+                <i class="bi bi-check-circle-fill"></i> Guardar Cambios
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // Efecto visual al seleccionar medalla
+        document.getElementById('IdMedalla').addEventListener('change', function(e) {
+            if (e.target.value) {
+                e.target.style.borderColor = '#fbbf24';
+                e.target.style.boxShadow = '0 0 0 0.2rem rgba(251, 191, 36, 0.25)';
+            }
+        });
+    </script>
+}

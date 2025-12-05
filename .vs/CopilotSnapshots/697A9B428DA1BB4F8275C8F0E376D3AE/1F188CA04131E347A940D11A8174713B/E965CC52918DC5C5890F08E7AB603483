@@ -1,0 +1,17 @@
+﻿namespace RunaTalento.Services.Observers
+{
+    /// <summary>
+    /// Patrón OBSERVER (GoF) - Interfaz para observadores de eventos de calificación
+    /// Permite notificar a múltiples componentes cuando se califica una actividad
+    /// </summary>
+    public interface ICalificacionObserver
+    {
+        /// <summary>
+        /// Se ejecuta cuando una actividad es calificada
+        /// </summary>
+        /// <param name="estudianteId">ID del estudiante</param>
+        /// <param name="actividadId">ID de la actividad</param>
+        /// <param name="puntajeObtenido">Puntaje obtenido</param>
+        void OnActividadCalificada(string estudianteId, int actividadId, int puntajeObtenido);
+    }
+}

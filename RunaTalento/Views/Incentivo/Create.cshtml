@@ -1,0 +1,117 @@
+@model RunaTalento.Models.Incentivo
+
+@{
+    ViewData["Title"] = "Crear Incentivo";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="admin-header">
+    <div class="admin-header-content">
+        <div>
+            <h1 class="admin-title">
+                <i class="bi bi-gift-fill"></i>
+                Crear Nuevo Incentivo
+            </h1>
+            <p class="admin-subtitle">Incentivo que se otorga automáticamente al alcanzar puntos</p>
+        </div>
+        <a asp-controller="Incentivos" asp-action="Index" class="btn-secondary-admin">
+            <i class="bi bi-arrow-left"></i>
+            Volver a Incentivos
+        </a>
+    </div>
+</div>
+
+<div class="admin-content">
+    <div class="form-container">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+            <div class="form-group-admin">
+                <label asp-for="Nombre" class="form-label-admin">
+                    <i class="bi bi-gift"></i>
+                    Nombre del Incentivo <span class="required">*</span>
+                </label>
+                <input asp-for="Nombre" class="form-control-admin" 
+                       placeholder="Ej: Certificado de Excelencia" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+
+            <div class="form-group-admin">
+                <label asp-for="Descripcion" class="form-label-admin">
+                    <i class="bi bi-text-paragraph"></i>
+                    Descripción
+                </label>
+                <textarea asp-for="Descripcion" class="form-control-admin" rows="3" 
+                          placeholder="Describe el incentivo y sus beneficios..."></textarea>
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group-admin">
+                        <label asp-for="PuntosRequeridos" class="form-label-admin">
+                            <i class="bi bi-star-fill"></i>
+                            Puntos Requeridos <span class="required">*</span>
+                        </label>
+                        <input asp-for="PuntosRequeridos" type="number" class="form-control-admin" 
+                               placeholder="Ej: 500" min="1" />
+                        <span asp-validation-for="PuntosRequeridos" class="text-danger"></span>
+                        <small class="form-text text-muted">
+                            Se otorgará automáticamente al alcanzar estos puntos
+                        </small>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group-admin">
+                        <label asp-for="IconoUrl" class="form-label-admin">
+                            <i class="bi bi-image"></i>
+                            Ícono (Clase Bootstrap Icons)
+                        </label>
+                        <input asp-for="IconoUrl" class="form-control-admin" 
+                               placeholder="Ej: bi bi-trophy-fill" />
+                        <span asp-validation-for="IconoUrl" class="text-danger"></span>
+                        <small class="form-text text-muted">
+                            <a href="https://icons.getbootstrap.com/" target="_blank">
+                                Ver iconos disponibles
+                            </a>
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group-admin">
+                <div class="form-check">
+                    <input asp-for="Activo" class="form-check-input" type="checkbox" checked />
+                    <label asp-for="Activo" class="form-check-label">
+                        <strong>Activar incentivo</strong>
+                        <br>
+                        <small class="text-muted">
+                            Si está activo, se otorgará automáticamente a los estudiantes que alcancen los puntos
+                        </small>
+                    </label>
+                </div>
+            </div>
+
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle-fill"></i>
+                <strong>Nota:</strong> El incentivo se otorgará automáticamente cuando un estudiante alcance o supere los puntos requeridos después de ser calificado.
+            </div>
+
+            <div class="form-actions">
+                <a asp-controller="Incentivos" asp-action="Index" class="btn-secondary-admin">
+                    <i class="bi bi-x-circle"></i>
+                    Cancelar
+                </a>
+                <button type="submit" class="btn-primary-admin">
+                    <i class="bi bi-check-circle-fill"></i>
+                    Crear Incentivo
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

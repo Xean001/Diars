@@ -1,0 +1,122 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using RunaTalento.Data;
+using RunaTalento.Models;
+
+namespace RunaTalento.Controllers
+{
+    /// <summary>
+    /// Controlador para asignar medallas a estudiantes
+    /// </summary>
+    [Authorize(Roles = "Admin,Docente")]
+    public class MedallaEstudianteController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public MedallaEstudianteController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        {
+            _context = context;
+            _userManager = userManager;
+        }
+
+        // GET: MedallaEstudiante
+        public async Task<IActionResult> Index()
+        {
+            var medallasEstudiantes = await _context.MedallaEstudiante
+                .Include(me => me.Medalla)
+                .Include(me => me.Estudiante)
+                .ToListAsync();
+            return View(medallasEstudiantes);
+        }
+
+        // GET: MedallaEstudiante/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var medallaEstudiante = await _context.MedallaEstudiante
+                .Include(me => me.Medalla)
+                .Include(me => me.Estudiante)
+                .FirstOrDefaultAsync(m => m.IdMedallaEstudiante == id);
+            
+            if (medallaEstudiante == null)
+            {
+                return NotFound();
+            }
+
+            return View(medallaEstudiante);
+        }
+
+        // GET: MedallaEstudiante/Create
+        public async Task<IActionResult> Create()
+        {
+            ViewData["IdMedalla"] = new SelectList(_context.Medalla, "IdMedalla", "Nombre");
+            var estudiantes = await _userManager.GetUsersInRoleAsync("Estudiante");
+            ViewData["IdEstudiante"] = new SelectList(estudiantes, "Id", "Email");
+            return View();
+        }
+
+        // POST: MedallaEstudiante/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("IdMedallaEstudiante,IdMedalla,IdEstudiante")] MedallaEstudiante medallaEstudiante)
+        {
+            if (ModelState.IsValid)
+            {
+                medallaEstudiante.FechaOtorgada = DateTime.Now;
+                _context.Add(medallaEstudiante);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Medalla asignada exitosamente";
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["IdMedalla"] = new SelectList(_context.Medalla, "IdMedalla", "Nombre", medallaEstudiante.IdMedalla);
+            var estudiantes = await _userManager.GetUsersInRoleAsync("Estudiante");
+            ViewData["IdEstudiante"] = new SelectList(estudiantes, "Id", "Email", medallaEstudiante.IdEstudiante);
+            return View(medallaEstudiante);
+        }
+
+        // GET: MedallaEstudiante/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var medallaEstudiante = await _context.MedallaEstudiante
+                .Include(me => me.Medalla)
+                .Include(me => me.Estudiante)
+                .FirstOrDefaultAsync(m => m.IdMedallaEstudiante == id);
+            
+            if (medallaEstudiante == null)
+            {
+                return NotFound();
+            }
+
+            return View(medallaEstudiante);
+        }
+
+        // POST: MedallaEstudiante/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var medallaEstudiante = await _context.MedallaEstudiante.FindAsync(id);
+            if (medallaEstudiante != null)
+            {
+                _context.MedallaEstudiante.Remove(medallaEstudiante);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Medalla removida del estudiante";
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+    }
+}

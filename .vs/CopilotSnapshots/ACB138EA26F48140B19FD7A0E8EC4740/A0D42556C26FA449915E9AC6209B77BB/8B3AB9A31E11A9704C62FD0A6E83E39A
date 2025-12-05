@@ -1,0 +1,70 @@
+﻿@model IEnumerable<RunaTalento.Models.Actividad>
+
+@{
+    ViewData["Title"] = "Actividades";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-clipboard-check-fill"></i> Gestión de Actividades</h1>
+        @if (User.IsInRole("Docente"))
+        {
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Nueva Actividad
+            </a>
+        }
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row">
+        @foreach (var actividad in Model)
+        {
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">@actividad.Titulo</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">@(actividad.Descripcion ?? "Sin descripción")</p>
+                        <p class="mb-1">
+                            <i class="bi bi-book"></i> <strong>Curso:</strong> @actividad.Curso?.Nombre
+                        </p>
+                        <p class="mb-1">
+                            <i class="bi bi-person"></i> <strong>Docente:</strong> @actividad.Curso?.Docente?.Nombres
+                        </p>
+                        <p class="mb-0">
+                            <i class="bi bi-star-fill text-warning"></i> <strong>Puntaje:</strong> 
+                            <span class="badge bg-warning text-dark">@actividad.Puntaje pts</span>
+                        </p>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <small class="text-muted">
+                            <i class="bi bi-calendar"></i> @actividad.FechaCreacion.ToString("dd/MM/yyyy")
+                        </small>
+                        <div class="d-flex justify-content-between mt-2">
+                            <a asp-action="Details" asp-route-id="@actividad.IdActividad" class="btn btn-sm btn-info">
+                                <i class="bi bi-eye"></i> Ver
+                            </a>
+                            @if (User.IsInRole("Docente"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@actividad.IdActividad" class="btn btn-sm btn-warning">
+                                    <i class="bi bi-pencil"></i> Editar
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@actividad.IdActividad" class="btn btn-sm btn-danger">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

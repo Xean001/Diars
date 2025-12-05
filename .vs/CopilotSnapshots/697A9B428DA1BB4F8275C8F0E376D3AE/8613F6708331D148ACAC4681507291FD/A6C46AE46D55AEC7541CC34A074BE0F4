@@ -1,0 +1,43 @@
+﻿namespace RunaTalento.Services.Decorators
+{
+    /// <summary>
+    /// Patrón DECORATOR (GoF) - Decorador que añade dificultad extra
+    /// Aumenta el puntaje de actividades consideradas difíciles
+    /// </summary>
+    public class ActividadDificultadDecorator : ActividadDecorator
+    {
+        private readonly string _nivelDificultad;
+        private const double BONIFICACION_DIFICIL = 1.20;
+        private const double BONIFICACION_MUY_DIFICIL = 1.35;
+
+        public ActividadDificultadDecorator(IActividadComponent actividad, string nivelDificultad) 
+            : base(actividad)
+        {
+            _nivelDificultad = nivelDificultad?.ToLower() ?? "normal";
+        }
+
+        public override string ObtenerDescripcionCompleta()
+        {
+            var descripcionBase = _actividad.ObtenerDescripcionCompleta();
+            
+            return _nivelDificultad switch
+            {
+                "dificil" => $"🔥 DIFÍCIL: {descripcionBase} [+20% puntaje]",
+                "muy_dificil" => $"🔥🔥 MUY DIFÍCIL: {descripcionBase} [+35% puntaje]",
+                _ => descripcionBase
+            };
+        }
+
+        public override int CalcularPuntajeConModificadores()
+        {
+            var puntajeBase = _actividad.CalcularPuntajeConModificadores();
+            
+            return _nivelDificultad switch
+            {
+                "dificil" => (int)(puntajeBase * BONIFICACION_DIFICIL),
+                "muy_dificil" => (int)(puntajeBase * BONIFICACION_MUY_DIFICIL),
+                _ => puntajeBase
+            };
+        }
+    }
+}

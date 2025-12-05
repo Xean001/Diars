@@ -1,0 +1,68 @@
+@model RunaTalento.Models.MedallaEstudiante
+
+@{
+    ViewData["Title"] = "Detalles de Medalla Otorgada";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white text-center">
+                    <h4 class="mb-0"><i class="bi bi-award-fill"></i> Medalla Otorgada</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            @if (!string.IsNullOrEmpty(Model.Medalla?.ImagenUrl))
+                            {
+                                <img src="@Model.Medalla.ImagenUrl" alt="@Model.Medalla.Nombre" 
+                                     class="img-fluid mb-3" style="max-height: 200px;" />
+                            }
+                            else
+                            {
+                                <div class="mb-3">
+                                    <i class="bi bi-award-fill text-warning" style="font-size: 8rem;"></i>
+                                </div>
+                            }
+                        </div>
+                        <div class="col-md-8">
+                            <dl class="row">
+                                <dt class="col-sm-4">Medalla:</dt>
+                                <dd class="col-sm-8"><strong class="text-warning fs-5">@Model.Medalla?.Nombre</strong></dd>
+
+                                <dt class="col-sm-4">Descripción:</dt>
+                                <dd class="col-sm-8">@(Model.Medalla?.Descripcion ?? "Sin descripción")</dd>
+
+                                <dt class="col-sm-4">Estudiante:</dt>
+                                <dd class="col-sm-8">
+                                    <i class="bi bi-person-circle"></i>
+                                    <strong>@Model.Estudiante?.Nombres @Model.Estudiante?.Apellidos</strong>
+                                    <br/>
+                                    <small class="text-muted">@Model.Estudiante?.Email</small>
+                                </dd>
+
+                                <dt class="col-sm-4">Fecha Otorgada:</dt>
+                                <dd class="col-sm-8">
+                                    <i class="bi bi-calendar-check"></i> 
+                                    @Model.FechaOtorgada.ToString("dd/MM/yyyy HH:mm")
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Volver al listado
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@Model.IdMedallaEstudiante" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> Revocar Medalla
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,41 @@
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace RunaTalento.Models
+{
+    /// <summary>
+    /// Representa una actividad o tarea en un curso
+    /// </summary>
+    public class Actividad
+    {
+        [Key]
+        public int IdActividad { get; set; }
+
+        [Required(ErrorMessage = "El título es obligatorio")]
+        [StringLength(100)]
+        public string Titulo { get; set; }
+
+        [StringLength(255)]
+        public string? Descripcion { get; set; }
+
+        [Required(ErrorMessage = "El puntaje es obligatorio")]
+        [Range(0, 100, ErrorMessage = "El puntaje debe estar entre 0 y 100")]
+        public int Puntaje { get; set; }
+
+        public DateTime FechaCreacion { get; set; } = DateTime.Now;
+
+        [Required(ErrorMessage = "El curso es obligatorio")]
+        public int IdCurso { get; set; }
+
+        //  guarda la ruta del archivo subido
+        [StringLength(255)]
+        public string? ArchivoUrl { get; set; }
+
+        // Navegación hacia el curso
+        [ForeignKey("IdCurso")]
+        public virtual Curso? Curso { get; set; }
+
+        // Navegación hacia las entregas de estudiantes
+        public virtual ICollection<ActividadEstudiante>? ActividadesEstudiantes { get; set; }
+    }
+}

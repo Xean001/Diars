@@ -1,0 +1,66 @@
+﻿@model RunaTalento.Models.Actividad
+
+@{
+    ViewData["Title"] = "Editar Actividad";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-warning">
+                    <h4 class="mb-0"><i class="bi bi-pencil"></i> Editar Actividad</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                        
+                        <input type="hidden" asp-for="IdActividad" />
+                        <input type="hidden" asp-for="FechaCreacion" />
+                        
+                        <div class="mb-3">
+                            <label asp-for="Titulo" class="form-label"></label>
+                            <input asp-for="Titulo" class="form-control" />
+                            <span asp-validation-for="Titulo" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Descripcion" class="form-label"></label>
+                            <textarea asp-for="Descripcion" class="form-control" rows="3"></textarea>
+                            <span asp-validation-for="Descripcion" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Puntaje" class="form-label"></label>
+                                <input asp-for="Puntaje" class="form-control" type="number" min="0" max="100" />
+                                <span asp-validation-for="Puntaje" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="IdCurso" class="form-label">Curso</label>
+                                <select asp-for="IdCurso" class="form-select" asp-items="ViewBag.IdCurso">
+                                    <option value="">-- Seleccione un curso --</option>
+                                </select>
+                                <span asp-validation-for="IdCurso" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Volver
+                            </a>
+                            <button type="submit" class="btn btn-warning">
+                                <i class="bi bi-save"></i> Actualizar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

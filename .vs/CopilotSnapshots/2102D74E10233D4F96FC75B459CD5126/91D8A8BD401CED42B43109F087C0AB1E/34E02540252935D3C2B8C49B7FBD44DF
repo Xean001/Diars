@@ -1,0 +1,87 @@
+﻿@{
+    ViewData["Title"] = "Crear Usuario";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-person-plus-fill"></i> Crear Nuevo Usuario</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="nombres" class="form-label">Nombres <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="nombres" name="nombres" required />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="apellidos" class="form-label">Apellidos <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="apellidos" name="apellidos" required />
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control" id="email" name="email" required />
+                            <small class="form-text text-muted">Este será el nombre de usuario</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Contraseña <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control" id="password" name="password" required />
+                            <small class="form-text text-muted">
+                                Mínimo 6 caracteres, debe incluir mayúsculas, minúsculas y números
+                            </small>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="rol" class="form-label">Rol <span class="text-danger">*</span></label>
+                                <select class="form-select" id="rol" name="rol" required>
+                                    <option value="">-- Seleccione un rol --</option>
+                                    @foreach (var rol in ViewBag.Roles as SelectList)
+                                    {
+                                        <option value="@rol.Value">@rol.Text</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="idNivel" class="form-label">Nivel (Opcional)</label>
+                                <select class="form-select" id="idNivel" name="idNivel">
+                                    <option value="">-- Sin nivel asignado --</option>
+                                    @foreach (var nivel in ViewBag.Niveles as SelectList)
+                                    {
+                                        <option value="@nivel.Value">@nivel.Text</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i>
+                            <strong>Nota:</strong> El usuario recibirá un correo de confirmación automáticamente.
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> Crear Usuario
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

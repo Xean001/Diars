@@ -1,0 +1,122 @@
+﻿@model IEnumerable<dynamic>
+@{
+    ViewData["Title"] = "Actividades Disponibles";
+    Layout = "~/Views/Shared/_LayoutEstudiante.cshtml";
+}
+
+<!-- Header de la sección -->
+<div class="seccion-header">
+    <div class="d-flex align-items-start">
+        <i class="bi bi-clipboard-check-fill text-primary me-3" style="font-size: 2.5rem;"></i>
+        <div>
+            <h2 class="mb-1" style="gap: 0;">Actividades Disponibles</h2>
+            <p class="text-muted mb-0">Completa actividades para ganar puntos y subir de nivel</p>
+        </div>
+    </div>
+</div>
+
+@if (Model != null && Model.Any())
+{
+    <div class="row g-4">
+        @foreach (var item in Model)
+        {
+            var actividad = item.Actividad;
+            var actividadEstudiante = item.ActividadEstudiante;
+            var completada = actividadEstudiante != null;
+            
+            // Determinar nivel de dificultad basado en puntaje
+            var nivel = actividad.Puntaje < 100 ? "Básico" : actividad.Puntaje < 150 ? "Intermedio" : "Avanzado";
+            var nivelClass = actividad.Puntaje < 100 ? "badge-basico" : actividad.Puntaje < 150 ? "badge-intermedio" : "badge-avanzado";
+
+            <div class="col-lg-6">
+                <div class="actividad-card @(completada ? "completada" : "")">
+                    <div class="actividad-card-header">
+                        <div>
+                            <h5 class="actividad-titulo">@actividad.Titulo</h5>
+                            <small class="text-muted">@(actividad.Descripcion?.Length > 50 ? actividad.Descripcion.Substring(0, 50) + "..." : actividad.Descripcion ?? "Sin descripción")</small>
+                            
+                            @* ✅ MOSTRAR FECHA LÍMITE SI EXISTE *@
+                            @if (actividad.FechaLimite != null)
+                            {
+                                var diasRestantes = (actividad.FechaLimite.Value - DateTime.Now).Days;
+                                var horasRestantes = (actividad.FechaLimite.Value - DateTime.Now).Hours;
+                                var colorUrgencia = diasRestantes < 1 ? "text-danger" : diasRestantes < 3 ? "text-warning" : "text-muted";
+                                
+                                <div class="mt-2">
+                                    <small class="@colorUrgencia">
+                                        <i class="bi bi-clock"></i>
+                                        @if (diasRestantes > 0)
+                                        {
+                                            <strong>Vence en @diasRestantes día(s)</strong>
+                                        }
+                                        else if (horasRestantes > 0)
+                                        {
+                                            <strong>Vence en @horasRestantes hora(s)</strong>
+                                        }
+                                        else
+                                        {
+                                            <strong>Vence pronto</strong>
+                                        }
+                                        - @actividad.FechaLimite.Value.ToString("dd/MM/yyyy HH:mm")
+                                    </small>
+                                </div>
+                            }
+                        </div>
+                        <span class="actividad-badge @nivelClass">@nivel</span>
+                    </div>
+
+                    <div class="actividad-footer">
+                        <div class="actividad-puntos">
+                            <i class="bi bi-star-fill"></i>
+                            <span>+@actividad.Puntaje pts</span>
+                        </div>
+
+                        @if (completada)
+                        {
+                            <button class="btn btn-completada" disabled>
+                                <i class="bi bi-check-circle-fill"></i> Completada
+                            </button>
+                        }
+                        else
+                        {
+                            <a asp-action="Realizar" asp-route-id="@actividad.IdActividad" class="btn btn-realizar">
+                                Realizar
+                            </a>
+                        }
+                    </div>
+
+                    @if (completada && actividadEstudiante.PuntajeObtenido != null)
+                    {
+                        <div class="mt-3 p-3 rounded" style="background: #f0fdf4; border-left: 4px solid var(--green-success);">
+                            <small class="d-flex align-items-center gap-2">
+                                <i class="bi bi-check-circle-fill text-success"></i>
+                                <strong class="text-success">Calificación: @actividadEstudiante.PuntajeObtenido pts</strong>
+                            </small>
+                        </div>
+                    }
+                    else if (completada)
+                    {
+                        <div class="mt-3 p-3 rounded" style="background: #fef3c7; border-left: 4px solid var(--orange-warning);">
+                            <small class="d-flex align-items-center gap-2" style="color: #92400e;">
+                                <i class="bi bi-clock"></i>
+                                <span>Pendiente de calificación</span>
+                            </small>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-12">
+            <div class="perfil-section text-center py-5">
+                <i class="bi bi-inbox" style="font-size: 4rem; color: var(--gray-text);"></i>
+                <h4 class="mt-4 mb-2" style="justify-content: center;">No hay actividades disponibles</h4>
+                <p class="text-muted mb-0">Aún no se han creado actividades en el sistema. Vuelve más tarde.</p>
+            </div>
+        </div>
+    </div>
+}

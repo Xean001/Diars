@@ -1,0 +1,95 @@
+﻿@model List<dynamic>
+
+@{
+    ViewData["Title"] = "Gestión de Usuarios";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-people-fill"></i> Gestión de Usuarios</h1>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-person-plus-fill"></i> Nuevo Usuario
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="card shadow">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>Nombre Completo</th>
+                            <th>Email</th>
+                            <th>Roles</th>
+                            <th>Estado</th>
+                            <th>Fecha Registro</th>
+                            <th>Puntaje</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            var usuario = item.Usuario as RunaTalento.Models.ApplicationUser;
+                            <tr>
+                                <td>
+                                    <strong>@usuario.Nombres @usuario.Apellidos</strong>
+                                </td>
+                                <td>@usuario.Email</td>
+                                <td>
+                                    <span class="badge bg-info">@item.Roles</span>
+                                </td>
+                                <td>
+                                    @if (usuario.Estado == "Activo")
+                                    {
+                                        <span class="badge bg-success">Activo</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Inactivo</span>
+                                    }
+                                </td>
+                                <td>@usuario.FechaRegistro.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    <span class="badge bg-warning text-dark">
+                                        @usuario.PuntajeTotal pts
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <a asp-action="Details" asp-route-id="@usuario.Id" 
+                                       class="btn btn-sm btn-info" title="Ver detalles">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@usuario.Id" 
+                                       class="btn btn-sm btn-warning" title="Editar">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@usuario.Id" 
+                                       class="btn btn-sm btn-danger" title="Eliminar">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

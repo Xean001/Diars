@@ -1,0 +1,143 @@
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace RunaTalento.Models
+{
+    /// <summary>
+    /// Representa una actividad o tarea en un curso
+    /// Puede ser decorada con modificadores de dificultad y urgencia (Patrón DECORATOR)
+    /// </summary>
+    public class Actividad
+    {
+        [Key]
+        public int IdActividad { get; set; }
+
+        [Required(ErrorMessage = "El título es obligatorio")]
+        [StringLength(100)]
+        public string Titulo { get; set; }
+
+        [StringLength(255)]
+        public string? Descripcion { get; set; }
+
+        [Required(ErrorMessage = "El puntaje es obligatorio")]
+        [Range(0, 1000, ErrorMessage = "El puntaje debe estar entre 0 y 1000")]
+        public int Puntaje { get; set; }
+
+        public DateTime FechaCreacion { get; set; } = DateTime.Now;
+
+        /// <summary>
+        /// Fecha límite para entregar la actividad (opcional)
+        /// </summary>
+        [Display(Name = "Fecha Límite")]
+        public DateTime? FechaLimite { get; set; }
+
+        [Required(ErrorMessage = "El curso es obligatorio")]
+        public int IdCurso { get; set; }
+
+        // Guarda la ruta del archivo subido
+        [StringLength(255)]
+        public string? ArchivoUrl { get; set; }
+
+        // ? PROPIEDADES PARA PATRÓN DECORATOR - Modificadores de actividad
+        /// <summary>
+        /// Nivel de dificultad: "normal", "dificil", "muy_dificil"
+        /// Usado por ActividadDificultadDecorator
+        /// </summary>
+        [StringLength(20)]
+        public string? NivelDificultad { get; set; } = "normal";
+
+        /// <summary>
+        /// Indica si la actividad es considerada urgente (fecha límite cercana)
+        /// Usado por ActividadUrgenciaDecorator
+        /// </summary>
+        [NotMapped]
+        public bool EsUrgente => FechaLimite.HasValue && 
+                                (FechaLimite.Value - DateTime.Now).TotalDays <= 2 &&
+                                FechaLimite.Value > DateTime.Now;
+
+        // Navegación hacia el curso
+        [ForeignKey("IdCurso")]
+        public virtual Curso? Curso { get; set; }
+
+        // Navegación hacia las entregas de estudiantes
+        public virtual ICollection<ActividadEstudiante>? ActividadesEstudiantes { get; set; }
+
+        /// <summary>
+        /// Verifica si la actividad está vencida
+        /// </summary>
+        [NotMapped]
+        public bool EstaVencida => FechaLimite.HasValue && DateTime.Now > FechaLimite.Value;
+
+        /// <summary>
+        /// Verifica si la actividad está vigente (no vencida o sin fecha límite)
+        /// </summary>
+        [NotMapped]
+        public bool EstaVigente => !FechaLimite.HasValue || DateTime.Now <= FechaLimite.Value;
+
+        /// <summary>
+        /// Obtiene el puntaje con modificadores aplicados (Patrón DECORATOR)
+        /// </summary>
+        [NotMapped]
+        public int PuntajeConModificadores
+        {
+            get
+            {
+                var puntaje = Puntaje;
+
+                // Aplicar bonificación por dificultad
+                if (!string.IsNullOrEmpty(NivelDificultad))
+                {
+                    puntaje = NivelDificultad.ToLower() switch
+                    {
+                        "dificil" => (int)(puntaje * 1.20),      // +20%
+                        "muy_dificil" => (int)(puntaje * 1.35),  // +35%
+                        _ => puntaje
+                    };
+                }
+
+                // Aplicar bonificación por urgencia
+                if (EsUrgente)
+                {
+                    puntaje = (int)(puntaje * 1.15); // +15%
+                }
+
+                return puntaje;
+            }
+        }
+
+        /// <summary>
+        /// Obtiene una descripción detallada con modificadores (Patrón DECORATOR)
+        /// </summary>
+        [NotMapped]
+        public string DescripcionConModificadores
+        {
+            get
+            {
+                var descripcion = Titulo;
+                var modificadores = new List<string>();
+
+                if (EsUrgente)
+                {
+                    modificadores.Add("? URGENTE");
+                }
+
+                if (!string.IsNullOrEmpty(NivelDificultad) && NivelDificultad.ToLower() != "normal")
+                {
+                    modificadores.Add(NivelDificultad.ToLower() switch
+                    {
+                        "dificil" => "?? DIFÍCIL",
+                        "muy_dificil" => "???? MUY DIFÍCIL",
+                        _ => ""
+                    });
+                }
+
+                if (modificadores.Any())
+                {
+                    descripcion = $"{string.Join(" ", modificadores)} - {descripcion}";
+                }
+
+                return descripcion;
+            }
+        }
+    }
+}

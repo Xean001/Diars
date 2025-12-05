@@ -1,0 +1,26 @@
+namespace RunaTalento.Services.Factories
+{
+    using RunaTalento.Services.Strategies;
+
+    /// <summary>
+    /// Patrón FACTORY METHOD (GoF) - Fábrica para crear estrategias de calificación
+    /// Centraliza la creación de objetos de estrategias de calificación
+    /// </summary>
+    public interface ICalificacionStrategyFactory
+    {
+        ICalificacionStrategy CrearEstrategia(string tipoEstrategia);
+    }
+
+    public class CalificacionStrategyFactory : ICalificacionStrategyFactory
+    {
+        public ICalificacionStrategy CrearEstrategia(string tipoEstrategia)
+        {
+            return tipoEstrategia?.ToLower() switch
+            {
+                "bonificacion" => new CalificacionConBonificacionStrategy(),
+                "penalizacion" => new CalificacionConPenalizacionStrategy(),
+                _ => new CalificacionEstandarStrategy()
+            };
+        }
+    }
+}

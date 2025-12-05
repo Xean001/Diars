@@ -1,0 +1,82 @@
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using RunaTalento.Models;
+
+namespace RunaTalento.Data
+{
+    /// <summary>
+    /// Contexto de base de datos para la aplicación RunaTalento
+    /// Hereda de IdentityDbContext para integrar ASP.NET Identity
+    /// </summary>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
+        {
+        }
+
+        // DbSets para las entidades del sistema
+        public DbSet<Nivel> Nivel { get; set; }
+        public DbSet<Curso> Curso { get; set; }
+        public DbSet<Actividad> Actividad { get; set; }
+        public DbSet<ActividadEstudiante> ActividadEstudiante { get; set; }
+        public DbSet<Medalla> Medalla { get; set; }
+        public DbSet<MedallaEstudiante> MedallaEstudiante { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            // Configuración de relaciones y restricciones
+
+            // Relación ApplicationUser -> Nivel
+            builder.Entity<ApplicationUser>()
+                .HasOne<Nivel>()
+                .WithMany()
+                .HasForeignKey(u => u.IdNivel)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            // Relación Curso -> ApplicationUser (Docente)
+            builder.Entity<Curso>()
+                .HasOne(c => c.Docente)
+                .WithMany()
+                .HasForeignKey(c => c.IdDocente)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Relación Actividad -> Curso
+            builder.Entity<Actividad>()
+                .HasOne(a => a.Curso)
+                .WithMany(c => c.Actividades)
+                .HasForeignKey(a => a.IdCurso)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Relación ActividadEstudiante -> Actividad
+            builder.Entity<ActividadEstudiante>()
+                .HasOne(ae => ae.Actividad)
+                .WithMany(a => a.ActividadesEstudiantes)
+                .HasForeignKey(ae => ae.IdActividad)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Relación ActividadEstudiante -> ApplicationUser (Estudiante)
+            builder.Entity<ActividadEstudiante>()
+                .HasOne(ae => ae.Estudiante)
+                .WithMany()
+                .HasForeignKey(ae => ae.IdEstudiante)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Relación MedallaEstudiante -> Medalla
+            builder.Entity<MedallaEstudiante>()
+                .HasOne(me => me.Medalla)
+                .WithMany(m => m.MedallasEstudiantes)
+                .HasForeignKey(me => me.IdMedalla)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Relación MedallaEstudiante -> ApplicationUser (Estudiante)
+            builder.Entity<MedallaEstudiante>()
+                .HasOne(me => me.Estudiante)
+                .WithMany()
+                .HasForeignKey(me => me.IdEstudiante)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
+    }
+}

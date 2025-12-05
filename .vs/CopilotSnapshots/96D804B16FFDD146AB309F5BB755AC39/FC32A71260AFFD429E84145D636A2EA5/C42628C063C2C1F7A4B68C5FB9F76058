@@ -1,0 +1,96 @@
+﻿@model RunaTalento.Models.Medalla
+
+@{
+    ViewData["Title"] = "Detalles de Medalla";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white text-center">
+                    <h4 class="mb-0"><i class="bi bi-award-fill"></i> @Model.Nombre</h4>
+                </div>
+                <div class="card-body text-center">
+                    @if (!string.IsNullOrEmpty(Model.ImagenUrl))
+                    {
+                        <img src="@Model.ImagenUrl" alt="@Model.Nombre" class="img-fluid mb-3" style="max-height: 250px;" />
+                    }
+                    else
+                    {
+                        <div class="mb-3">
+                            <i class="bi bi-award-fill text-warning" style="font-size: 10rem;"></i>
+                        </div>
+                    }
+
+                    <dl class="row mt-4">
+                        <dt class="col-sm-4">Nombre:</dt>
+                        <dd class="col-sm-8"><strong>@Model.Nombre</strong></dd>
+
+                        <dt class="col-sm-4">Descripción:</dt>
+                        <dd class="col-sm-8">@(Model.Descripcion ?? "Sin descripción")</dd>
+
+                        <dt class="col-sm-4">URL de Imagen:</dt>
+                        <dd class="col-sm-8">
+                            @if (!string.IsNullOrEmpty(Model.ImagenUrl))
+                            {
+                                <small class="text-muted">@Model.ImagenUrl</small>
+                            }
+                            else
+                            {
+                                <span class="text-muted">No configurada</span>
+                            }
+                        </dd>
+                    </dl>
+
+                    <hr />
+
+                    <h5 class="mb-3"><i class="bi bi-people-fill"></i> Estudiantes que tienen esta medalla</h5>
+                    
+                    @if (Model.MedallasEstudiantes != null && Model.MedallasEstudiantes.Any())
+                    {
+                        <div class="list-group text-start">
+                            @foreach (var medallaEst in Model.MedallasEstudiantes)
+                            {
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <i class="bi bi-person-circle"></i>
+                                            <strong>@medallaEst.Estudiante?.Nombres @medallaEst.Estudiante?.Apellidos</strong>
+                                        </div>
+                                        <small class="text-muted">
+                                            <i class="bi bi-calendar"></i> 
+                                            @medallaEst.FechaOtorgada.ToString("dd/MM/yyyy")
+                                        </small>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i> Ningún estudiante ha recibido esta medalla todavía.
+                        </div>
+                    }
+
+                    <hr />
+
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Volver al listado
+                        </a>
+                        <div>
+                            <a asp-action="Edit" asp-route-id="@Model.IdMedalla" class="btn btn-warning">
+                                <i class="bi bi-pencil"></i> Editar
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@Model.IdMedalla" class="btn btn-danger">
+                                <i class="bi bi-trash"></i> Eliminar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

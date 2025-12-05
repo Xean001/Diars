@@ -1,0 +1,502 @@
+﻿# Especificación de Casos de Uso - RunaTalento (Nuevo Formato)
+
+## CU01 – Iniciar Sesión
+
+**1. Nombre del caso de uso**
+CU01 – Iniciar Sesión
+
+**1.1 Breve descripción**
+Permite a los usuarios (estudiante, docente o administrador) ingresar al sistema mediante su usuario y contraseña; el sistema valida las credenciales y redirige al panel correspondiente según el rol.
+
+**2. Flujo de eventos**
+**2.1 Flujo básico**
+1. El usuario accede a la pantalla de inicio de sesión.
+2. El sistema solicita nombre de usuario (email) y contraseña.
+3. El usuario ingresa nombre de usuario y contraseña.
+4. El sistema valida las credenciales contra la base de datos.
+5. El sistema identifica el rol del usuario y muestra el panel principal correspondiente (estudiante, docente o administrador).
+
+**2.2 Flujos alternativos**
+**2.2.1 Credenciales incorrectas**
+1. El usuario ingresa credenciales inválidas.
+2. El sistema muestra un mensaje de error indicando "Usuario o contraseña incorrectos" y ofrece reintentar.
+
+**2.2.2 Usuario inactivo o bloqueado**
+1. El usuario intenta iniciar sesión pero su cuenta está inactiva.
+2. El sistema muestra el mensaje: "Tu cuenta ha sido desactivada. Contacta al administrador".
+
+**2.2.3 Email no confirmado**
+1. El usuario intenta iniciar sesión pero no ha confirmado su email.
+2. El sistema muestra el mensaje: "Por favor confirma tu email antes de iniciar sesión".
+
+**3. Requisitos especiales**
+3.1 Las contraseñas deben almacenarse en forma encriptada (hash).
+3.2 El tiempo de respuesta de autenticación debe ser razonable (< 3 segundos).
+3.3 Debe existir un límite de 5 intentos fallidos antes de un bloqueo temporal de la cuenta.
+
+**4. Condiciones previas**
+4.1 El usuario debe estar registrado en el sistema.
+4.2 La base de datos de usuarios debe estar disponible.
+4.3 La cuenta del usuario debe estar activa.
+
+**5. Condiciones de publicación**
+5.1 El usuario queda autenticado y redirigido al panel correspondiente.
+5.2 Si la autenticación falla, se muestra el mensaje de error adecuado.
+
+**6. Puntos de extensión**
+No aplica.
+
+---
+
+## CU02 – Consultar Ranking
+
+**1. Nombre del caso de uso**
+CU02 – Consultar Ranking
+
+**1.1 Breve descripción**
+Permite a estudiantes y docentes visualizar la posición general de los estudiantes según sus puntajes, niveles y medallas.
+
+**2. Flujo de eventos**
+**2.1 Flujo básico**
+1. El usuario (estudiante o docente) selecciona la opción “Ver Ranking”.
+2. El sistema obtiene la lista de todos los estudiantes con sus puntajes, niveles y medallas.
+3. Se ordena la lista de mayor a menor puntaje.
+4. Se muestra el ranking en pantalla, resaltando la posición del usuario actual si es un estudiante.
+
+**2.2 Flujos alternativos**
+**2.2.1 Ranking vacío**
+1. Si no hay estudiantes con puntajes registrados, el sistema muestra el mensaje: “No existen registros en el ranking”.
+
+**2.2.2 Filtro por curso (Docente)**
+1. Si el usuario es un docente, puede seleccionar un curso de una lista.
+2. El sistema filtra el ranking para mostrar únicamente a los estudiantes de ese curso.
+
+**3. Requisitos especiales**
+3.1 El sistema debe actualizar el ranking en tiempo real a medida que los estudiantes ganan puntos.
+3.2 La carga del ranking debe ser eficiente, mostrando inicialmente el TOP 100.
+
+**4. Condiciones previas**
+4.1 El usuario debe haber iniciado sesión.
+
+**5. Condiciones de publicación**
+5.1 Se visualiza correctamente el ranking actualizado y ordenado.
+
+**6. Puntos de extensión**
+No aplica.
+
+---
+
+## CU03 – Consultar Perfil
+
+**1. Nombre del caso de uso**
+CU03 – Consultar Perfil
+
+**1.1 Breve descripción**
+Permite al estudiante revisar su información personal, progreso académico, logros, medallas, puntaje total y nivel actual.
+
+**2. Flujo de eventos**
+**2.1 Flujo básico**
+1. El estudiante selecciona la opción “Mi Perfil”.
+2. El sistema recupera la información personal y académica del estudiante (puntaje, nivel, medallas, etc.).
+3. Se muestra el perfil completo con una barra de progreso hacia el siguiente nivel y estadísticas detalladas.
+
+**2.2 Flujos alternativos**
+**2.2.1 Error en la base de datos**
+1. Si hay un error al recuperar los datos, el sistema muestra un mensaje: “Error al cargar los datos del perfil”.
+
+**2.2.2 Estudiante sin actividad**
+1. Si el estudiante no ha completado actividades, el perfil muestra 0 puntos y un mensaje para motivarlo a participar.
+
+**3. Requisitos especiales**
+3.1 La información del perfil debe actualizarse en tiempo real después de que una actividad es calificada.
+3.2 Debe mostrar una notificación especial cuando el estudiante sube de nivel.
+
+**4. Condiciones previas**
+4.1 El estudiante debe haber iniciado sesión.
+
+**5. Condiciones de publicación**
+5.1 Se visualiza correctamente la información del perfil actualizada.
+
+**6. Puntos de extensión**
+No aplica.
+
+---
+
+## CU04 – Realizar Actividades
+
+**1. Nombre del caso de uso**
+CU04 – Realizar Actividades
+
+**1.1 Breve descripción**
+Permite al estudiante ver, seleccionar y completar actividades académicas para obtener puntos y subir de nivel.
+
+**2. Flujo de eventos**
+**2.1 Flujo básico**
+1. El estudiante accede a la sección “Actividades Disponibles”.
+2. El sistema muestra la lista de actividades con su puntaje, dificultad y fecha límite.
+3. El estudiante selecciona una actividad.
+4. El sistema muestra las instrucciones y permite al estudiante cargar un archivo como entrega.
+5. El estudiante entrega la actividad.
+6. El sistema registra la entrega y la marca como "Pendiente de Calificación".
+
+**2.2 Flujos alternativos**
+**2.2.1 Actividad ya completada**
+1. Si la actividad ya fue entregada, el sistema muestra el estado ("Completada" o "Pendiente") y deshabilita el botón para realizarla.
+
+**2.2.2 Actividad vencida**
+1. Si la fecha límite de la actividad ya pasó, el sistema muestra una advertencia pero aún permite la entrega (sujeto a penalización).
+
+**2.2.3 Error en la entrega**
+1. Si el estudiante no selecciona un archivo o el archivo es demasiado grande, el sistema muestra un mensaje de error y solicita corregirlo.
+
+**3. Requisitos especiales**
+3.1 El sistema debe calcular y mostrar puntajes potenciales con bonificadores por dificultad y urgencia.
+3.2 El tamaño máximo de archivo para las entregas está limitado a 10 MB.
+
+**4. Condiciones previas**
+4.1 El estudiante debe haber iniciado sesión.
+4.2 Debe existir al menos una actividad disponible en sus cursos.
+
+**5. Condiciones de publicación**
+5.1 La entrega del estudiante se registra correctamente y su estado cambia a "Pendiente de Calificación".
+
+**6. Puntos de extensión**
+No aplica.
+
+---
+
+## CU05 – Ver Medallas y Logros
+
+**1. Nombre del caso de uso**
+CU05 – Ver Medallas y Logros
+
+**1.1 Breve descripción**
+Permite al estudiante consultar las medallas que le han sido otorgadas por los docentes y los logros (incentivos) que ha desbloqueado automáticamente al alcanzar ciertos hitos.
+
+**2. Flujo de eventos**
+**2.1 Flujo básico**
+1. El estudiante accede a la sección “Mis Medallas” o “Mis Incentivos” en su perfil.
+2. El sistema obtiene la lista de medallas o incentivos obtenidos por el estudiante.
+3. Se muestra cada medalla/logro con su nombre, descripción, icono y fecha de obtención.
+
+**2.2 Flujos alternativos**
+**2.2.1 Sin medallas o logros**
+1. Si el estudiante aún no ha obtenido ninguno, el sistema muestra un mensaje como “Aún no has obtenido medallas” y muestra las que están disponibles para motivarlo.
+
+**3. Requisitos especiales**
+3.1 La interfaz debe diferenciar claramente entre medallas (otorgadas por docentes) e incentivos (desbloqueados automáticamente).
+
+**4. Condiciones previas**
+4.1 El estudiante debe haber iniciado sesión.
+
+**5. Condiciones de publicación**
+5.1 Se visualiza correctamente la lista de medallas y logros del estudiante.
+
+**6. Puntos de extensión**
+No aplica.
+
+---
+
+## CU06 – Gestión de Actividades (Docente)
+
+**1. Nombre del caso de uso**
+CU06 – Gestión de Actividades
+
+**1.1 Breve descripción**
+Permite al docente crear, editar y eliminar actividades académicas para los cursos que tiene asignados.
+
+**2. Flujo de eventos**
+**2.1 Flujo básico (Crear)**
+1. El docente selecciona la opción “Crear Actividad”.
+2. El sistema muestra un formulario para ingresar título, descripción, puntaje, curso, fecha límite y nivel de dificultad.
+3. El docente completa y guarda el formulario.
+4. El sistema valida los datos y crea la actividad, haciéndola disponible para los estudiantes del curso.
+
+**2.2 Flujos alternativos**
+**2.2.1 Editar actividad**
+1. El docente selecciona una actividad existente y elige “Editar”.
+2. El sistema carga los datos de la actividad en el formulario.
+3. El docente modifica los datos y guarda los cambios.
+
+**2.2.2 Eliminar actividad**
+1. El docente selecciona una actividad y elige “Eliminar”.
+2. El sistema solicita confirmación. Si la actividad no tiene entregas, se elimina. Si tiene entregas, muestra una advertencia.
+
+**3. Requisitos especiales**
+3.1 El puntaje de una actividad debe estar en un rango de 0 a 1000 puntos.
+3.2 Al crear una actividad, se debe asignar automáticamente a todos los estudiantes inscritos en el curso.
+
+**4. Condiciones previas**
+4.1 El docente debe haber iniciado sesión.
+4.2 El docente debe tener al menos un curso asignado.
+
+**5. Condiciones de publicación**
+5.1 La actividad se crea, modifica o elimina correctamente en el sistema.
+
+**6. Puntos de extensión**
+No aplica.
+
+---
+
+## CU07 – Realizar Calificación
+
+**1. Nombre del caso de uso**
+CU07 – Realizar Calificación
+
+**1.1 Breve descripción**
+Permite al docente calificar las actividades entregadas por los estudiantes, aplicando opcionalmente bonificaciones o penalizaciones, y actualizando automáticamente el progreso del estudiante.
+
+**2. Flujo de eventos**
+**2.1 Flujo básico**
+1. El docente accede a la sección “Calificar Actividades”.
+2. El sistema muestra una lista de las entregas pendientes.
+3. El docente selecciona una entrega para calificar.
+4. El sistema muestra un formulario donde el docente ingresa un puntaje y puede añadir comentarios.
+5. El docente guarda la calificación.
+6. El sistema actualiza el puntaje total del estudiante, recalcula su nivel y le otorga los incentivos que correspondan.
+
+**2.2 Flujos alternativos**
+**2.2.1 Puntaje fuera de rango**
+1. Si el docente ingresa un puntaje mayor al máximo de la actividad, el sistema muestra un error y no permite guardar.
+
+**2.2.2 Actividad ya calificada**
+1. Si el docente intenta calificar una entrega que ya tiene puntaje, el sistema lo notifica y ofrece la opción de editar la calificación.
+
+**3. Requisitos especiales**
+3.1 La actualización del puntaje, nivel e incentivos del estudiante debe ser una transacción atómica para garantizar la consistencia de los datos.
+3.2 El sistema debe registrar en un log cada calificación realizada, incluyendo la estrategia utilizada.
+
+**4. Condiciones previas**
+4.1 El docente debe haber iniciado sesión.
+4.2 Deben existir entregas de estudiantes pendientes de calificar.
+
+**5. Condiciones de publicación**
+5.1 La actividad del estudiante queda calificada.
+5.2 El puntaje, nivel e incentivos del estudiante se actualizan correctamente.
+5.3 El estudiante es notificado sobre su calificación.
+
+**6. Puntos de extensión**
+**6.1 Bono o Penalización**
+1. El caso de uso se extiende para permitir al docente seleccionar una estrategia de calificación (Estándar, Bonificación por entrega puntual, o Penalización por entrega tardía), que modifica el puntaje final.
+
+---
+
+## CU08 – Asignar Medalla (Docente)
+
+**1. Nombre del caso de uso**
+CU08 – Asignar Medalla
+
+**1.1 Breve descripción**
+Permite al docente otorgar medallas a los estudiantes como un reconocimiento especial por su desempeño.
+
+**2. Flujo de eventos**
+**2.1 Flujo básico**
+1. El docente selecciona la opción “Asignar Medalla”.
+2. El sistema muestra un formulario para seleccionar un estudiante y una medalla de las listas disponibles.
+3. El docente puede añadir un motivo para el reconocimiento.
+4. El docente confirma la asignación.
+5. El sistema registra que el estudiante ha obtenido esa medalla.
+
+**2.2 Flujos alternativos**
+**2.2.1 Estudiante ya posee la medalla**
+1. Si el docente intenta asignar una medalla que el estudiante ya tiene, el sistema muestra un error: “Este estudiante ya tiene esa medalla”.
+
+**3. Requisitos especiales**
+3.1 El sistema debe registrar qué docente otorgó la medalla y en qué fecha.
+
+**4. Condiciones previas**
+4.1 El docente debe haber iniciado sesión.
+4.2 Deben existir medallas creadas en el sistema por un administrador.
+
+**5. Condiciones de publicación**
+5.1 La medalla se añade al perfil del estudiante y es visible para él.
+
+**6. Puntos de extensión**
+No aplica.
+
+---
+
+## CU09 – Gestión de Usuarios (Admin)
+
+**1. Nombre del caso de uso**
+CU09 – Gestión de Usuarios
+
+**1.1 Breve descripción**
+Permite al administrador crear, editar y activar/desactivar cuentas de usuario (Estudiante, Docente, Admin).
+
+**2. Flujo de eventos**
+**2.1 Flujo básico (Crear)**
+1. El administrador accede a “Gestión de Usuarios” y selecciona “Crear Usuario”.
+2. Completa un formulario con el email, nombre, apellidos, rol y contraseña del nuevo usuario.
+3. El sistema valida que el email no exista y que la contraseña sea segura.
+4. El sistema crea la nueva cuenta de usuario.
+
+**2.2 Flujos alternativos**
+**2.2.1 Editar usuario**
+1. El administrador selecciona un usuario y elige “Editar” para modificar su nombre, apellidos o rol.
+
+**2.2.2 Activar/Desactivar usuario**
+1. El administrador puede cambiar el estado de una cuenta entre “Activo” e “Inactivo”. Un usuario inactivo no puede iniciar sesión.
+
+**2.2.3 Email duplicado**
+1. Si el email ingresado ya está registrado, el sistema muestra un error.
+
+**3. Requisitos especiales**
+3.1 No se debe poder eliminar al último usuario con rol de Administrador para evitar el bloqueo del sistema.
+3.2 Las contraseñas deben cumplir con políticas de seguridad (longitud, caracteres especiales, etc.).
+
+**4. Condiciones previas**
+4.1 El usuario debe haber iniciado sesión con rol de Administrador.
+
+**5. Condiciones de publicación**
+5.1 La cuenta de usuario se crea, modifica o actualiza su estado correctamente.
+
+**6. Puntos de extensión**
+No aplica.
+
+---
+
+## CU10 – Gestión de Cursos (Admin)
+
+**1. Nombre del caso de uso**
+CU10 – Gestión de Cursos
+
+**1.1 Breve descripción**
+Permite al administrador crear y gestionar los cursos académicos, asignando uno o más docentes a cada uno.
+
+**2. Flujo de eventos**
+**2.1 Flujo básico**
+1. El administrador accede a “Gestión de Cursos” y selecciona “Crear Curso”.
+2. Completa un formulario con el nombre, descripción y semestre del curso.
+3. Asigna uno o más docentes de una lista de usuarios existentes.
+4. El sistema crea el curso y establece la relación con los docentes.
+
+**2.2 Flujos alternativos**
+**2.2.1 Editar curso**
+1. El administrador puede editar los detalles de un curso o cambiar los docentes asignados.
+
+**3. Requisitos especiales**
+3.1 Un curso puede tener múltiples docentes, y un docente puede estar en múltiples cursos.
+
+**4. Condiciones previas**
+4.1 El usuario debe haber iniciado sesión con rol de Administrador.
+4.2 Deben existir usuarios con rol de Docente para poder ser asignados.
+
+**5. Condiciones de publicación**
+5.1 El curso se crea o modifica correctamente y los docentes asignados pueden empezar a crear actividades en él.
+
+**6. Puntos de extensión**
+No aplica.
+
+---
+
+## CU11 – Gestión de Medallas (Admin)
+
+**1. Nombre del caso de uso**
+CU11 – Gestión de Medallas
+
+**1.1 Breve descripción**
+Permite al administrador crear, editar y eliminar las medallas que los docentes pueden otorgar como reconocimiento especial a los estudiantes.
+
+**2. Flujo de eventos**
+**2.1 Flujo básico (CRUD)**
+1. El administrador accede a la sección “Gestión de Medallas”.
+2. El sistema muestra una lista de las medallas existentes.
+3. El administrador puede realizar las siguientes acciones:
+    - **Crear:** Completa un formulario con nombre, descripción e icono y lo guarda.
+    - **Editar:** Selecciona una medalla, modifica sus datos y guarda los cambios.
+    - **Eliminar:** Selecciona una medalla y confirma su eliminación.
+4. El sistema valida los datos (ej. nombre no duplicado) y actualiza la base de datos.
+
+**2.2 Flujos alternativos**
+**2.2.1 Editar medalla ya otorgada**
+1. Si se intenta editar una medalla que ya ha sido asignada a estudiantes, el sistema solo permitirá modificar la descripción y el icono, pero no el nombre, para mantener la consistencia histórica.
+
+**3. Requisitos especiales**
+3.1 La configuración de las medallas es global para todo el sistema.
+
+**4. Condiciones previas**
+4.1 El usuario debe haber iniciado sesión con rol de Administrador.
+
+**5. Condiciones de publicación**
+5.1 Las medallas están disponibles, actualizadas o eliminadas del sistema, listas para que los docentes las asignen.
+
+**6. Puntos de extensión**
+No aplica.
+
+---
+
+## CU12 – Gestión de Niveles (Admin)
+
+**1. Nombre del caso de uso**
+CU12 – Gestión de Niveles
+
+**1.1 Breve descripción**
+Permite al administrador crear, editar y eliminar los niveles de gamificación que los estudiantes alcanzan al acumular puntos.
+
+**2. Flujo de eventos**
+**2.1 Flujo básico (CRUD)**
+1. El administrador accede a la sección “Mantenedor de Niveles”.
+2. El sistema muestra una lista de los niveles existentes con sus rangos de puntos.
+3. El administrador puede:
+    - **Crear:** Define un nombre (ej. "Bronce"), un puntaje mínimo y máximo.
+    - **Editar:** Modifica el nombre o el rango de puntos de un nivel existente.
+    - **Eliminar:** Elimina un nivel que no esté en uso.
+4. El sistema valida los datos y guarda los cambios.
+
+**2.2 Flujos alternativos**
+**2.2.1 Superposición de rangos**
+1. Al crear o editar un nivel, si el rango de puntos se superpone con el de otro nivel existente, el sistema muestra un error y no permite guardar.
+
+**2.2.2 Rango inválido**
+1. Si el puntaje mínimo es mayor o igual al puntaje máximo, el sistema muestra un error.
+
+**3. Requisitos especiales**
+3.1 Los rangos de puntos de los niveles no deben superponerse para garantizar que cada puntaje corresponda a un único nivel.
+
+**4. Condiciones previas**
+4.1 El usuario debe haber iniciado sesión con rol de Administrador.
+
+**5. Condiciones de publicación**
+5.1 Los niveles de gamificación del sistema están correctamente configurados y listos para ser asignados automáticamente a los estudiantes según su puntaje.
+
+**6. Puntos de extensión**
+No aplica.
+
+---
+
+## CU13 – Gestión de Incentivos (Admin)
+
+**1. Nombre del caso de uso**
+CU13 – Gestión de Incentivos
+
+**1.1 Breve descripción**
+Permite al administrador crear, editar y eliminar los incentivos (logros o "achievements") que los estudiantes desbloquean automáticamente al alcanzar determinados hitos de puntaje.
+
+**2. Flujo de eventos**
+**2.1 Flujo básico (CRUD)**
+1. El administrador accede a la sección “Gestión de Incentivos”.
+2. El sistema muestra una lista de los incentivos existentes.
+3. El administrador puede:
+    - **Crear:** Define un nombre, descripción y los puntos requeridos para desbloquear el incentivo.
+    - **Editar:** Modifica los detalles o los puntos requeridos de un incentivo.
+    - **Eliminar:** Elimina un incentivo.
+4. El sistema guarda los cambios en la base de datos.
+
+**2.2 Flujos alternativos**
+**2.2.1 Otorgamiento retroactivo**
+1. Al crear o modificar un incentivo (ej. bajando los puntos requeridos), el sistema verifica si algún estudiante ahora cumple con el criterio.
+2. Si es así, el sistema le otorga automáticamente el incentivo.
+
+**3. Requisitos especiales**
+3.1 La concesión de incentivos debe ser un proceso automático que se ejecuta cada vez que el puntaje de un estudiante se actualiza.
+
+**4. Condiciones previas**
+4.1 El usuario debe haber iniciado sesión con rol de Administrador.
+
+**5. Condiciones de publicación**
+5.1 Los incentivos automáticos del sistema están configurados.
+5.2 Los estudiantes que cumplen con los criterios reciben sus incentivos correspondientes.
+
+**6. Puntos de extensión**
+No aplica.

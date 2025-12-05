@@ -1,0 +1,254 @@
+﻿@{
+    ViewData["Title"] = "Mi Perfil";
+    Layout = "~/Views/Shared/_LayoutEstudiante.cshtml";
+    var estudiante = ViewBag.Estudiante as RunaTalento.Models.ApplicationUser;
+    var medallas = ViewBag.Medallas as List<RunaTalento.Models.MedallaEstudiante>;
+    var incentivos = ViewBag.Incentivos as List<RunaTalento.Models.IncentivoEstudiante>;
+    var actividades = ViewBag.ActividadesCompletadas as List<RunaTalento.Models.ActividadEstudiante>;
+    var nivelActual = ViewBag.NivelActual as RunaTalento.Models.Nivel;
+    var siguienteNivel = ViewBag.SiguienteNivel as RunaTalento.Models.Nivel;
+    var porcentajeProgreso = ViewBag.PorcentajeProgresoNivel ?? 0;
+    var totalActividades = ViewBag.TotalActividades ?? 0;
+    var totalMedallas = ViewBag.TotalMedallas ?? 0;
+}
+
+<style>
+    /* Incentivos en Perfil Estudiante */
+    .incentivos-estudiante-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .incentivo-estudiante-item {
+        background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
+        border: 2px solid #14b8a6;
+        border-radius: 12px;
+        padding: 16px;
+        display: flex;
+        gap: 16px;
+        align-items: start;
+        transition: all 0.3s ease;
+    }
+
+    .incentivo-estudiante-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(20, 184, 166, 0.2);
+    }
+
+    .incentivo-estudiante-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        color: white;
+        flex-shrink: 0;
+        box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);
+    }
+
+    .incentivo-estudiante-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .incentivo-estudiante-nombre {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 4px;
+    }
+
+    .incentivo-estudiante-descripcion {
+        font-size: 0.9rem;
+        color: #64748b;
+        margin-bottom: 10px;
+        line-height: 1.4;
+    }
+
+    .incentivo-estudiante-detalles {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .incentivo-estudiante-detalles .badge {
+        font-size: 0.85rem;
+        padding: 4px 10px;
+    }
+
+    /* ✅ NUEVO: Estilos para Progreso de Nivel */
+    .progreso-nivel-card {
+        background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+        border: 2px solid #c4b5fd;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.1);
+    }
+
+    .nivel-progreso-visual {
+        position: relative;
+    }
+
+    .nivel-progreso-bar {
+        width: 100%;
+        height: 32px;
+        background: linear-gradient(135deg, #e0e7ff 0%, #ddd6fe 100%);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        position: relative;
+    }
+
+    .nivel-progreso-fill {
+        height: 100%;
+        background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: width 1s ease-in-out;
+        position: relative;
+        box-shadow: 0 2px 8px rgba(139, 92, 246, 0.4);
+        min-width: 40px; /* Para que siempre se vea el texto */
+    }
+
+    .nivel-progreso-fill::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.3) 50%,
+            transparent
+        );
+        animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+        0% {
+            transform: translateX(-100%);
+        }
+        100% {
+            transform: translateX(100%);
+        }
+    }
+
+    .nivel-progreso-text {
+        color: white;
+        font-weight: 700;
+        font-size: 0.85rem;
+        z-index: 1;
+        position: relative;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Animación de entrada */
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .progreso-nivel-card {
+        animation: slideInUp 0.6s ease-out;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .incentivo-estudiante-item {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .incentivo-estudiante-icon {
+            width: 80px;
+            height: 80px;
+            font-size: 2.5rem;
+        }
+
+        .progreso-nivel-card {
+            padding: 16px;
+        }
+
+        .nivel-progreso-bar {
+            height: 28px;
+        }
+
+        .nivel-progreso-text {
+            font-size: 0.75rem;
+        }
+    }
+</style>
+
+<div class="row g-4">
+    <!-- Columna izquierda: Progreso Académico -->
+    <div class="col-lg-6">
+        <div class="perfil-section">
+            <div class="d-flex align-items-center mb-2">
+                <i class="bi bi-star-fill text-purple me-2" style="font-size: 1.5rem;"></i>
+                <h4 class="mb-0">Progreso Académico</h4>
+            </div>
+            <p class="text-muted mb-4">Tu avance en el sistema</p>
+
+            <!-- Puntos Totales -->
+            <div class="progreso-card mb-4">
+                <div class="d-flex align-items-center justify-content-center mb-2">
+                    <i class="bi bi-star-fill" style="font-size: 3rem; color: #f59e0b;"></i>
+                </div>
+                <h2 class="puntos-totales">@estudiante?.PuntajeTotal</h2>
+                <p class="mb-0" style="color: #92400e; font-weight: 600;">Puntos Totales</p>
+            </div>
+
+            <!-- Nivel Actual -->
+            @if (nivelActual != null)
+            {
+                <div class="text-center mb-4">
+                    <div class="nivel-badge mb-3">
+                        <div class="nivel-numero">@nivelActual.IdNivel</div>
+                        <span>Nivel Actual</span>
+                    </div>
+                    <p class="mt-2 mb-1 fw-semibold" style="color: #1e293b;">@nivelActual.Nombre</p>
+                    <small class="text-muted">@nivelActual.PuntajeMinimo/@nivelActual.PuntajeMaximo pts</small>
+                </div>
+
+                @* ✅ NUEVO: Progreso de Nivel (dentro del rango actual) *@
+                @{
+                    var puntosEnNivel = estudiante.PuntajeTotal - nivelActual.PuntajeMinimo;
+                    var rangoNivel = nivelActual.PuntajeMaximo - nivelActual.PuntajeMinimo;
+                    var porcentajeNivel = rangoNivel > 0 ? (int)((puntosEnNivel * 100.0) / rangoNivel) : 0;
+                    
+                    // Asegurar que el porcentaje esté entre 0 y 100
+                    porcentajeNivel = Math.Max(0, Math.Min(100, porcentajeNivel));
+                }
+
+                <div class="progreso-nivel-card mb-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-bar-chart-fill me-2" style="color: #8b5cf6; font-size: 1.2rem;"></i>
+                        <h5 class="mb-0" style="color: #1e293b; font-weight: 600;">Progreso de Nivel</h5>
+                    </div>
+
+                    <div class="nivel-progreso-visual mb-3">
+                        <div class="nivel-progreso-bar">
+                            <div class="nivel-progreso-fill" style="width: @porcentajeNivel%">
+                                <span class="nivel-progreso-text">@porcentajeNivel%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <div class="text-start

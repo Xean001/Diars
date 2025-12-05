@@ -1,0 +1,85 @@
+﻿@model RunaTalento.Models.Medalla
+
+@{
+    ViewData["Title"] = "Editar Medalla";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="admin-header">
+    <div class="admin-header-content">
+        <div>
+            <h1 class="admin-title">
+                <i class="bi bi-pencil-fill"></i>
+                Editar Medalla
+            </h1>
+            <p class="admin-subtitle">Modifica la información de la medalla</p>
+        </div>
+        <a asp-controller="Incentivos" asp-action="Index" class="btn-secondary-admin">
+            <i class="bi bi-arrow-left"></i>
+            Volver a Incentivos
+        </a>
+    </div>
+</div>
+
+<div class="admin-content">
+    <div class="form-container">
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+            
+            <input type="hidden" asp-for="IdMedalla" />
+            
+            <div class="form-group-admin">
+                <label asp-for="Nombre" class="form-label-admin">
+                    <i class="bi bi-award"></i>
+                    Nombre de la Medalla <span class="required">*</span>
+                </label>
+                <input asp-for="Nombre" class="form-control-admin" 
+                       placeholder="Ej: Medalla de Excelencia Académica" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+
+            <div class="form-group-admin">
+                <label asp-for="Descripcion" class="form-label-admin">
+                    <i class="bi bi-text-paragraph"></i>
+                    Descripción
+                </label>
+                <textarea asp-for="Descripcion" class="form-control-admin" rows="4" 
+                          placeholder="Describe los criterios para obtener esta medalla..."></textarea>
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+
+            <div class="form-group-admin">
+                <label asp-for="ImagenUrl" class="form-label-admin">
+                    <i class="bi bi-image"></i>
+                    URL de la Imagen (Opcional)
+                </label>
+                <input asp-for="ImagenUrl" class="form-control-admin" 
+                       placeholder="https://ejemplo.com/medalla.png o /images/medallas/oro.png" />
+                <span asp-validation-for="ImagenUrl" class="text-danger"></span>
+                
+                @if (!string.IsNullOrEmpty(Model.ImagenUrl))
+                {
+                    <div class="mt-3">
+                        <p class="text-muted mb-2"><small>Vista previa actual:</small></p>
+                        <img src="@Model.ImagenUrl" alt="Vista previa" class="img-thumbnail" style="max-height: 150px; border-radius: 8px;" />
+                    </div>
+                }
+            </div>
+
+            <div class="form-actions">
+                <a asp-controller="Incentivos" asp-action="Index" class="btn-secondary-admin">
+                    <i class="bi bi-x-circle"></i>
+                    Cancelar
+                </a>
+                <button type="submit" class="btn-primary-admin">
+                    <i class="bi bi-check-circle-fill"></i>
+                    Guardar Cambios
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

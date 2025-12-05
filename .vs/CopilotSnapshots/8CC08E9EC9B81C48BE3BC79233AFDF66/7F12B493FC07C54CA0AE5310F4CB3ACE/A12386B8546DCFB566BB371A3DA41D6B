@@ -1,0 +1,152 @@
+﻿@model RunaTalento.Models.Medalla
+
+@{
+    ViewData["Title"] = "Editar Medalla";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="admin-header">
+    <div class="admin-header-content">
+        <div>
+            <h1 class="admin-title">
+                <i class="bi bi-pencil-fill"></i>
+                Editar Medalla
+            </h1>
+            <p class="admin-subtitle">Modifica la información de la medalla: <strong>@Model.Nombre</strong></p>
+        </div>
+        <a asp-action="Index" class="btn-secondary-admin">
+            <i class="bi bi-arrow-left"></i>
+            Volver a Medallas
+        </a>
+    </div>
+</div>
+
+<div class="admin-content">
+    <div class="form-container">
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+            
+            <input type="hidden" asp-for="IdMedalla" />
+            
+            <div class="form-group-admin">
+                <label asp-for="Nombre" class="form-label-admin">
+                    <i class="bi bi-award"></i>
+                    Nombre de la Medalla <span class="required">*</span>
+                </label>
+                <input asp-for="Nombre" class="form-control-admin" 
+                       placeholder="Ej: Medalla de Excelencia Académica" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+
+            <div class="form-group-admin">
+                <label asp-for="Descripcion" class="form-label-admin">
+                    <i class="bi bi-text-paragraph"></i>
+                    Descripción
+                </label>
+                <textarea asp-for="Descripcion" class="form-control-admin" rows="4" 
+                          placeholder="Describe los criterios para obtener esta medalla..."></textarea>
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+
+            <div class="form-group-admin">
+                <label asp-for="ImagenUrl" class="form-label-admin">
+                    <i class="bi bi-image"></i>
+                    URL de la Imagen (Opcional)
+                </label>
+                <input asp-for="ImagenUrl" class="form-control-admin" id="imagenUrlInput"
+                       placeholder="https://ejemplo.com/medalla.png o /images/medallas/oro.png" />
+                <span asp-validation-for="ImagenUrl" class="text-danger"></span>
+                
+                @if (!string.IsNullOrEmpty(Model.ImagenUrl))
+                {
+                    <div class="mt-3 p-3" style="background: #f8fafc; border-radius: 12px; border: 1.5px solid #e2e8f0;">
+                        <p class="text-muted mb-2"><small><i class="bi bi-eye"></i> Vista previa actual:</small></p>
+                        <div class="text-center">
+                            <img src="@Model.ImagenUrl" alt="Vista previa" id="imagenPreview" 
+                                 class="img-thumbnail" 
+                                 style="max-height: 150px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="mt-3 p-3 text-center" id="imagenPreviewContainer" style="background: #f8fafc; border-radius: 12px; border: 1.5px dashed #cbd5e1; display: none;">
+                        <p class="text-muted mb-2"><small><i class="bi bi-eye"></i> Vista previa:</small></p>
+                        <img src="" alt="Vista previa" id="imagenPreview" 
+                             class="img-thumbnail" 
+                             style="max-height: 150px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+                    </div>
+                }
+            </div>
+
+            <div class="alert alert-warning">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <strong>Atención:</strong> Los cambios afectarán a todas las medallas ya otorgadas de este tipo.
+            </div>
+
+            <div class="form-actions">
+                <a asp-action="Index" class="btn-secondary-admin">
+                    <i class="bi bi-x-circle"></i>
+                    Cancelar
+                </a>
+                <button type="submit" class="btn-warning-admin">
+                    <i class="bi bi-check-circle-fill"></i>
+                    Guardar Cambios
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // Vista previa de imagen en tiempo real
+        const imagenUrlInput = document.getElementById('imagenUrlInput');
+        const imagenPreview = document.getElementById('imagenPreview');
+        const imagenPreviewContainer = document.getElementById('imagenPreviewContainer');
+
+        if (imagenUrlInput) {
+            imagenUrlInput.addEventListener('input', function(e) {
+                const url = e.target.value.trim();
+                
+                if (url) {
+                    if (imagenPreview) {
+                        imagenPreview.src = url;
+                        if (imagenPreviewContainer) {
+                            imagenPreviewContainer.style.display = 'block';
+                        }
+                    }
+                    e.target.style.borderColor = '#2563eb';
+                } else {
+                    if (imagenPreviewContainer) {
+                        imagenPreviewContainer.style.display = 'none';
+                    }
+                }
+            });
+
+            // Manejar error de carga de imagen
+            if (imagenPreview) {
+                imagenPreview.addEventListener('error', function() {
+                    this.style.display = 'none';
+                    if (imagenPreviewContainer) {
+                        imagenPreviewContainer.innerHTML = '<p class="text-danger mb-0"><i class="bi bi-exclamation-circle"></i> No se pudo cargar la imagen. Verifica la URL.</p>';
+                    }
+                });
+
+                imagenPreview.addEventListener('load', function() {
+                    this.style.display = 'block';
+                });
+            }
+        }
+
+        // Validación en tiempo real del nombre
+        document.querySelector('input[name="Nombre"]').addEventListener('input', function(e) {
+            if (e.target.value.length > 0) {
+                e.target.style.borderColor = '#22c55e';
+            } else {
+                e.target.style.borderColor = '#e2e8f0';
+            }
+        });
+    </script>
+}

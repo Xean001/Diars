@@ -1,0 +1,69 @@
+﻿@model RunaTalento.Models.Medalla
+
+@{
+    ViewData["Title"] = "Eliminar Medalla";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="admin-header">
+    <div class="admin-header-content">
+        <div>
+            <h1 class="admin-title">
+                <i class="bi bi-trash-fill text-danger"></i>
+                Eliminar Medalla
+            </h1>
+            <p class="admin-subtitle text-danger">¿Estás seguro de que deseas eliminar esta medalla?</p>
+        </div>
+        <a asp-controller="Incentivos" asp-action="Index" class="btn-secondary-admin">
+            <i class="bi bi-arrow-left"></i>
+            Cancelar
+        </a>
+    </div>
+</div>
+
+<div class="admin-content">
+    <div class="alert alert-warning" role="alert">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <strong>Advertencia:</strong> Esta acción eliminará permanentemente esta medalla. Los estudiantes que ya la tienen la conservarán.
+    </div>
+
+    <div class="detail-card">
+        <h4 class="detail-card-title">
+            <i class="bi bi-award-fill"></i>
+            Información de la Medalla
+        </h4>
+        <div class="detail-card-body">
+            <div class="detail-item">
+                <span class="detail-label">Nombre:</span>
+                <span class="detail-value"><strong>@Model.Nombre</strong></span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Descripción:</span>
+                <span class="detail-value">@(Model.Descripcion ?? "Sin descripción")</span>
+            </div>
+            @if (!string.IsNullOrEmpty(Model.ImagenUrl))
+            {
+                <div class="detail-item">
+                    <span class="detail-label">Imagen:</span>
+                    <span class="detail-value">
+                        <img src="@Model.ImagenUrl" alt="@Model.Nombre" class="img-thumbnail" style="max-height: 100px; border-radius: 8px;" />
+                    </span>
+                </div>
+            }
+        </div>
+    </div>
+
+    <form asp-action="Delete" method="post" class="mt-4">
+        <input type="hidden" asp-for="IdMedalla" />
+        <div class="form-actions">
+            <a asp-controller="Incentivos" asp-action="Index" class="btn-secondary-admin">
+                <i class="bi bi-x-circle"></i>
+                No, Cancelar
+            </a>
+            <button type="submit" class="btn-danger-admin">
+                <i class="bi bi-trash-fill"></i>
+                Sí, Eliminar Medalla
+            </button>
+        </div>
+    </form>
+</div>

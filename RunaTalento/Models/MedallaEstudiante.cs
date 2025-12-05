@@ -1,0 +1,36 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace RunaTalento.Models
+{
+    /// <summary>
+    /// Representa una medalla otorgada a un estudiante
+    /// </summary>
+    public class MedallaEstudiante
+    {
+        [Key]
+        public int IdMedallaEstudiante { get; set; }
+
+        [Required(ErrorMessage = "La medalla es obligatoria")]
+        public int IdMedalla { get; set; }
+
+        [Required(ErrorMessage = "El estudiante es obligatorio")]
+        public string IdEstudiante { get; set; }
+
+        public string? IdDocente { get; set; } // ? Docente que otorgó la medalla
+
+        public DateTime FechaOtorgada { get; set; } = DateTime.Now;
+
+        // Navegación hacia la medalla
+        [ForeignKey("IdMedalla")]
+        public virtual Medalla? Medalla { get; set; }
+
+        // Navegación hacia el estudiante
+        [ForeignKey("IdEstudiante")]
+        public virtual ApplicationUser? Estudiante { get; set; }
+
+        // Navegación hacia el docente
+        [ForeignKey("IdDocente")]
+        public virtual ApplicationUser? Docente { get; set; }
+    }
+}

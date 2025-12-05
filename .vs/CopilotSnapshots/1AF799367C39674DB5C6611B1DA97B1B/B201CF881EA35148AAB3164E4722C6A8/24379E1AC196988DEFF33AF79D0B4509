@@ -1,0 +1,80 @@
+﻿@{
+    ViewData["Title"] = "Otorgar Medalla a Estudiante";
+    Layout = "~/Views/Shared/_LayoutDocente.cshtml";
+}
+
+<div class="otorgar-section">
+    <div class="otorgar-header">
+        <i class="bi bi-award-fill"></i>
+        <h3>Otorgar Medalla a Estudiante</h3>
+    </div>
+    <p>Reconoce el esfuerzo y logros de tus estudiantes</p>
+
+    <form asp-action="OtorgarMedallas" method="post">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+        <div class="row">
+            <!-- Columna Izquierda -->
+            <div class="col-md-6">
+                <div class="mb-4">
+                    <label for="idEstudiante" class="form-label">
+                        Seleccionar Estudiante <span class="text-danger">*</span>
+                    </label>
+                    <select name="idEstudiante" id="idEstudiante" class="form-select" required>
+                        <option value="">Elige un estudiante</option>
+                        @if (ViewBag.Estudiantes != null)
+                        {
+                            @foreach (var item in (SelectList)ViewBag.Estudiantes)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label for="idMedalla" class="form-label">
+                        Tipo de Medalla <span class="text-danger">*</span>
+                    </label>
+                    <select name="idMedalla" id="idMedalla" class="form-select" required>
+                        <option value="">Selecciona el tipo de medalla</option>
+                        @if (ViewBag.Medallas != null)
+                        {
+                            @foreach (var item in (SelectList)ViewBag.Medallas)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <!-- Columna Derecha -->
+            <div class="col-md-6">
+                <div class="mb-4">
+                    <label for="motivo" class="form-label">
+                        Motivo del Reconocimiento <span class="text-danger">*</span>
+                    </label>
+                    <textarea name="motivo" id="motivo" class="form-control" 
+                              placeholder="Ej: Por su excelente participación en clase durante el mes..."
+                              rows="7" required></textarea>
+                    <small class="form-text">
+                        <i class="bi bi-info-circle"></i> 
+                        Describe por qué el estudiante merece esta medalla
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="d-flex justify-content-end gap-2 mt-4">
+            <button type="submit" class="btn-otorgar">
+                <i class="bi bi-award-fill"></i> Otorgar Medalla
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

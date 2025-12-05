@@ -1,0 +1,147 @@
+@model IEnumerable<RunaTalento.Models.Medalla>
+
+@{
+    ViewData["Title"] = "Gestión de Medallas";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<!-- Header de Sección -->
+<div class="seccion-header">
+    <div class="seccion-header-content">
+        <div class="seccion-header-icon">
+            <i class="bi bi-award-fill"></i>
+        </div>
+        <div>
+            <h2>Gestión de Medallas</h2>
+            <p>Administra y personaliza las medallas de reconocimiento</p>
+        </div>
+    </div>
+    <div>
+        <a asp-action="Create" class="btn btn-primary-admin">
+            <i class="bi bi-plus-circle"></i> Nueva Medalla
+        </a>
+    </div>
+</div>
+
+<!-- Alertas de éxito/error -->
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        <strong>¡Éxito!</strong> @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <strong>Error:</strong> @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<!-- Grid de Medallas -->
+@if (Model != null && Model.Any())
+{
+    <div class="medallas-grid">
+        @foreach (var medalla in Model)
+        {
+            <div class="medalla-card">
+                <!-- Imagen o Icono de Medalla -->
+                <div class="text-center mb-3">
+                    @if (!string.IsNullOrEmpty(medalla.ImagenUrl))
+                    {
+                        <img src="@medalla.ImagenUrl" 
+                             alt="@medalla.Nombre" 
+                             class="img-fluid" 
+                             style="max-height: 150px; max-width: 150px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+                    }
+                    else
+                    {
+                        <div style="display: inline-flex; align-items: center; justify-content: center; width: 150px; height: 150px; background: linear-gradient(135deg, #fef3c7, #fde68a); border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                            <i class="bi bi-award-fill" style="font-size: 5rem; color: #f59e0b;"></i>
+                        </div>
+                    }
+                </div>
+
+                <!-- Información de la Medalla -->
+                <div class="text-center mb-3">
+                    <h5 class="fw-bold mb-2" style="color: #0f172a;">@medalla.Nombre</h5>
+                    <p class="text-muted mb-0" style="font-size: 0.875rem; line-height: 1.5;">
+                        @if (!string.IsNullOrEmpty(medalla.Descripcion))
+                        {
+                            @medalla.Descripcion
+                        }
+                        else
+                        {
+                            <span class="text-muted fst-italic">Sin descripción</span>
+                        }
+                    </p>
+                </div>
+
+                <!-- Divider -->
+                <hr style="margin: 16px 0; border-color: #e2e8f0;" />
+
+                <!-- Acciones -->
+                <div class="action-buttons">
+                    <a asp-action="Details" 
+                       asp-route-id="@medalla.IdMedalla" 
+                       class="btn-action btn-action-info"
+                       data-bs-toggle="tooltip"
+                       title="Ver detalles">
+                        <i class="bi bi-eye-fill"></i>
+                    </a>
+                    <a asp-action="Edit" 
+                       asp-route-id="@medalla.IdMedalla" 
+                       class="btn-action btn-action-warning"
+                       data-bs-toggle="tooltip"
+                       title="Editar medalla">
+                        <i class="bi bi-pencil-fill"></i>
+                    </a>
+                    <a asp-action="Delete" 
+                       asp-route-id="@medalla.IdMedalla" 
+                       class="btn-action btn-action-danger"
+                       data-bs-toggle="tooltip"
+                       title="Eliminar medalla">
+                        <i class="bi bi-trash-fill"></i>
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <!-- Estado vacío -->
+    <div class="admin-content">
+        <div class="empty-state">
+            <i class="bi bi-award"></i>
+            <h3>No hay medallas registradas</h3>
+            <p>Comienza creando tu primera medalla de reconocimiento</p>
+            <a asp-action="Create" class="btn btn-primary-admin">
+                <i class="bi bi-plus-circle"></i> Crear Primera Medalla
+            </a>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        // Inicializar tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+
+        // Auto-cerrar alertas después de 5 segundos
+        setTimeout(function() {
+            var alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                var bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+    </script>
+}

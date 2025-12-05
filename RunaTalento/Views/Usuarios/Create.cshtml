@@ -1,0 +1,124 @@
+@{
+    ViewData["Title"] = "Crear Usuario";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="admin-header">
+    <div class="admin-header-content">
+        <div>
+            <h1 class="admin-title">
+                <i class="bi bi-person-plus-fill"></i>
+                Crear Nuevo Usuario
+            </h1>
+            <p class="admin-subtitle">Agrega un nuevo usuario al sistema</p>
+        </div>
+        <a asp-action="Index" class="btn-secondary-admin">
+            <i class="bi bi-arrow-left"></i>
+            Volver a Usuarios
+        </a>
+    </div>
+</div>
+
+<div class="admin-content">
+    <div class="form-container">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group-admin">
+                        <label for="nombres" class="form-label-admin">
+                            <i class="bi bi-person"></i>
+                            Nombres <span class="required">*</span>
+                        </label>
+                        <input type="text" class="form-control-admin" id="nombres" name="nombres" 
+                               placeholder="Nombres del usuario" required />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group-admin">
+                        <label for="apellidos" class="form-label-admin">
+                            <i class="bi bi-person"></i>
+                            Apellidos <span class="required">*</span>
+                        </label>
+                        <input type="text" class="form-control-admin" id="apellidos" name="apellidos" 
+                               placeholder="Apellidos del usuario" required />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group-admin">
+                <label for="email" class="form-label-admin">
+                    <i class="bi bi-envelope"></i>
+                    Email <span class="required">*</span>
+                </label>
+                <input type="email" class="form-control-admin" id="email" name="email" 
+                       placeholder="correo@ejemplo.com" required />
+                <small class="form-text text-muted">Este será el nombre de usuario para iniciar sesión</small>
+            </div>
+
+            <div class="form-group-admin">
+                <label for="password" class="form-label-admin">
+                    <i class="bi bi-lock"></i>
+                    Contraseña <span class="required">*</span>
+                </label>
+                <input type="password" class="form-control-admin" id="password" name="password" 
+                       placeholder="Mínimo 6 caracteres" required />
+                <small class="form-text text-muted">
+                    Debe incluir mayúsculas, minúsculas y números
+                </small>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group-admin">
+                        <label for="rol" class="form-label-admin">
+                            <i class="bi bi-shield-check"></i>
+                            Rol <span class="required">*</span>
+                        </label>
+                        <select class="form-control-admin" id="rol" name="rol" required>
+                            <option value="">Seleccione un rol...</option>
+                            @foreach (var rol in ViewBag.Roles as SelectList)
+                            {
+                                <option value="@rol.Value">@rol.Text</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group-admin">
+                        <label class="form-label-admin">
+                            <i class="bi bi-trophy"></i>
+                            Nivel de Progreso
+                        </label>
+                        <div class="alert alert-info mb-0">
+                            <i class="bi bi-info-circle-fill"></i>
+                            <small>El nivel se asigna automáticamente según el puntaje del estudiante</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle-fill"></i>
+                <strong>Nota:</strong> El usuario será creado con puntaje inicial de 0 y sin nivel asignado. El nivel se actualizará automáticamente cuando obtenga puntos por actividades.
+            </div>
+
+            <div class="form-actions">
+                <a asp-action="Index" class="btn-secondary-admin">
+                    <i class="bi bi-x-circle"></i>
+                    Cancelar
+                </a>
+                <button type="submit" class="btn-primary-admin">
+                    <i class="bi bi-check-circle-fill"></i>
+                    Crear Usuario
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

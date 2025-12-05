@@ -1,0 +1,161 @@
+﻿@{
+    ViewData["Title"] = "Mi Perfil";
+    Layout = "~/Views/Shared/_LayoutEstudiante.cshtml";
+    var estudiante = ViewBag.Estudiante as RunaTalento.Models.ApplicationUser;
+    var medallas = ViewBag.Medallas as List<RunaTalento.Models.MedallaEstudiante>;
+    var actividades = ViewBag.ActividadesCompletadas as List<RunaTalento.Models.ActividadEstudiante>;
+    var nivelActual = ViewBag.NivelActual as RunaTalento.Models.Nivel;
+    var siguienteNivel = ViewBag.SiguienteNivel as RunaTalento.Models.Nivel;
+    var porcentajeProgreso = ViewBag.PorcentajeProgresoNivel ?? 0;
+    var totalActividades = ViewBag.TotalActividades ?? 0;
+    var totalMedallas = ViewBag.TotalMedallas ?? 0;
+}
+
+<div class="row">
+    <!-- Columna izquierda: Progreso Académico -->
+    <div class="col-lg-6 mb-4">
+        <div class="perfil-section">
+            <h4>
+                <i class="bi bi-star-fill"></i> Progreso Académico
+            </h4>
+            <p class="text-muted">Tu avance en el sistema</p>
+
+            <!-- Puntos Totales -->
+            <div class="progreso-card mb-4">
+                <div class="d-flex align-items-center justify-content-center mb-2">
+                    <i class="bi bi-star-fill" style="font-size: 3rem; color: #f59e0b;"></i>
+                </div>
+                <h2 class="puntos-totales">@estudiante?.PuntajeTotal</h2>
+                <p class="mb-0" style="color: #92400e; font-weight: 600;">Puntos Totales</p>
+            </div>
+
+            <!-- Nivel Actual -->
+            @if (nivelActual != null)
+            {
+                <div class="text-center mb-4">
+                    <div class="nivel-badge">
+                        <div class="nivel-numero">@nivelActual.IdNivel</div>
+                        <span>Nivel Actual</span>
+                    </div>
+                    <p class="mt-2 mb-0 text-muted">@nivelActual.Nombre</p>
+                    <small class="text-muted">@nivelActual.PuntajeMinimo - @nivelActual.PuntajeMaximo pts</small>
+                </div>
+
+                @if (siguienteNivel != null)
+                {
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-2">
+                            <small class="text-muted">Progreso al siguiente nivel</small>
+                            <small class="text-purple fw-bold">@siguienteNivel.PuntajeMinimo pts para subir</small>
+                        </div>
+                        <div class="progress-bar-custom">
+                            <div class="progress" style="width: @porcentajeProgreso%">
+                                @porcentajeProgreso%
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    Aún no tienes un nivel asignado. ¡Completa actividades para obtener tu primer nivel!
+                </div>
+            }
+        </div>
+
+        <!-- Logros Desbloqueados -->
+        <div class="perfil-section">
+            <h4>
+                <i class="bi bi-trophy-fill"></i> Logros Desbloqueados
+            </h4>
+            <p class="text-muted">Reconocimientos obtenidos</p>
+
+            <div class="logros-list">
+                @if (totalActividades >= 10)
+                {
+                    <div class="logro-item">
+                        <i class="bi bi-unlock-fill"></i>
+                        <div>
+                            <strong>10 actividades completadas</strong>
+                            <br><small class="text-muted">¡Excelente dedicación!</small>
+                        </div>
+                    </div>
+                }
+                @if (totalActividades >= 1)
+                {
+                    <div class="logro-item">
+                        <i class="bi bi-unlock-fill"></i>
+                        <div>
+                            <strong>Racha de 7 días</strong>
+                            <br><small class="text-muted">Mantén tu constancia</small>
+                        </div>
+                    </div>
+                }
+                @if (totalMedallas >= 1)
+                {
+                    <div class="logro-item">
+                        <i class="bi bi-unlock-fill"></i>
+                        <div>
+                            <strong>Top 5 del ranking</strong>
+                            <br><small class="text-muted">¡Sigue así!</small>
+                        </div>
+                    </div>
+                }
+                
+                @if (totalActividades == 0 && totalMedallas == 0)
+                {
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i>
+                        Completa actividades para desbloquear logros
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Columna derecha: Mis Medallas -->
+    <div class="col-lg-6 mb-4">
+        <div class="perfil-section">
+            <h4>
+                <i class="bi bi-award-fill"></i> Mis Medallas
+            </h4>
+            <p class="text-muted">Reconocimientos obtenidos</p>
+
+            @if (medallas != null && medallas.Any())
+            {
+                <div class="medallas-grid">
+                    @foreach (var medallaEst in medallas)
+                    {
+                        <div class="medalla-item">
+                            <div class="medalla-icon">
+                                @if (!string.IsNullOrEmpty(medallaEst.Medalla?.ImagenUrl))
+                                {
+                                    <img src="@medallaEst.Medalla.ImagenUrl" alt="@medallaEst.Medalla?.Nombre" style="width: 60px; height: 60px;">
+                                }
+                                else
+                                {
+                                    <i class="bi bi-award-fill text-warning"></i>
+                                }
+                            </div>
+                            <div class="medalla-nombre">@medallaEst.Medalla?.Nombre</div>
+                            <div class="medalla-fecha">
+                                <i class="bi bi-calendar"></i> @medallaEst.FechaOtorgada.ToString("dd/MM/yyyy")
+                            </div>
+                            <div class="medalla-tipo medalla-oro">Oro</div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info text-center">
+                    <i class="bi bi-award" style="font-size: 3rem;"></i>
+                    <h5 class="mt-3">Aún no tienes medallas</h5>
+                    <p class="mb-0">Completa actividades y logra objetivos para obtener medallas</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

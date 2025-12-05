@@ -1,0 +1,124 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using RunaTalento.Data;
+using RunaTalento.Models;
+
+namespace RunaTalento.Controllers
+{
+    /// <summary>
+    /// Controlador para CU03 - Consultar Perfil
+    /// Permite al estudiante revisar su información personal, logros y medallas
+    /// </summary>
+    [Authorize(Roles = "Estudiante")]
+    public class PerfilController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public PerfilController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        {
+            _context = context;
+            _userManager = userManager;
+        }
+
+        // GET: Perfil
+        public async Task<IActionResult> Index()
+        {
+            try
+            {
+                // Obtener el usuario actual
+                var userId = _userManager.GetUserId(User);
+                var estudiante = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Id == userId);
+
+                if (estudiante == null)
+                {
+                    TempData["Error"] = "Error al cargar los datos del perfil";
+                    return RedirectToAction("Index", "Home");
+                }
+
+                // Obtener medallas del estudiante
+                var medallas = await _context.MedallaEstudiante
+                    .Include(me => me.Medalla)
+                    .Where(me => me.IdEstudiante == userId)
+                    .OrderByDescending(me => me.FechaOtorgada)
+                    .ToListAsync();
+
+                // Obtener incentivos del estudiante
+                var incentivos = await _context.IncentivoEstudiante
+                    .Include(ie => ie.Incentivo)
+                    .Where(ie => ie.IdEstudiante == userId)
+                    .OrderByDescending(ie => ie.FechaOtorgado)
+                    .ToListAsync();
+
+                // Obtener actividades completadas
+                var actividadesCompletadas = await _context.ActividadEstudiante
+                    .Include(ae => ae.Actividad)
+                    .ThenInclude(a => a.Curso)
+                    .Where(ae => ae.IdEstudiante == userId)
+                    .OrderByDescending(ae => ae.FechaEntrega)
+                    .ToListAsync();
+
+                // Obtener nivel actual basado en el puntaje del estudiante
+                var nivelActual = await _context.Nivel
+                    .Where(n => n.PuntajeMinimo <= estudiante.PuntajeTotal && n.PuntajeMaximo >= estudiante.PuntajeTotal)
+                    .FirstOrDefaultAsync();
+
+                // Si no se encuentra nivel por puntaje, intentar usar el IdNivel del estudiante
+                if (nivelActual == null && estudiante.IdNivel.HasValue)
+                {
+                    nivelActual = await _context.Nivel.FindAsync(estudiante.IdNivel.Value);
+                }
+
+                // Calcular siguiente nivel
+                var siguienteNivel = await _context.Nivel
+                    .Where(n => n.PuntajeMinimo > estudiante.PuntajeTotal)
+                    .OrderBy(n => n.PuntajeMinimo)
+                    .FirstOrDefaultAsync();
+
+                // Crear ViewBag con los datos
+                ViewBag.Estudiante = estudiante;
+                ViewBag.Medallas = medallas;
+                ViewBag.Incentivos = incentivos;
+                ViewBag.ActividadesCompletadas = actividadesCompletadas;
+                ViewBag.NivelActual = nivelActual;  // Objeto Nivel
+                ViewBag.SiguienteNivel = siguienteNivel;
+                ViewBag.TotalActividades = actividadesCompletadas.Count;
+                ViewBag.TotalMedallas = medallas.Count;
+
+                // Datos para el header del layout (usando nombres diferentes)
+                ViewBag.PuntajeTotal = estudiante.PuntajeTotal;
+                ViewBag.NivelTexto = nivelActual != null 
+                    ? $"Nivel {nivelActual.IdNivel}" 
+                    : "Sin nivel";
+                ViewBag.NivelId = nivelActual?.IdNivel ?? 0;
+                ViewBag.NombreCompleto = $"{estudiante.Nombres} {estudiante.Apellidos}";
+                var nombres = estudiante.Nombres?.Split(' ');
+                var apellidos = estudiante.Apellidos?.Split(' ');
+                ViewBag.Iniciales = $"{nombres?[0]?.Substring(0, 1)}{apellidos?[0]?.Substring(0, 1)}";
+
+                // Calcular porcentaje para el siguiente nivel
+                if (siguienteNivel != null && nivelActual != null)
+                {
+                    var puntajeEnRango = estudiante.PuntajeTotal - nivelActual.PuntajeMinimo;
+                    var rangoTotal = siguienteNivel.PuntajeMinimo - nivelActual.PuntajeMinimo;
+                    ViewBag.PorcentajeProgresoNivel = rangoTotal > 0 ? 
+                        (int)((puntajeEnRango * 100.0) / rangoTotal) : 0;
+                }
+                else
+                {
+                    ViewBag.PorcentajeProgresoNivel = 0;
+                }
+
+                return View();
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al cargar los datos del perfil: " + ex.Message;
+                return RedirectToAction("Index", "Home");
+            }
+        }
+    }
+}

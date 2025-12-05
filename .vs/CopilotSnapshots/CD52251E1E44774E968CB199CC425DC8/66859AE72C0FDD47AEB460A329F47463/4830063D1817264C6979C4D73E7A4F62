@@ -1,0 +1,210 @@
+﻿@{
+    ViewData["Title"] = "Mi Perfil";
+    var estudiante = ViewBag.Estudiante as RunaTalento.Models.ApplicationUser;
+    var medallas = ViewBag.Medallas as List<RunaTalento.Models.MedallaEstudiante>;
+    var actividades = ViewBag.ActividadesCompletadas as List<RunaTalento.Models.ActividadEstudiante>;
+    var nivelActual = ViewBag.NivelActual as RunaTalento.Models.Nivel;
+    var siguienteNivel = ViewBag.SiguienteNivel as RunaTalento.Models.Nivel;
+    var porcentajeProgreso = ViewBag.PorcentajeProgresoNivel;
+}
+
+<div class="container mt-4">
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Encabezado del Perfil -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card shadow-lg">
+                <div class="card-body bg-gradient text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <div class="row align-items-center">
+                        <div class="col-md-2 text-center">
+                            <i class="bi bi-person-circle" style="font-size: 6rem;"></i>
+                        </div>
+                        <div class="col-md-7">
+                            <h2 class="mb-0">@estudiante?.Nombres @estudiante?.Apellidos</h2>
+                            <p class="mb-1"><i class="bi bi-envelope"></i> @estudiante?.Email</p>
+                            <p class="mb-0">
+                                <small><i class="bi bi-calendar"></i> Miembro desde: @estudiante?.FechaRegistro.ToString("dd/MM/yyyy")</small>
+                            </p>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <h1 class="display-3 mb-0"><i class="bi bi-star-fill"></i></h1>
+                            <h2>@estudiante?.PuntajeTotal</h2>
+                            <p class="mb-0">Puntos Totales</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estadísticas Rápidas -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white shadow">
+                <div class="card-body text-center">
+                    <i class="bi bi-trophy-fill" style="font-size: 3rem;"></i>
+                    <h3 class="mt-2">@(nivelActual?.Nombre ?? "Sin nivel")</h3>
+                    <p class="mb-0">Nivel Actual</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success text-white shadow">
+                <div class="card-body text-center">
+                    <i class="bi bi-clipboard-check-fill" style="font-size: 3rem;"></i>
+                    <h3 class="mt-2">@ViewBag.TotalActividades</h3>
+                    <p class="mb-0">Actividades Completadas</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-warning text-dark shadow">
+                <div class="card-body text-center">
+                    <i class="bi bi-award-fill" style="font-size: 3rem;"></i>
+                    <h3 class="mt-2">@ViewBag.TotalMedallas</h3>
+                    <p class="mb-0">Medallas Obtenidas</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progreso al Siguiente Nivel -->
+    @if (siguienteNivel != null)
+    {
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card shadow">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="bi bi-arrow-up-circle-fill"></i> Progreso al Siguiente Nivel</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span><strong>Nivel Actual:</strong> @nivelActual?.Nombre</span>
+                            <span><strong>Siguiente Nivel:</strong> @siguienteNivel.Nombre</span>
+                        </div>
+                        <div class="progress" style="height: 30px;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" 
+                                 role="progressbar" 
+                                 style="width: @porcentajeProgreso%;" 
+                                 aria-valuenow="@porcentajeProgreso" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="100">
+                                @porcentajeProgreso%
+                            </div>
+                        </div>
+                        <p class="text-muted mt-2 mb-0">
+                            Te faltan <strong>@(siguienteNivel.PuntajeMinimo - estudiante.PuntajeTotal) puntos</strong> para alcanzar el siguiente nivel
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Medallas Obtenidas -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card shadow">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0"><i class="bi bi-award-fill"></i> Mis Medallas</h5>
+                </div>
+                <div class="card-body">
+                    @if (medallas != null && medallas.Any())
+                    {
+                        <div class="row">
+                            @foreach (var medallaEst in medallas)
+                            {
+                                <div class="col-md-3 col-sm-6 mb-3 text-center">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            @if (!string.IsNullOrEmpty(medallaEst.Medalla?.ImagenUrl))
+                                            {
+                                                <img src="@medallaEst.Medalla.ImagenUrl" alt="@medallaEst.Medalla.Nombre" 
+                                                     class="img-fluid mb-2" style="max-height: 100px;" />
+                                            }
+                                            else
+                                            {
+                                                <i class="bi bi-award-fill text-warning" style="font-size: 4rem;"></i>
+                                            }
+                                            <h6 class="mt-2">@medallaEst.Medalla?.Nombre</h6>
+                                            <small class="text-muted">@medallaEst.FechaOtorgada.ToString("dd/MM/yyyy")</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i> Aún no has obtenido medallas. ¡Sigue esforzándote!
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actividades Completadas -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-clipboard-check"></i> Actividades Completadas</h5>
+                </div>
+                <div class="card-body">
+                    @if (actividades != null && actividades.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Actividad</th>
+                                        <th>Curso</th>
+                                        <th>Fecha de Entrega</th>
+                                        <th>Puntaje Obtenido</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var actEst in actividades)
+                                    {
+                                        <tr>
+                                            <td>@actEst.Actividad?.Titulo</td>
+                                            <td>@actEst.Actividad?.Curso?.Nombre</td>
+                                            <td>@actEst.FechaEntrega.ToString("dd/MM/yyyy HH:mm")</td>
+                                            <td>
+                                                @if (actEst.PuntajeObtenido.HasValue)
+                                                {
+                                                    <span class="badge bg-success">
+                                                        <i class="bi bi-star-fill"></i> @actEst.PuntajeObtenido pts
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary">Pendiente</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i> Aún no has completado actividades. ¡Comienza ahora!
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

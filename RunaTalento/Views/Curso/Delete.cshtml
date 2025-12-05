@@ -1,0 +1,74 @@
+@model RunaTalento.Models.Curso
+
+@{
+    ViewData["Title"] = "Eliminar Curso";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="admin-header">
+    <div class="admin-header-content">
+        <div>
+            <h1 class="admin-title">
+                <i class="bi bi-trash-fill text-danger"></i>
+                Eliminar Curso
+            </h1>
+            <p class="admin-subtitle text-danger">¿Estás seguro de que deseas eliminar este curso?</p>
+        </div>
+        <a asp-action="Index" class="btn-secondary-admin">
+            <i class="bi bi-arrow-left"></i>
+            Cancelar
+        </a>
+    </div>
+</div>
+
+<div class="admin-content">
+    <div class="alert alert-warning" role="alert">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <strong>Advertencia:</strong> Esta acción no se puede deshacer. Todas las actividades asociadas a este curso también podrían verse afectadas.
+    </div>
+
+    <div class="detail-card">
+        <h4 class="detail-card-title">
+            <i class="bi bi-book-fill"></i>
+            Información del Curso
+        </h4>
+        <div class="detail-card-body">
+            <div class="detail-item">
+                <span class="detail-label">Nombre:</span>
+                <span class="detail-value">@Model.Nombre</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Descripción:</span>
+                <span class="detail-value">@(Model.Descripcion ?? "Sin descripción")</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Docente Asignado:</span>
+                <span class="detail-value">
+                    @Model.Docente?.Nombres @Model.Docente?.Apellidos
+                    <br />
+                    <small class="text-muted">@Model.Docente?.Email</small>
+                </span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Actividades:</span>
+                <span class="detail-value">
+                    <span class="badge bg-info">@(Model.Actividades?.Count ?? 0) actividades</span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <form asp-action="Delete" method="post" class="mt-4">
+        <input type="hidden" asp-for="IdCurso" />
+        <div class="form-actions">
+            <a asp-action="Index" class="btn-secondary-admin">
+                <i class="bi bi-x-circle"></i>
+                No, Cancelar
+            </a>
+            <button type="submit" class="btn-danger-admin">
+                <i class="bi bi-trash-fill"></i>
+                Sí, Eliminar Curso
+            </button>
+        </div>
+    </form>
+</div>

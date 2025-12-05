@@ -1,0 +1,42 @@
+﻿namespace RunaTalento.Services.Decorators
+{
+    /// <summary>
+    /// Patrón DECORATOR (GoF) - Decorador que añade bonificación de urgencia
+    /// Aumenta el puntaje de actividades con fecha límite cercana
+    /// </summary>
+    public class ActividadUrgenciaDecorator : ActividadDecorator
+    {
+        private readonly bool _esUrgente;
+        private const double BONIFICACION_URGENCIA = 1.15; // 15% extra
+
+        public ActividadUrgenciaDecorator(IActividadComponent actividad, bool esUrgente) 
+            : base(actividad)
+        {
+            _esUrgente = esUrgente;
+        }
+
+        public override string ObtenerDescripcionCompleta()
+        {
+            var descripcionBase = _actividad.ObtenerDescripcionCompleta();
+            
+            if (_esUrgente)
+            {
+                return $"? URGENTE: {descripcionBase} [+15% puntaje adicional]";
+            }
+            
+            return descripcionBase;
+        }
+
+        public override int CalcularPuntajeConModificadores()
+        {
+            var puntajeBase = _actividad.CalcularPuntajeConModificadores();
+            
+            if (_esUrgente)
+            {
+                return (int)(puntajeBase * BONIFICACION_URGENCIA);
+            }
+            
+            return puntajeBase;
+        }
+    }
+}

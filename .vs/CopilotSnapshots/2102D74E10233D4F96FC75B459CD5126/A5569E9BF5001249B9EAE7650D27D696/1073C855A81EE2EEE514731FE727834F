@@ -1,0 +1,98 @@
+﻿@model RunaTalento.Models.ApplicationUser
+
+@{
+    ViewData["Title"] = "Eliminar Usuario";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="admin-header">
+    <div class="admin-header-content">
+        <div>
+            <h1 class="admin-title">
+                <i class="bi bi-trash-fill text-danger"></i>
+                Eliminar Usuario
+            </h1>
+            <p class="admin-subtitle text-danger">¿Estás seguro de que deseas eliminar este usuario?</p>
+        </div>
+        <a asp-action="Index" class="btn-secondary-admin">
+            <i class="bi bi-arrow-left"></i>
+            Cancelar
+        </a>
+    </div>
+</div>
+
+<div class="admin-content">
+    <div class="alert alert-danger" role="alert">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <strong>¡ADVERTENCIA!</strong> Esta acción es irreversible.
+        <p class="mb-0 mt-2">Se eliminarán todos los datos asociados a este usuario incluyendo:</p>
+        <ul class="mb-0 mt-2">
+            <li>Actividades completadas</li>
+            <li>Medallas obtenidas</li>
+            <li>Progreso y puntajes</li>
+            <li>Cursos asignados (si es docente)</li>
+        </ul>
+    </div>
+
+    <div class="detail-card">
+        <h4 class="detail-card-title">
+            <i class="bi bi-person-circle"></i>
+            Información del Usuario a Eliminar
+        </h4>
+        <div class="detail-card-body">
+            <div class="detail-item">
+                <span class="detail-label">Nombre Completo:</span>
+                <span class="detail-value"><strong>@Model.Nombres @Model.Apellidos</strong></span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Email:</span>
+                <span class="detail-value">@Model.Email</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Rol:</span>
+                <span class="detail-value">
+                    <span class="badge bg-info fs-6">@ViewBag.Roles</span>
+                </span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Estado:</span>
+                <span class="detail-value">
+                    @if (Model.Estado == "Activo")
+                    {
+                        <span class="badge bg-success">Activo</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Inactivo</span>
+                    }
+                </span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Fecha de Registro:</span>
+                <span class="detail-value">@Model.FechaRegistro.ToString("dd/MM/yyyy HH:mm")</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Puntaje Total:</span>
+                <span class="detail-value">
+                    <span class="badge bg-warning text-dark">
+                        <i class="bi bi-star-fill"></i> @Model.PuntajeTotal puntos
+                    </span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <form asp-action="Delete" method="post" class="mt-4">
+        <input type="hidden" name="id" value="@Model.Id" />
+        <div class="form-actions">
+            <a asp-action="Index" class="btn-secondary-admin">
+                <i class="bi bi-x-circle"></i>
+                No, Cancelar
+            </a>
+            <button type="submit" class="btn-danger-admin">
+                <i class="bi bi-trash-fill"></i>
+                Sí, Eliminar Definitivamente
+            </button>
+        </div>
+    </form>
+</div>

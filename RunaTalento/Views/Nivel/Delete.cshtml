@@ -1,0 +1,64 @@
+@model RunaTalento.Models.Nivel
+
+@{
+    ViewData["Title"] = "Eliminar Nivel";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="admin-header">
+    <div class="admin-header-content">
+        <div>
+            <h1 class="admin-title">
+                <i class="bi bi-trash-fill text-danger"></i>
+                Eliminar Nivel
+            </h1>
+            <p class="admin-subtitle text-danger">¿Estás seguro de que deseas eliminar este nivel?</p>
+        </div>
+        <a asp-controller="Incentivos" asp-action="Index" class="btn-secondary-admin">
+            <i class="bi bi-arrow-left"></i>
+            Cancelar
+        </a>
+    </div>
+</div>
+
+<div class="admin-content">
+    <div class="alert alert-danger" role="alert">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <strong>¡ADVERTENCIA!</strong> Esta acción eliminará permanentemente este nivel. Los estudiantes que lo tienen actualmente quedarán sin nivel asignado.
+    </div>
+
+    <div class="detail-card">
+        <h4 class="detail-card-title">
+            <i class="bi bi-bar-chart-steps"></i>
+            Información del Nivel
+        </h4>
+        <div class="detail-card-body">
+            <div class="detail-item">
+                <span class="detail-label">Nombre:</span>
+                <span class="detail-value"><strong>@Model.Nombre</strong></span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Rango de Puntaje:</span>
+                <span class="detail-value">
+                    <span class="badge bg-primary">
+                        @Model.PuntajeMinimo - @Model.PuntajeMaximo puntos
+                    </span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <form asp-action="Delete" method="post" class="mt-4">
+        <input type="hidden" asp-for="IdNivel" />
+        <div class="form-actions">
+            <a asp-controller="Incentivos" asp-action="Index" class="btn-secondary-admin">
+                <i class="bi bi-x-circle"></i>
+                No, Cancelar
+            </a>
+            <button type="submit" class="btn-danger-admin">
+                <i class="bi bi-trash-fill"></i>
+                Sí, Eliminar Nivel
+            </button>
+        </div>
+    </form>
+</div>

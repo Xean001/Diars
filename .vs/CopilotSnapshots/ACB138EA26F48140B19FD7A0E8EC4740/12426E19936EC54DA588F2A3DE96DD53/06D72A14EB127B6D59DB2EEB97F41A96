@@ -1,0 +1,88 @@
+﻿@model IEnumerable<RunaTalento.Models.Actividad>
+
+@{
+    ViewData["Title"] = "Actividades";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-clipboard-check-fill"></i> Gestión de Actividades</h1>
+        @if (User.IsInRole("Docente"))
+        {
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Nueva Actividad
+            </a>
+        }
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row">
+        @foreach (var actividad in Model)
+        {
+            var estaVencida = actividad.FechaLimite.HasValue && DateTime.Now > actividad.FechaLimite.Value;
+            var porVencer = actividad.FechaLimite.HasValue && !estaVencida && (actividad.FechaLimite.Value - DateTime.Now).TotalDays <= 3;
+            
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm @(estaVencida ? "border-danger" : porVencer ? "border-warning" : "")">
+                    <div class="card-header @(estaVencida ? "bg-secondary" : "bg-success") text-white">
+                        <h5 class="mb-0">
+                            @actividad.Titulo
+                            @if (estaVencida)
+                            {
+                                <span class="badge bg-danger float-end">Vencida</span>
+                            }
+                            else if (porVencer)
+                            {
+                                <span class="badge bg-warning text-dark float-end">Por vencer</span>
+                            }
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">@(actividad.Descripcion ?? "Sin descripción")</p>
+                        <p class="mb-1">
+                            <i class="bi bi-book"></i> <strong>Curso:</strong> @actividad.Curso?.Nombre
+                        </p>
+                        <p class="mb-1">
+                            <i class="bi bi-person"></i> <strong>Docente:</strong> @actividad.Curso?.Docente?.Nombres
+                        </p>
+                        <p class="mb-1">
+                            <i class="bi bi-star-fill text-warning"></i> <strong>Puntaje:</strong> 
+                            <span class="badge bg-warning text-dark">@actividad.Puntaje pts</span>
+                        </p>
+                        
+                        @if (actividad.FechaLimite.HasValue)
+                        {
+                            var colorFecha = estaVencida ? "text-danger" : porVencer ? "text-warning" : "text-muted";
+                            var iconoFecha = estaVencida ? "bi-x-circle-fill" : porVencer ? "bi-exclamation-triangle-fill" : "bi-calendar-event";
+                            
+                            <p class="mb-0 @colorFecha">
+                                <i class="bi @iconoFecha"></i> 
+                                <strong>
+                                    @if (estaVencida)
+                                    {
+                                        <text>Venció: </text>
+                                    }
+                                    else
+                                    {
+                                        <text>Vence: </text>
+                                    }
+                                    @actividad.FechaLimite.Value.ToString("dd/MM/yyyy HH:mm")
+                                </strong>
+                            </p>
+                        }
+                        else
+                        {
+                            <p class="mb-0 text-muted">
+                                <i class="bi bi-infinity"></i> <strong>Sin fecha límite</strong>
+                            </p>
+                        }
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <small class="text-muted

@@ -1,0 +1,115 @@
+﻿@model RunaTalento.Models.Actividad
+
+@{
+    ViewData["Title"] = "Registrar Nueva Actividad";
+    Layout = "~/Views/Shared/_LayoutDocente.cshtml";
+}
+
+<div class="registro-section">
+    <div class="registro-header">
+        <i class="bi bi-plus-circle-fill"></i>
+        <h3>Registrar Nueva Actividad</h3>
+    </div>
+    <p>Crea actividades académicas para que los estudiantes puedan realizar</p>
+
+    <form asp-action="CrearActividad" method="post" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+        <div class="row">
+            <!-- Columna Izquierda -->
+            <div class="col-md-6">
+                <div class="mb-4">
+                    <label asp-for="Titulo" class="form-label">
+                        Título de la Actividad <span class="required">*</span>
+                    </label>
+                    <input asp-for="Titulo" class="form-control" 
+                           placeholder="Ej: Resolución de Problemas Matemáticos" />
+                    <span asp-validation-for="Titulo" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Descripcion" class="form-label">
+                        Descripción de la Actividad <span class="required">*</span>
+                    </label>
+                    <textarea asp-for="Descripcion" class="form-control" 
+                              placeholder="Describe las instrucciones y objetivos de la actividad..."
+                              rows="5"></textarea>
+                    <span asp-validation-for="Descripcion" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">
+                        Archivo Adjunto (Opcional)
+                    </label>
+                    <input type="file" name="archivo" class="form-control" 
+                           accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip" />
+                    <small class="form-text">
+                        <i class="bi bi-info-circle"></i> 
+                        Material de apoyo para los estudiantes (PDF, Word, PowerPoint, Excel, ZIP)
+                    </small>
+                </div>
+            </div>
+
+            <!-- Columna Derecha -->
+            <div class="col-md-6">
+                <div class="mb-4">
+                    <label class="form-label">
+                        Nivel de Dificultad <span class="required">*</span>
+                    </label>
+                    <select class="form-select">
+                        <option value="">Selecciona el nivel</option>
+                        <option value="Básico">Básico</option>
+                        <option value="Intermedio">Intermedio</option>
+                        <option value="Avanzado">Avanzado</option>
+                    </select>
+                    <small class="form-text">
+                        <i class="bi bi-info-circle"></i> 
+                        Indica la complejidad de la actividad
+                    </small>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="IdCurso" class="form-label">
+                        Curso <span class="required">*</span>
+                    </label>
+                    <select asp-for="IdCurso" class="form-select" asp-items="ViewBag.Cursos">
+                        <option value="">Selecciona un curso</option>
+                    </select>
+                    <span asp-validation-for="IdCurso" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Puntaje" class="form-label">
+                        Puntaje a Otorgar <span class="required">*</span>
+                    </label>
+                    <input asp-for="Puntaje" type="number" class="form-control" 
+                           placeholder="Ej: 150" min="0" max="1000" />
+                    <small class="form-text">
+                        <i class="bi bi-star-fill"></i> 
+                        Puntos que recibirá el estudiante al completar la actividad
+                    </small>
+                    <span asp-validation-for="Puntaje" class="text-danger"></span>
+                </div>
+
+                <div class="alert alert-info">
+                    <i class="bi bi-lightbulb-fill"></i>
+                    <strong>Consejo:</strong> Asigna puntajes proporcionales a la dificultad y tiempo de la actividad.
+                </div>
+            </div>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="d-flex justify-content-end gap-2 mt-4">
+            <a asp-controller="Docente" asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-x-circle"></i> Cancelar
+            </a>
+            <button type="submit" class="btn-registrar">
+                <i class="bi bi-plus-circle-fill"></i> Registrar Actividad
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

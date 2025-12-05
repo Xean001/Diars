@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Mi Perfil";
+    Layout = "~/Views/Shared/_LayoutEstudiante.cshtml";
+    var estudiante = ViewBag.Estudiante as RunaTalento.Models.ApplicationUser;
+    var medallas = ViewBag.Medallas as List<RunaTalento.Models.MedallaEstudiante>;
+    var incentivos = ViewBag.Incentivos as List<RunaTalento.Models.IncentivoEstudiante>;
+    var actividades = ViewBag.ActividadesCompletadas as List<RunaTalento.Models.ActividadEstudiante>;
+    var nivelActual = ViewBag.NivelActual as RunaTalento.Models.Nivel;
+    var siguienteNivel = ViewBag.SiguienteNivel as RunaTalento.Models.Nivel;
+    var porcentajeProgreso = ViewBag.PorcentajeProgresoNivel ?? 0;
+    var totalActividades = ViewBag.TotalActividades ?? 0;
+    var totalMedallas = ViewBag.TotalMedallas ?? 0;
+}
+
+<div class="row g-4">
+    <!-- Columna izquierda: Progreso Académico -->
+    <div class="col-lg-6">
+        <div class="perfil-section">
+            <div class="d-flex align-items-center mb-2">
+                <i class="bi bi-star-fill text-purple me-2" style="font-size: 1.5rem;"></i>
+                <h4 class="mb-0">Progreso Académico</h4>
+            </div>
+            <p class="text-muted mb-4">Tu avance en el sistema</p>
+
+            <!-- Puntos Totales -->
+            <div class="progreso-card mb-4">
+                <div class="d-flex align-items-center justify-content-center mb-2">
+                    <i class="bi bi-star-fill" style="font-size: 3rem; color: #f59e0b;"></i>
+                </div>
+                <h2 class="puntos-totales">@estudiante?.PuntajeTotal</h2>
+                <p class="mb-0" style="color: #92400e; font-weight: 600;">Puntos Totales</p>
+            </div>
+
+            <!-- DEBUG: Información del nivel -->
+            @if (nivelActual == null)
+            {
+                <div class="alert alert-warning mb-4">
+                    <i class="bi bi-info

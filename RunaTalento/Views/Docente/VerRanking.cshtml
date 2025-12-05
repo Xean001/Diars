@@ -1,0 +1,139 @@
+@model IEnumerable<dynamic>
+@{
+    ViewData["Title"] = "Ranking de Estudiantes";
+    Layout = "~/Views/Shared/_LayoutDocente.cshtml";
+}
+
+<div class="ranking-card">
+    <div class="ranking-header">
+        <h3>
+            <i class="bi bi-graph-up-arrow"></i>
+            Ranking de Estudiantes
+        </h3>
+        <p>Visualiza el desempeño general de tus estudiantes</p>
+    </div>
+
+    <div class="ranking-body">
+        @if (Model != null && Model.Any())
+        {
+            int posicion = 1;
+            foreach (var estudiante in Model)
+            {
+                string iniciales = "";
+                if (!string.IsNullOrEmpty(estudiante.Nombres) && !string.IsNullOrEmpty(estudiante.Apellidos))
+                {
+                    var nombres = estudiante.Nombres.Split(' ');
+                    var apellidos = estudiante.Apellidos.Split(' ');
+                    iniciales = $"{nombres[0].Substring(0, 1)}{apellidos[0].Substring(0, 1)}";
+                }
+                else
+                {
+                    iniciales = "??";
+                }
+
+                string posicionClass = posicion switch
+                {
+                    1 => "position-1",
+                    2 => "position-2",
+                    3 => "position-3",
+                    _ => "position-other"
+                };
+
+                <div class="ranking-item">
+                    <div class="ranking-position @posicionClass">
+                        @if (posicion <= 3)
+                        {
+                            <i class="bi bi-trophy-fill"></i>
+                        }
+                        else
+                        {
+                            @posicion
+                        }
+                    </div>
+
+                    <div class="ranking-avatar">
+                        @iniciales
+                    </div>
+
+                    <div class="ranking-info">
+                        <div class="ranking-name">
+                            @estudiante.Nombres @estudiante.Apellidos
+                        </div>
+                        <div class="ranking-level">
+                            @if (estudiante.IdNivel != null)
+                            {
+                                <i class="bi bi-star-fill"></i>
+                                <span>Nivel @estudiante.IdNivel</span>
+                                <span class="text-muted">•</span>
+                                <span class="text-muted">@estudiante.PuntajeTotal pts</span>
+                            }
+                            else
+                            {
+                                <i class="bi bi-dash-circle"></i>
+                                <span class="text-muted">Sin nivel aún</span>
+                                <span class="text-muted">•</span>
+                                <span class="text-muted">@estudiante.PuntajeTotal pts</span>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="ranking-stats">
+                        <div class="stat-item stat-points">
+                            <div class="stat-value">@estudiante.PuntajeTotal</div>
+                            <div class="stat-label">puntos</div>
+                        </div>
+
+                        <div class="stat-item stat-medals">
+                            <i class="bi bi-award-fill"></i>
+                            <div>
+                                <div class="stat-value">@estudiante.MedallasCount</div>
+                                <div class="stat-label">medallas</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                posicion++;
+            }
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <i class="bi bi-inbox" style="font-size: 4rem; color: #cbd5e1;"></i>
+                <h4 class="mt-3 text-muted">No hay estudiantes registrados</h4>
+                <p class="text-muted">Los estudiantes aparecerán aquí cuando se registren y completen actividades</p>
+            </div>
+        }
+    </div>
+</div>
+
+@if (Model != null && Model.Any())
+{
+    var totalEstudiantes = Model.Count();
+    var promedioGeneral = Model.Average(e => (int)e.PuntajeTotal);
+    var totalMedallas = Model.Sum(e => (int)e.MedallasCount);
+
+    <div class="row mt-4">
+        <div class="col-md-4 mb-3">
+            <div class="docente-card text-center">
+                <i class="bi bi-people-fill" style="font-size: 2.5rem; color: #14b8a6;"></i>
+                <h2 class="mt-3 mb-1" style="color: #0f172a; font-weight: 700;">@totalEstudiantes</h2>
+                <p class="text-muted mb-0">Estudiantes Activos</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="docente-card text-center">
+                <i class="bi bi-graph-up" style="font-size: 2.5rem; color: #fbbf24;"></i>
+                <h2 class="mt-3 mb-1" style="color: #0f172a; font-weight: 700;">@Math.Round(promedioGeneral, 0)</h2>
+                <p class="text-muted mb-0">Promedio de Puntos</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="docente-card text-center">
+                <i class="bi bi-award-fill" style="font-size: 2.5rem; color: #fb923c;"></i>
+                <h2 class="mt-3 mb-1" style="color: #0f172a; font-weight: 700;">@totalMedallas</h2>
+                <p class="text-muted mb-0">Medallas Otorgadas</p>
+            </div>
+        </div>
+    </div>
+}

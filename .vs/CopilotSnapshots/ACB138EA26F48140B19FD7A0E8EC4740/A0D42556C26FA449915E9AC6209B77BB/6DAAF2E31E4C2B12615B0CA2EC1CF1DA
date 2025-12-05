@@ -1,0 +1,13 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using RunaTalento.Data;
+using RunaTalento.Models;
+
+namespace RunaTalento.Controllers
+{
+    /// <summary>
+    /// Controlador para gestionar los niveles de logro
+    /// Solo accesible por docentes
+    /// </summary>
+    [Authorize(Roles

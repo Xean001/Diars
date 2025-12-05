@@ -1,0 +1,65 @@
+﻿@model IEnumerable<RunaTalento.Models.ActividadEstudiante>
+@{
+    ViewData["Title"] = "Calificar Actividades";
+    Layout = "~/Views/Shared/_LayoutDocente.cshtml";
+}
+
+<div class="docente-card">
+    <div class="card-header-custom">
+        <i class="bi bi-clipboard-check"></i>
+        <h3>Calificar Actividades Entregadas</h3>
+    </div>
+    <p class="card-subtitle">Revisa y califica las actividades entregadas por tus estudiantes</p>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Estudiante</th>
+                        <th>Actividad</th>
+                        <th>Curso</th>
+                        <th>Fecha Entrega</th>
+                        <th>Estado</th>
+                        <th>Documento</th>
+                        <th>Puntaje Máximo</th>
+                        <th>Calificación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        // ✅ Verificar si la actividad estaba vencida al momento de entrega
+                        var estabaVencida = item.Actividad?.FechaLimite.HasValue == true && item.FechaEntrega > item.Actividad.FechaLimite.Value;
+                        var estaVencida = item.Actividad?.FechaLimite.HasValue == true && DateTime.Now > item.Actividad.FechaLimite.Value;
+                        
+                        <tr class="@(estabaVencida ? "table-warning" : "")">
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="ranking-avatar" style="width: 40px; height: 40px; font-size: 0.9rem;">
+                                        @{
+                                            var nombres = item.Estudiante?.Nombres?.Split(' ');
+                                            var apellidos = item.Estudiante?.Apellidos?.Split(' ');
+                                            var iniciales = $"{nombres?[0]?.Substring(0, 1)}{apellidos?[0]?.Substring(0, 1)}";
+                                        }
+                                        @iniciales
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold">@item.Estudiante?.Nombres @item.Estudiante?.Apellidos</div>
+                                        <small class="text-muted">@item.Estudiante?.Email</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <strong>@item.Actividad?.Titulo</strong>
+                                @if (!string.IsNullOrEmpty(item.Actividad?.Descripcion))
+                                {
+                                    <br />
+                                    <small class="text-muted">@(item.Actividad.Descripcion.Length > 50 ? item.Actividad.Descripcion.Substring(0, 50) + "..." : item.Actividad.Descripcion)</small>
+                                }
+                                @* ✅ MOSTRAR FECHA LÍMITE *@
+                                @if (item.Actividad?.FechaLimite != null)
+                                {
+                                    <br />
+                                    <small class="text-muted

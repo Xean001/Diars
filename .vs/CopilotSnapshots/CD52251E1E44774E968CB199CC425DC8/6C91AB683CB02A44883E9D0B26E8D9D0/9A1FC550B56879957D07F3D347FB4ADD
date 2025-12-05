@@ -1,0 +1,101 @@
+﻿@model IEnumerable<dynamic>
+@{
+    ViewData["Title"] = "Actividades Disponibles";
+    Layout = "~/Views/Shared/_LayoutEstudiante.cshtml";
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex align-items-center mb-4">
+            <div class="flex-grow-1">
+                <h2 class="mb-1">
+                    <i class="bi bi-clipboard-check text-purple"></i> Actividades Disponibles
+                </h2>
+                <p class="text-muted">Completa actividades para ganar puntos y subir de nivel</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model != null && Model.Any())
+{
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            var actividad = item.Actividad;
+            var actividadEstudiante = item.ActividadEstudiante;
+            var completada = actividadEstudiante != null;
+            
+            // Determinar nivel de dificultad basado en puntaje
+            var nivel = actividad.Puntaje < 50 ? "Básico" : actividad.Puntaje < 100 ? "Intermedio" : "Avanzado";
+            var nivelClass = actividad.Puntaje < 50 ? "badge-basico" : actividad.Puntaje < 100 ? "badge-intermedio" : "badge-avanzado";
+
+            <div class="col-md-6 mb-4">
+                <div class="actividad-card @(completada ? "completada" : "")">
+                    <div class="actividad-card-header">
+                        <div>
+                            <h5 class="actividad-titulo">@actividad.Titulo</h5>
+                            <small class="text-muted">@actividad.Curso?.Nombre</small>
+                        </div>
+                        <span class="actividad-badge @nivelClass">@nivel</span>
+                    </div>
+
+                    <p class="actividad-descripcion">
+                        @(actividad.Descripcion ?? "Sin descripción")
+                    </p>
+
+                    <div class="actividad-footer">
+                        <div class="actividad-puntos">
+                            <i class="bi bi-star-fill"></i>
+                            <span>+@actividad.Puntaje pts</span>
+                        </div>
+
+                        @if (completada)
+                        {
+                            <button class="btn btn-completada" disabled>
+                                <i class="bi bi-check-circle-fill"></i> Completada
+                            </button>
+                        }
+                        else
+                        {
+                            <a asp-action="Realizar" asp-route-id="@actividad.IdActividad" class="btn btn-realizar">
+                                Realizar
+                            </a>
+                        }
+                    </div>
+
+                    @if (completada && actividadEstudiante.PuntajeObtenido != null)
+                    {
+                        <div class="mt-3 p-2 bg-light rounded">
+                            <small class="text-muted">
+                                <i class="bi bi-check-circle text-success"></i>
+                                Calificación: <strong>@actividadEstudiante.PuntajeObtenido pts</strong>
+                            </small>
+                        </div>
+                    }
+                    else if (completada)
+                    {
+                        <div class="mt-3 p-2 bg-warning bg-opacity-10 rounded">
+                            <small class="text-warning">
+                                <i class="bi bi-clock"></i>
+                                Pendiente de calificación
+                            </small>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                <i class="bi bi-info-circle fs-1"></i>
+                <h4 class="mt-3">No hay actividades disponibles</h4>
+                <p>Aún no se han creado actividades en el sistema. Vuelve más tarde.</p>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,168 @@
+@model RunaTalento.Models.ApplicationUser
+
+@{
+    ViewData["Title"] = "Detalles del Usuario";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="admin-header">
+    <div class="admin-header-content">
+        <div>
+            <h1 class="admin-title">
+                <i class="bi bi-person-circle"></i>
+                Detalles del Usuario
+            </h1>
+            <p class="admin-subtitle">Información completa del usuario</p>
+        </div>
+        <a asp-action="Index" class="btn-secondary-admin">
+            <i class="bi bi-arrow-left"></i>
+            Volver a Usuarios
+        </a>
+    </div>
+</div>
+
+<div class="admin-content">
+    <!-- Información Principal -->
+    <div class="detail-card">
+        <h4 class="detail-card-title">
+            <i class="bi bi-info-circle-fill"></i>
+            Información Personal
+        </h4>
+        <div class="detail-card-body">
+            <div class="detail-item">
+                <span class="detail-label">Nombre Completo:</span>
+                <span class="detail-value"><strong>@Model.Nombres @Model.Apellidos</strong></span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Email:</span>
+                <span class="detail-value">@Model.Email</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Usuario:</span>
+                <span class="detail-value">@Model.UserName</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Rol:</span>
+                <span class="detail-value">
+                    <span class="badge bg-info fs-6">@ViewBag.Roles</span>
+                </span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Estado:</span>
+                <span class="detail-value">
+                    @if (Model.Estado == "Activo")
+                    {
+                        <span class="badge bg-success">Activo</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Inactivo</span>
+                    }
+                </span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Fecha de Registro:</span>
+                <span class="detail-value">@Model.FechaRegistro.ToString("dd/MM/yyyy HH:mm")</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estadísticas de Gamificación -->
+    <div class="detail-card mt-4">
+        <h4 class="detail-card-title">
+            <i class="bi bi-trophy-fill"></i>
+            Estadísticas de Gamificación
+        </h4>
+        <div class="detail-card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <i class="bi bi-star-fill text-warning"></i>
+                        <h3>@Model.PuntajeTotal</h3>
+                        <p>Puntos Totales</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <i class="bi bi-award-fill text-primary"></i>
+                        <h3>@ViewBag.TotalMedallas</h3>
+                        <p>Medallas Obtenidas</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <i class="bi bi-clipboard-check-fill text-success"></i>
+                        <h3>@ViewBag.TotalActividades</h3>
+                        <p>Actividades Completadas</p>
+                    </div>
+                </div>
+            </div>
+            @if (ViewBag.Nivel != null)
+            {
+                var nivel = ViewBag.Nivel as RunaTalento.Models.Nivel;
+                <div class="detail-item mt-3">
+                    <span class="detail-label">Nivel Actual:</span>
+                    <span class="detail-value">
+                        <span class="badge bg-primary fs-5">
+                            <i class="bi bi-trophy"></i> @nivel.Nombre
+                        </span>
+                        <span class="text-muted ms-2">
+                            (@nivel.PuntajeMinimo - @nivel.PuntajeMaximo puntos)
+                        </span>
+                    </span>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Acciones -->
+    <div class="form-actions mt-4">
+        <a asp-action="Index" class="btn-secondary-admin">
+            <i class="bi bi-arrow-left"></i>
+            Volver
+        </a>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn-warning-admin">
+            <i class="bi bi-pencil-fill"></i>
+            Editar Usuario
+        </a>
+        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn-danger-admin">
+            <i class="bi bi-trash-fill"></i>
+            Eliminar Usuario
+        </a>
+    </div>
+</div>
+
+<style>
+    .stat-card {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 12px;
+        padding: 25px;
+        text-align: center;
+        border: 1px solid #dee2e6;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-card i {
+        font-size: 3rem;
+        margin-bottom: 10px;
+    }
+
+    .stat-card h3 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin: 10px 0 5px;
+        color: #2d3748;
+    }
+
+    .stat-card p {
+        margin: 0;
+        color: #718096;
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+</style>

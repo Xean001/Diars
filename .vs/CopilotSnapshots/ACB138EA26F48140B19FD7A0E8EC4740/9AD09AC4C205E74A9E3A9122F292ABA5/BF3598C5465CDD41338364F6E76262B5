@@ -1,0 +1,71 @@
+﻿@model IEnumerable<dynamic>
+@{
+    ViewData["Title"] = "Ranking de Estudiantes";
+    Layout = "~/Views/Shared/_LayoutDocente.cshtml";
+}
+
+<div class="ranking-card">
+    <div class="ranking-header">
+        <h3>
+            <i class="bi bi-graph-up-arrow"></i>
+            Ranking de Estudiantes
+        </h3>
+        <p>Visualiza el desempeño general de tus estudiantes</p>
+    </div>
+
+    <div class="ranking-body">
+        @if (Model != null && Model.Any())
+        {
+            int posicion = 1;
+            foreach (var estudiante in Model)
+            {
+                string iniciales = "";
+                if (!string.IsNullOrEmpty(estudiante.Nombres) && !string.IsNullOrEmpty(estudiante.Apellidos))
+                {
+                    var nombres = estudiante.Nombres.Split(' ');
+                    var apellidos = estudiante.Apellidos.Split(' ');
+                    iniciales = $"{nombres[0].Substring(0, 1)}{apellidos[0].Substring(0, 1)}";
+                }
+                else
+                {
+                    iniciales = "??";
+                }
+
+                string posicionClass = posicion switch
+                {
+                    1 => "position-1",
+                    2 => "position-2",
+                    3 => "position-3",
+                    _ => "position-other"
+                };
+
+                <div class="ranking-item">
+                    <!-- Posición -->
+                    <div class="ranking-position @posicionClass">
+                        @if (posicion <= 3)
+                        {
+                            <i class="bi bi-trophy-fill"></i>
+                        }
+                        else
+                        {
+                            @posicion
+                        }
+                    </div>
+
+                    <!-- Avatar -->
+                    <div class="ranking-avatar">
+                        @iniciales
+                    </div>
+
+                    <!-- Información del estudiante -->
+                    <div class="ranking-info">
+                        <div class="ranking-name">
+                            @estudiante.Nombres @estudiante.Apellidos
+                        </div>
+                        <div class="ranking-level">
+                            @if (estudiante.IdNivel != null)
+                            {
+                                <i class="bi bi-star-fill"></i>
+                                <span>Nivel @estudiante.IdNivel</span>
+                                <span class="text-muted">•</span>
+                                <span class="text-muted

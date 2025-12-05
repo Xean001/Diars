@@ -1,0 +1,24 @@
+using Microsoft.Extensions.Logging;
+
+namespace RunaTalento.Services.Observers
+{
+    /// <summary>
+    /// Patrón OBSERVER (GoF) - Observador que registra en logs las calificaciones
+    /// </summary>
+    public class LogCalificacionObserver : ICalificacionObserver
+    {
+        private readonly ILogger<LogCalificacionObserver> _logger;
+
+        public LogCalificacionObserver(ILogger<LogCalificacionObserver> logger)
+        {
+            _logger = logger;
+        }
+
+        public void OnActividadCalificada(string estudianteId, int actividadId, int puntajeObtenido)
+        {
+            _logger.LogInformation(
+                "Actividad calificada - Estudiante: {EstudianteId}, Actividad: {ActividadId}, Puntaje: {Puntaje}",
+                estudianteId, actividadId, puntajeObtenido);
+        }
+    }
+}

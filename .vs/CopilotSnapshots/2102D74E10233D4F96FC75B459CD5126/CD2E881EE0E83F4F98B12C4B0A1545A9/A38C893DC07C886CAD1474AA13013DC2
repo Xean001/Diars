@@ -1,0 +1,105 @@
+﻿@model RunaTalento.Models.Curso
+
+@{
+    ViewData["Title"] = "Editar Curso";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="admin-header">
+    <div class="admin-header-content">
+        <div>
+            <h1 class="admin-title">
+                <i class="bi bi-pencil-fill"></i>
+                Editar Curso
+            </h1>
+            <p class="admin-subtitle">Modifica la información del curso</p>
+        </div>
+        <a asp-action="Index" class="btn-secondary-admin">
+            <i class="bi bi-arrow-left"></i>
+            Volver a Cursos
+        </a>
+    </div>
+</div>
+
+<div class="admin-content">
+    <div class="form-container">
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+            <input type="hidden" asp-for="IdCurso" />
+
+            <div class="form-group-admin">
+                <label asp-for="Nombre" class="form-label-admin">
+                    <i class="bi bi-book"></i>
+                    Nombre del Curso <span class="required">*</span>
+                </label>
+                <input asp-for="Nombre" class="form-control-admin" placeholder="Ej: Matemáticas I" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+
+            <div class="form-group-admin">
+                <label asp-for="Descripcion" class="form-label-admin">
+                    <i class="bi bi-text-paragraph"></i>
+                    Descripción
+                </label>
+                <textarea asp-for="Descripcion" class="form-control-admin" rows="4" 
+                          placeholder="Describe el contenido y objetivos del curso..."></textarea>
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+
+            <div class="form-group-admin">
+                <label class="form-label-admin">
+                    <i class="bi bi-people-fill"></i>
+                    Docentes Asignados <span class="required">*</span>
+                </label>
+                <p class="text-muted small mb-2">Selecciona uno o varios docentes para este curso</p>
+                @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ContainsKey(""))
+                {
+                    <div class="alert alert-danger">
+                        @foreach (var error in ViewData.ModelState[""].Errors)
+                        {
+                            <div>@error.ErrorMessage</div>
+                        }
+                    </div>
+                }
+                <div class="docentes-checkbox-list" style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 15px; border-radius: 8px; background: #f8f9fa;">
+                    @{
+                        var docentesAsignados = ViewBag.DocentesAsignados as List<string> ?? new List<string>();
+                    }
+                    @foreach (var docente in ViewBag.Docentes)
+                    {
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" 
+                                   type="checkbox" 
+                                   name="docentesSeleccionados" 
+                                   value="@docente.Id" 
+                                   id="docente_@docente.Id"
+                                   @(docentesAsignados.Contains(docente.Id) ? "checked" : "")>
+                            <label class="form-check-label" for="docente_@docente.Id">
+                                @docente.NombreCompleto
+                            </label>
+                        </div>
+                    }
+                </div>
+                <small class="form-text text-muted mt-2">
+                    <i class="bi bi-info-circle"></i>
+                    Debes seleccionar al menos un docente. Puedes asignar varios docentes al mismo curso.
+                </small>
+            </div>
+
+            <div class="form-actions">
+                <a asp-action="Index" class="btn-secondary-admin">
+                    <i class="bi bi-x-circle"></i>
+                    Cancelar
+                </a>
+                <button type="submit" class="btn-primary-admin">
+                    <i class="bi bi-check-circle-fill"></i>
+                    Guardar Cambios
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

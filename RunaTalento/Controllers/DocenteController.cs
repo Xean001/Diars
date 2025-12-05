@@ -1,0 +1,437 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using RunaTalento.Data;
+using RunaTalento.Models;
+using RunaTalento.BusinessLogic;
+using RunaTalento.Services;
+using RunaTalento.Services.Factories;
+
+namespace RunaTalento.Controllers
+{
+    /// <summary>
+    /// Controlador MVC del panel de docente
+    /// Patrón MVC - Capa de Presentación
+    /// Responsabilidad: Gestionar la interacción del usuario y delegar lógica a la capa de negocio
+    /// </summary>
+    [Authorize(Roles = "Docente")]
+    public class DocenteController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly CalificacionBusinessLogic _calificacionLogic;
+        private readonly GamificacionService _gamificacionService;
+        private readonly ICalificacionStrategyFactory _strategyFactory;
+
+        public DocenteController(
+            ApplicationDbContext context,
+            UserManager<ApplicationUser> userManager,
+            CalificacionBusinessLogic calificacionLogic,
+            GamificacionService gamificacionService,
+            ICalificacionStrategyFactory strategyFactory)
+        {
+            _context = context;
+            _userManager = userManager;
+            _calificacionLogic = calificacionLogic;
+            _gamificacionService = gamificacionService;
+            _strategyFactory = strategyFactory;
+        }
+
+        private async Task CargarDatosDocente()
+        {
+            var userId = _userManager.GetUserId(User);
+            var docente = await _context.Users.FindAsync(userId);
+            if (docente != null)
+            {
+                ViewBag.NombreCompleto = $"Prof. {docente.Nombres} {docente.Apellidos}";
+                var nombres = docente.Nombres?.Split(' ');
+                var apellidos = docente.Apellidos?.Split(' ');
+                ViewBag.Iniciales = $"{nombres?[0]?.Substring(0, 1)}{apellidos?[0]?.Substring(0, 1)}";
+            }
+        }
+
+        public IActionResult Index()
+        {
+            return RedirectToAction(nameof(CrearActividad));
+        }
+
+        // Gestión de Actividades
+        public async Task<IActionResult> CrearActividad()
+        {
+            await CargarDatosDocente();
+
+            var userId = _userManager.GetUserId(User);
+            var cursos = await _context.CursoDocente
+                .Include(cd => cd.Curso)
+                .Where(cd => cd.IdDocente == userId)
+                .Select(cd => cd.Curso)
+                .ToListAsync();
+
+            ViewData["IdCurso"] = new SelectList(cursos, "IdCurso", "Nombre");
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CrearActividad([Bind("Titulo,Descripcion,Puntaje,IdCurso,FechaLimite")] Actividad actividad)
+        {
+            if (ModelState.IsValid)
+            {
+                actividad.FechaCreacion = DateTime.Now;
+                _context.Add(actividad);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Actividad creada exitosamente";
+                return RedirectToAction(nameof(CrearActividad));
+            }
+
+            await CargarDatosDocente();
+            var userId = _userManager.GetUserId(User);
+            var cursos = await _context.CursoDocente
+                .Include(cd => cd.Curso)
+                .Where(cd => cd.IdDocente == userId)
+                .Select(cd => cd.Curso)
+                .ToListAsync();
+            ViewData["IdCurso"] = new SelectList(cursos, "IdCurso", "Nombre", actividad.IdCurso);
+            return View(actividad);
+        }
+
+        // Gestión de Medallas
+        public async Task<IActionResult> OtorgarMedallas()
+        {
+            await CargarDatosDocente();
+
+            var docenteId = _userManager.GetUserId(User);
+
+            ViewData["IdMedalla"] = new SelectList(_context.Medalla, "IdMedalla", "Nombre");
+
+            var cursosDelDocente = await _context.CursoDocente
+                .Where(cd => cd.IdDocente == docenteId)
+                .Select(cd => cd.IdCurso)
+                .ToListAsync();
+
+            var estudiantesDelDocente = await _context.ActividadEstudiante
+                .Include(ae => ae.Actividad)
+                .Where(ae => cursosDelDocente.Contains(ae.Actividad.IdCurso))
+                .Select(ae => ae.IdEstudiante)
+                .Distinct()
+                .ToListAsync();
+
+            var estudiantes = await _context.Users
+                .Where(u => estudiantesDelDocente.Contains(u.Id))
+                .OrderBy(u => u.Nombres)
+                .ToListAsync();
+
+            ViewData["IdEstudiante"] = new SelectList(estudiantes, "Id", "Email");
+
+            var medallasOtorgadas = await _context.MedallaEstudiante
+                .Include(me => me.Estudiante)
+                .Include(me => me.Medalla)
+                .Where(me => me.IdDocente == docenteId)
+                .OrderByDescending(me => me.FechaOtorgada)
+                .Take(10)
+                .ToListAsync();
+
+            ViewBag.MedallasOtorgadas = medallasOtorgadas;
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> OtorgarMedallas([Bind("IdMedalla,IdEstudiante")] MedallaEstudiante medallaEstudiante, string Motivo)
+        {
+            if (ModelState.IsValid)
+            {
+                var existente = await _context.MedallaEstudiante
+                    .FirstOrDefaultAsync(me => me.IdMedalla == medallaEstudiante.IdMedalla
+                                            && me.IdEstudiante == medallaEstudiante.IdEstudiante);
+
+                if (existente != null)
+                {
+                    TempData["Warning"] = "El estudiante ya tiene esta medalla";
+                }
+                else
+                {
+                    medallaEstudiante.FechaOtorgada = DateTime.Now;
+                    medallaEstudiante.IdDocente = _userManager.GetUserId(User);
+                    _context.Add(medallaEstudiante);
+                    await _context.SaveChangesAsync();
+                    TempData["Success"] = "Medalla otorgada exitosamente";
+                }
+
+                return RedirectToAction(nameof(OtorgarMedallas));
+            }
+
+            await CargarDatosDocente();
+            ViewData["IdMedalla"] = new SelectList(_context.Medalla, "IdMedalla", "Nombre", medallaEstudiante.IdMedalla);
+            var estudiantes = await _userManager.GetUsersInRoleAsync("Estudiante");
+            ViewData["IdEstudiante"] = new SelectList(estudiantes, "Id", "Email", medallaEstudiante.IdEstudiante);
+
+            return View(medallaEstudiante);
+        }
+
+        public async Task<IActionResult> EditarMedallaOtorgada(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var docenteId = _userManager.GetUserId(User);
+            var medallaEstudiante = await _context.MedallaEstudiante
+                .Include(me => me.Estudiante)
+                .Include(me => me.Medalla)
+                .FirstOrDefaultAsync(me => me.IdMedallaEstudiante == id && me.IdDocente == docenteId);
+
+            if (medallaEstudiante == null)
+            {
+                TempData["Error"] = "Medalla no encontrada o no tienes permiso para editarla";
+                return RedirectToAction(nameof(OtorgarMedallas));
+            }
+
+            await CargarDatosDocente();
+            ViewData["IdMedalla"] = new SelectList(_context.Medalla, "IdMedalla", "Nombre", medallaEstudiante.IdMedalla);
+
+            return View(medallaEstudiante);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditarMedallaOtorgada(int id, [Bind("IdMedallaEstudiante,IdMedalla,IdEstudiante,IdDocente")] MedallaEstudiante medallaEstudiante)
+        {
+            if (id != medallaEstudiante.IdMedallaEstudiante)
+            {
+                return NotFound();
+            }
+
+            var docenteId = _userManager.GetUserId(User);
+            if (medallaEstudiante.IdDocente != docenteId)
+            {
+                TempData["Error"] = "No tienes permiso para editar esta medalla";
+                return RedirectToAction(nameof(OtorgarMedallas));
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var medallaOriginal = await _context.MedallaEstudiante.AsNoTracking()
+                        .FirstOrDefaultAsync(me => me.IdMedallaEstudiante == id);
+
+                    if (medallaOriginal != null)
+                    {
+                        medallaEstudiante.FechaOtorgada = medallaOriginal.FechaOtorgada;
+                    }
+
+                    _context.Update(medallaEstudiante);
+                    await _context.SaveChangesAsync();
+                    TempData["Success"] = "Medalla actualizada exitosamente";
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!_context.MedallaEstudiante.Any(e => e.IdMedallaEstudiante == medallaEstudiante.IdMedallaEstudiante))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(OtorgarMedallas));
+            }
+
+            await CargarDatosDocente();
+            ViewData["IdMedalla"] = new SelectList(_context.Medalla, "IdMedalla", "Nombre", medallaEstudiante.IdMedalla);
+            return View(medallaEstudiante);
+        }
+
+        public async Task<IActionResult> EliminarMedallaOtorgada(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var docenteId = _userManager.GetUserId(User);
+            var medallaEstudiante = await _context.MedallaEstudiante
+                .Include(me => me.Estudiante)
+                .Include(me => me.Medalla)
+                .FirstOrDefaultAsync(me => me.IdMedallaEstudiante == id && me.IdDocente == docenteId);
+
+            if (medallaEstudiante == null)
+            {
+                TempData["Error"] = "Medalla no encontrada o no tienes permiso para eliminarla";
+                return RedirectToAction(nameof(OtorgarMedallas));
+            }
+
+            await CargarDatosDocente();
+            return View(medallaEstudiante);
+        }
+
+        [HttpPost, ActionName("EliminarMedallaOtorgada")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EliminarMedallaOtorgadaConfirmed(int id)
+        {
+            var docenteId = _userManager.GetUserId(User);
+            var medallaEstudiante = await _context.MedallaEstudiante
+                .FirstOrDefaultAsync(me => me.IdMedallaEstudiante == id && me.IdDocente == docenteId);
+
+            if (medallaEstudiante != null)
+            {
+                _context.MedallaEstudiante.Remove(medallaEstudiante);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Medalla otorgada eliminada exitosamente";
+            }
+            else
+            {
+                TempData["Error"] = "No se pudo eliminar la medalla";
+            }
+
+            return RedirectToAction(nameof(OtorgarMedallas));
+        }
+
+        // Consultas de Desempeño
+        public async Task<IActionResult> VerRanking()
+        {
+            await CargarDatosDocente();
+
+            var docenteId = _userManager.GetUserId(User);
+
+            var cursosDelDocente = await _context.CursoDocente
+                .Where(cd => cd.IdDocente == docenteId)
+                .Select(cd => cd.IdCurso)
+                .ToListAsync();
+
+            var estudiantesDelDocente = await _context.ActividadEstudiante
+                .Include(ae => ae.Actividad)
+                .Where(ae => cursosDelDocente.Contains(ae.Actividad.IdCurso))
+                .Select(ae => ae.IdEstudiante)
+                .Distinct()
+                .ToListAsync();
+
+            var estudiantes = await _context.Users
+                .Include(u => u.Nivel)
+                .Where(u => estudiantesDelDocente.Contains(u.Id))
+                .OrderByDescending(u => u.PuntajeTotal)
+                .ThenBy(u => u.Nombres)
+                .Take(100)
+                .Select(u => new
+                {
+                    u.Id,
+                    u.Nombres,
+                    u.Apellidos,
+                    u.Email,
+                    u.PuntajeTotal,
+                    u.IdNivel,
+                    NivelNombre = u.Nivel != null ? u.Nivel.Nombre : "Sin nivel",
+                    MedallasCount = _context.MedallaEstudiante.Count(me => me.IdEstudiante == u.Id)
+                })
+                .ToListAsync();
+
+            return View(estudiantes);
+        }
+
+        // Calificación con Patrones
+        public async Task<IActionResult> CalificarActividades()
+        {
+            await CargarDatosDocente();
+
+            var docenteId = _userManager.GetUserId(User);
+
+            var cursosDelDocente = await _context.CursoDocente
+                .Where(cd => cd.IdDocente == docenteId)
+                .Select(cd => cd.IdCurso)
+                .ToListAsync();
+
+            var actividadesEntregadas = await _context.ActividadEstudiante
+                .Include(ae => ae.Actividad)
+                .ThenInclude(a => a.Curso)
+                .Include(ae => ae.Estudiante)
+                .Where(ae => ae.PuntajeObtenido == null && cursosDelDocente.Contains(ae.Actividad.IdCurso))
+                .OrderByDescending(ae => ae.FechaEntrega)
+                .ToListAsync();
+
+            return View(actividadesEntregadas);
+        }
+
+        /// <summary>
+        /// Califica una actividad entregada por un estudiante
+        /// Aplica patrones Factory, Strategy y Observer a través de la capa de lógica de negocio
+        /// </summary>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Calificar(int idActividadEstudiante, int puntajeObtenido, string estrategiaCalificacion = "estandar")
+        {
+            var actividadEstudiante = await _context.ActividadEstudiante
+                .Include(ae => ae.Actividad)
+                .Include(ae => ae.Estudiante)
+                .FirstOrDefaultAsync(ae => ae.IdActividadEstudiante == idActividadEstudiante);
+
+            if (actividadEstudiante == null)
+            {
+                TempData["Error"] = "Actividad no encontrada";
+                return RedirectToAction(nameof(CalificarActividades));
+            }
+
+            if (puntajeObtenido < 0 || puntajeObtenido > actividadEstudiante.Actividad.Puntaje)
+            {
+                TempData["Error"] = $"El puntaje debe estar entre 0 y {actividadEstudiante.Actividad.Puntaje}";
+                return RedirectToAction(nameof(CalificarActividades));
+            }
+
+            // ? Patrón FACTORY METHOD - Crear estrategia de calificación
+            var strategy = _strategyFactory.CrearEstrategia(estrategiaCalificacion);
+
+            // ? Patrón CONTROLLER (GRASP) - Delegar lógica de negocio
+            // Crear instancia temporal con la estrategia seleccionada
+            var controladorCalificacion = new CalificacionBusinessLogic(
+                strategy,
+                new Services.Observers.CalificacionNotifier());
+
+            var resultado = controladorCalificacion.ProcesarCalificacion(
+                actividadEstudiante,
+                puntajeObtenido,
+                actividadEstudiante.Actividad.FechaLimite);
+
+            // ? Patrón HIGH COHESION - Actualizar gamificación
+            var actualizacion = await _gamificacionService.ActualizarPuntajeYNivel(
+                actividadEstudiante.IdEstudiante,
+                resultado.PuntajeFinal);
+
+            var incentivos = await _gamificacionService.OtorgarIncentivosAutomaticos(
+                actividadEstudiante.IdEstudiante);
+
+            await _context.SaveChangesAsync();
+
+            // Construir mensaje de éxito
+            var mensajeExito = $"? {resultado.Mensaje}";
+
+            if (actualizacion.CambioDeNivel)
+            {
+                mensajeExito += $" | ??? {actualizacion.ObtenerMensaje()}";
+            }
+
+            if (incentivos.Any())
+            {
+                mensajeExito += $" | ?? Incentivos obtenidos: {string.Join(", ", incentivos)}";
+            }
+
+            TempData["Success"] = mensajeExito;
+            return RedirectToAction(nameof(CalificarActividades));
+        }
+
+        public IActionResult VistaDocumento(string url)
+        {
+            if (string.IsNullOrEmpty(url))
+            {
+                TempData["Error"] = "URL de documento no válida";
+                return RedirectToAction(nameof(CalificarActividades));
+            }
+
+            return View((object)url);
+        }
+    }
+}

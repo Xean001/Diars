@@ -1,0 +1,287 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using RunaTalento.Data;
+using RunaTalento.Models;
+
+namespace RunaTalento.Controllers
+{
+    /// <summary>
+    /// Controlador para CU07 - Mantenedor de Usuarios
+    /// Permite al administrador crear, editar o eliminar cuentas de usuarios
+    /// </summary>
+    [Authorize(Roles = "Admin")]
+    public class UsuariosController : Controller
+    {
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ApplicationDbContext _context;
+
+        public UsuariosController(
+            UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager,
+            ApplicationDbContext context)
+        {
+            _userManager = userManager;
+            _roleManager = roleManager;
+            _context = context;
+        }
+
+        // GET: Usuarios
+        public async Task<IActionResult> Index()
+        {
+            await SetHeaderDataAsync();
+
+            var usuarios = await _userManager.Users.ToListAsync();
+            var usuariosConRoles = new List<dynamic>();
+
+            foreach (var usuario in usuarios)
+            {
+                var roles = await _userManager.GetRolesAsync(usuario);
+                usuariosConRoles.Add(new
+                {
+                    Usuario = usuario,
+                    Roles = string.Join(", ", roles),
+                    RolPrincipal = roles.FirstOrDefault() ?? "Sin rol"
+                });
+            }
+
+            return View(usuariosConRoles);
+        }
+
+        // GET: Usuarios/Create
+        public IActionResult Create()
+        {
+            ViewBag.Roles = new SelectList(_roleManager.Roles, "Name", "Name");
+            return View();
+        }
+
+        // POST: Usuarios/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(string email, string nombres, string apellidos, 
+            string password, string rol)
+        {
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password) || 
+                string.IsNullOrEmpty(nombres) || string.IsNullOrEmpty(apellidos))
+            {
+                ModelState.AddModelError("", "Todos los campos son obligatorios");
+                ViewBag.Roles = new SelectList(_roleManager.Roles, "Name", "Name");
+                return View();
+            }
+
+            var usuario = new ApplicationUser
+            {
+                UserName = email,
+                Email = email,
+                Nombres = nombres,
+                Apellidos = apellidos,
+                EmailConfirmed = true,
+                Estado = "Activo",
+                IdNivel = null, // ✅ El nivel se asigna AUTOMÁTICAMENTE
+                FechaRegistro = DateTime.Now,
+                PuntajeTotal = 0
+            };
+
+            var result = await _userManager.CreateAsync(usuario, password);
+
+            if (result.Succeeded)
+            {
+                if (!string.IsNullOrEmpty(rol))
+                {
+                    await _userManager.AddToRoleAsync(usuario, rol);
+                }
+
+                TempData["Success"] = "Usuario creado exitosamente. El nivel se asignará automáticamente al obtener puntos.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+
+            ViewBag.Roles = new SelectList(_roleManager.Roles, "Name", "Name");
+            return View();
+        }
+
+        // GET: Usuarios/Edit/5
+        public async Task<IActionResult> Edit(string? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var usuario = await _userManager.FindByIdAsync(id);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            var roles = await _userManager.GetRolesAsync(usuario);
+            ViewBag.RolActual = roles.FirstOrDefault();
+            ViewBag.Roles = new SelectList(_roleManager.Roles, "Name", "Name");
+            ViewBag.Niveles = new SelectList(_context.Nivel, "IdNivel", "Nombre", usuario.IdNivel);
+
+            return View(usuario);
+        }
+
+        // POST: Usuarios/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(string id, string nombres, string apellidos, 
+            string email, string estado, string? rol)
+        {
+            var usuario = await _userManager.FindByIdAsync(id);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            usuario.Nombres = nombres;
+            usuario.Apellidos = apellidos;
+            usuario.Email = email;
+            usuario.UserName = email;
+            usuario.Estado = estado;
+            // ✅ IdNivel NO se modifica aquí, se actualiza automáticamente
+
+            var result = await _userManager.UpdateAsync(usuario);
+
+            if (result.Succeeded)
+            {
+                // Actualizar rol
+                var rolesActuales = await _userManager.GetRolesAsync(usuario);
+                await _userManager.RemoveFromRolesAsync(usuario, rolesActuales);
+                
+                if (!string.IsNullOrEmpty(rol))
+                {
+                    await _userManager.AddToRoleAsync(usuario, rol);
+                }
+
+                TempData["Success"] = "Usuario actualizado exitosamente";
+                return RedirectToAction(nameof(Index));
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+
+            ViewBag.Roles = new SelectList(_roleManager.Roles, "Name", "Name");
+            ViewBag.Niveles = new SelectList(_context.Nivel, "IdNivel", "Nombre", usuario.IdNivel);
+            return View(usuario);
+        }
+
+        // GET: Usuarios/Delete/5
+        public async Task<IActionResult> Delete(string? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var usuario = await _userManager.FindByIdAsync(id);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            var roles = await _userManager.GetRolesAsync(usuario);
+            ViewBag.Roles = string.Join(", ", roles);
+
+            return View(usuario);
+        }
+
+        // POST: Usuarios/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(string id)
+        {
+            var usuario = await _userManager.FindByIdAsync(id);
+            if (usuario != null)
+            {
+                var result = await _userManager.DeleteAsync(usuario);
+                if (result.Succeeded)
+                {
+                    TempData["Success"] = "Usuario eliminado exitosamente";
+                }
+                else
+                {
+                    TempData["Error"] = "Error al eliminar el usuario";
+                }
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Usuarios/Details/5
+        public async Task<IActionResult> Details(string? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var usuario = await _userManager.FindByIdAsync(id);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            var roles = await _userManager.GetRolesAsync(usuario);
+            ViewBag.Roles = string.Join(", ", roles);
+
+            // Obtener nivel
+            if (usuario.IdNivel.HasValue)
+            {
+                ViewBag.Nivel = await _context.Nivel.FindAsync(usuario.IdNivel.Value);
+            }
+
+            // Obtener estadísticas
+            ViewBag.TotalMedallas = await _context.MedallaEstudiante
+                .CountAsync(me => me.IdEstudiante == id);
+            
+            ViewBag.TotalActividades = await _context.ActividadEstudiante
+                .CountAsync(ae => ae.IdEstudiante == id);
+
+            return View(usuario);
+        }
+
+        // Método auxiliar para establecer datos del header
+        private async Task SetHeaderDataAsync()
+        {
+            var userId = _userManager.GetUserId(User);
+            if (userId != null)
+            {
+                var admin = await _context.Users.FindAsync(userId);
+                if (admin != null)
+                {
+                    ViewBag.NombreCompleto = $"{admin.Nombres} {admin.Apellidos}";
+                    var nombres = admin.Nombres?.Split(' ');
+                    var apellidos = admin.Apellidos?.Split(' ');
+                    ViewBag.Iniciales = $"{nombres?[0]?.Substring(0, 1)}{apellidos?[0]?.Substring(0, 1)}";
+                }
+            }
+        }
+
+        /// <summary>
+        /// Método auxiliar para actualizar el nivel de un estudiante según su puntaje
+        /// ✅ Este método se llama automáticamente desde DocenteController.Calificar()
+        /// </summary>
+        private async Task ActualizarNivelAutomatico(ApplicationUser estudiante)
+        {
+            var nivel = await _context.Nivel
+                .Where(n => estudiante.PuntajeTotal >= n.PuntajeMinimo 
+                         && estudiante.PuntajeTotal <= n.PuntajeMaximo)
+                .FirstOrDefaultAsync();
+            
+            if (nivel != null)
+            {
+                estudiante.IdNivel = nivel.IdNivel;
+            }
+        }
+    }
+}

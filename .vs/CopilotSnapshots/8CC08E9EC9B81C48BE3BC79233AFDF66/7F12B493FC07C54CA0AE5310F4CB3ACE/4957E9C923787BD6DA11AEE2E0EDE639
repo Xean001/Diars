@@ -1,0 +1,100 @@
+﻿@model RunaTalento.Models.Medalla
+
+@{
+    ViewData["Title"] = "Crear Medalla";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="admin-header">
+    <div class="admin-header-content">
+        <div>
+            <h1 class="admin-title">
+                <i class="bi bi-award-fill"></i>
+                Crear Nueva Medalla
+            </h1>
+            <p class="admin-subtitle">Agrega una nueva medalla de reconocimiento al sistema</p>
+        </div>
+        <a asp-action="Index" class="btn-secondary-admin">
+            <i class="bi bi-arrow-left"></i>
+            Volver a Medallas
+        </a>
+    </div>
+</div>
+
+<div class="admin-content">
+    <div class="form-container">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+            
+            <div class="form-group-admin">
+                <label asp-for="Nombre" class="form-label-admin">
+                    <i class="bi bi-award"></i>
+                    Nombre de la Medalla <span class="required">*</span>
+                </label>
+                <input asp-for="Nombre" class="form-control-admin" 
+                       placeholder="Ej: Medalla de Excelencia Académica" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+
+            <div class="form-group-admin">
+                <label asp-for="Descripcion" class="form-label-admin">
+                    <i class="bi bi-text-paragraph"></i>
+                    Descripción
+                </label>
+                <textarea asp-for="Descripcion" class="form-control-admin" rows="4" 
+                          placeholder="Describe los criterios para obtener esta medalla..."></textarea>
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+
+            <div class="form-group-admin">
+                <label asp-for="ImagenUrl" class="form-label-admin">
+                    <i class="bi bi-image"></i>
+                    URL de la Imagen (Opcional)
+                </label>
+                <input asp-for="ImagenUrl" class="form-control-admin" 
+                       placeholder="https://ejemplo.com/medalla.png o /images/medallas/oro.png" />
+                <span asp-validation-for="ImagenUrl" class="text-danger"></span>
+                <small class="form-text text-muted">
+                    <i class="bi bi-lightbulb-fill"></i>
+                    Puedes usar una URL externa o una ruta relativa dentro del proyecto. Si no agregas imagen, se usará un icono predeterminado.
+                </small>
+            </div>
+
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle-fill me-2"></i>
+                <strong>Información:</strong> Las medallas serán otorgadas manualmente por los docentes como reconocimiento al esfuerzo y logros de los estudiantes.
+            </div>
+
+            <div class="form-actions">
+                <a asp-action="Index" class="btn-secondary-admin">
+                    <i class="bi bi-x-circle"></i>
+                    Cancelar
+                </a>
+                <button type="submit" class="btn-primary-admin">
+                    <i class="bi bi-check-circle-fill"></i>
+                    Crear Medalla
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // Vista previa de imagen
+        document.querySelector('input[name="ImagenUrl"]').addEventListener('input', function(e) {
+            const url = e.target.value;
+            if (url) {
+                e.target.style.borderColor = '#2563eb';
+            }
+        });
+
+        // Validación en tiempo real
+        document.querySelector('input[name="Nombre"]').addEventListener('input', function(e) {
+            if (e.target.value.length > 0) {
+                e.target.style.borderColor = '#22c55e';
+            }
+        });
+    </script>
+}

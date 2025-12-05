@@ -1,0 +1,47 @@
+﻿@model RunaTalento.Models.Curso
+
+@{
+    ViewData["Title"] = "Eliminar Curso";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0"><i class="bi bi-exclamation-triangle"></i> Confirmar Eliminación</h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <strong>¿Está seguro que desea eliminar este curso?</strong>
+                        <p class="mb-0">Esta acción también eliminará todas las actividades asociadas.</p>
+                    </div>
+
+                    <dl class="row">
+                        <dt class="col-sm-3">Nombre:</dt>
+                        <dd class="col-sm-9">@Model.Nombre</dd>
+
+                        <dt class="col-sm-3">Descripción:</dt>
+                        <dd class="col-sm-9">@(Model.Descripcion ?? "Sin descripción")</dd>
+
+                        <dt class="col-sm-3">Docente:</dt>
+                        <dd class="col-sm-9">@Model.Docente?.Email</dd>
+                    </dl>
+
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" asp-for="IdCurso" />
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-trash"></i> Eliminar Definitivamente
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

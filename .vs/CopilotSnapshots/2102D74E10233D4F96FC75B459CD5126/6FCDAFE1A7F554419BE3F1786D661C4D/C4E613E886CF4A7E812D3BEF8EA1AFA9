@@ -1,0 +1,8 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Bienvenido a RunaTalento</h1>
+    <p>Plataforma de gamificación académica</p>
+</div>

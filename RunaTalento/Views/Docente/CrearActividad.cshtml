@@ -1,0 +1,125 @@
+@model RunaTalento.Models.Actividad
+@{
+    ViewData["Title"] = "Crear Actividad";
+    Layout = "~/Views/Shared/_LayoutDocente.cshtml";
+}
+
+<div class="docente-card">
+    <div class="card-header-custom">
+        <i class="bi bi-plus-circle-fill"></i>
+        <h3>Registrar Nueva Actividad</h3>
+    </div>
+    <p class="card-subtitle">Crea actividades académicas para que los estudiantes puedan realizar</p>
+
+    <form asp-action="CrearActividad" method="post">
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <label asp-for="Titulo" class="form-label">
+                    Título de la Actividad <span class="text-danger">*</span>
+                </label>
+                <input asp-for="Titulo"
+                       class="form-control"
+                       placeholder="Ej: Resolución de Problemas Matemáticos"
+                       required />
+                <span asp-validation-for="Titulo" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <label asp-for="Puntaje" class="form-label">
+                    Puntaje a Otorgar <span class="text-danger">*</span>
+                </label>
+                <input asp-for="Puntaje"
+                       type="number"
+                       class="form-control"
+                       placeholder="Ej: 150"
+                       min="0"
+                       max="1000"
+                       required />
+                <small class="form-text">
+                    <i class="bi bi-lightbulb-fill"></i>
+                    Puntos que recibirá el estudiante al completar la actividad
+                </small>
+                <span asp-validation-for="Puntaje" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <label asp-for="IdCurso" class="form-label">
+                    Curso <span class="text-danger">*</span>
+                </label>
+                <select asp-for="IdCurso"
+                        class="form-select"
+                        asp-items="ViewBag.IdCurso"
+                        required>
+                    <option value="">Selecciona el curso</option>
+                </select>
+                <span asp-validation-for="IdCurso" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <label asp-for="FechaLimite" class="form-label">
+                    Fecha Límite de Entrega
+                </label>
+                <input asp-for="FechaLimite"
+                       type="datetime-local"
+                       class="form-control"
+                       id="fechaLimite" />
+                <small class="form-text">
+                    <i class="bi bi-info-circle"></i>
+                    Opcional. Si no se define, la actividad no tendrá fecha de vencimiento.
+                </small>
+                <span asp-validation-for="FechaLimite" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <label asp-for="Descripcion" class="form-label">
+                Descripción de la Actividad <span class="text-danger">*</span>
+            </label>
+            <textarea asp-for="Descripcion"
+                      class="form-control"
+                      rows="5"
+                      placeholder="Describe las instrucciones y objetivos de la actividad..."
+                      required></textarea>
+            <span asp-validation-for="Descripcion" class="text-danger"></span>
+        </div>
+
+        <div class="d-flex justify-content-end gap-3 mt-4">
+            <a asp-controller="Actividad" asp-action="Index" class="btn btn-secondary-custom">
+                <i class="bi bi-x-circle"></i> Cancelar
+            </a>
+            <button type="submit" class="btn btn-primary-custom">
+                <i class="bi bi-check-circle-fill"></i> Registrar Actividad
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        document.getElementById('Puntaje').addEventListener('input', function(e) {
+            const puntaje = e.target.value;
+            if (puntaje > 0 && puntaje <= 1000) {
+                e.target.style.borderColor = '#14b8a6';
+            }
+        });
+
+        document.getElementById('fechaLimite').addEventListener('change', function(e) {
+            const fechaSeleccionada = new Date(e.target.value);
+            const ahora = new Date();
+
+            if (fechaSeleccionada <= ahora) {
+                alert('?? La fecha límite debe ser posterior a la fecha actual');
+                e.target.value = '';
+            }
+        });
+
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        document.getElementById('fechaLimite').min = now.toISOString().slice(0, 16);
+    </script>
+}

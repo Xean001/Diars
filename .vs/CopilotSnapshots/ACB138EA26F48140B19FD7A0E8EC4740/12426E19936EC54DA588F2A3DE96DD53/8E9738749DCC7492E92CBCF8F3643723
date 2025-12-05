@@ -1,0 +1,226 @@
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace RunaTalento.Migrations
+{
+    /// <inheritdoc />
+    public partial class AgregarFechaLimiteActividad : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Curso_AspNetUsers_IdDocente",
+                table: "Curso");
+
+            migrationBuilder.AddColumn<string>(
+                name: "IdDocente",
+                table: "MedallaEstudiante",
+                type: "nvarchar(450)",
+                nullable: true);
+
+            migrationBuilder.AlterColumn<string>(
+                name: "IdDocente",
+                table: "Curso",
+                type: "nvarchar(450)",
+                nullable: true,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(450)");
+
+            migrationBuilder.AddColumn<string>(
+                name: "UrlDocumento",
+                table: "ActividadEstudiante",
+                type: "nvarchar(max)",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "ArchivoUrl",
+                table: "Actividad",
+                type: "nvarchar(255)",
+                maxLength: 255,
+                nullable: true);
+
+            migrationBuilder.AddColumn<DateTime>(
+                name: "FechaLimite",
+                table: "Actividad",
+                type: "datetime2",
+                nullable: true);
+
+            migrationBuilder.CreateTable(
+                name: "CursoDocente",
+                columns: table => new
+                {
+                    IdCursoDocente = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IdCurso = table.Column<int>(type: "int", nullable: false),
+                    IdDocente = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FechaAsignacion = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CursoDocente", x => x.IdCursoDocente);
+                    table.ForeignKey(
+                        name: "FK_CursoDocente_AspNetUsers_IdDocente",
+                        column: x => x.IdDocente,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CursoDocente_Curso_IdCurso",
+                        column: x => x.IdCurso,
+                        principalTable: "Curso",
+                        principalColumn: "IdCurso",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Incentivo",
+                columns: table => new
+                {
+                    IdIncentivo = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Descripcion = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    PuntosRequeridos = table.Column<int>(type: "int", nullable: false),
+                    IconoUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    Activo = table.Column<bool>(type: "bit", nullable: false),
+                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Incentivo", x => x.IdIncentivo);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "IncentivoEstudiante",
+                columns: table => new
+                {
+                    IdIncentivoEstudiante = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IdIncentivo = table.Column<int>(type: "int", nullable: false),
+                    IdEstudiante = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FechaOtorgado = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PuntajeAlObtener = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IncentivoEstudiante", x => x.IdIncentivoEstudiante);
+                    table.ForeignKey(
+                        name: "FK_IncentivoEstudiante_AspNetUsers_IdEstudiante",
+                        column: x => x.IdEstudiante,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_IncentivoEstudiante_Incentivo_IdIncentivo",
+                        column: x => x.IdIncentivo,
+                        principalTable: "Incentivo",
+                        principalColumn: "IdIncentivo",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MedallaEstudiante_IdDocente",
+                table: "MedallaEstudiante",
+                column: "IdDocente");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CursoDocente_IdCurso_IdDocente",
+                table: "CursoDocente",
+                columns: new[] { "IdCurso", "IdDocente" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CursoDocente_IdDocente",
+                table: "CursoDocente",
+                column: "IdDocente");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_IncentivoEstudiante_IdEstudiante",
+                table: "IncentivoEstudiante",
+                column: "IdEstudiante");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_IncentivoEstudiante_IdIncentivo_IdEstudiante",
+                table: "IncentivoEstudiante",
+                columns: new[] { "IdIncentivo", "IdEstudiante" },
+                unique: true);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Curso_AspNetUsers_IdDocente",
+                table: "Curso",
+                column: "IdDocente",
+                principalTable: "AspNetUsers",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.SetNull);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_MedallaEstudiante_AspNetUsers_IdDocente",
+                table: "MedallaEstudiante",
+                column: "IdDocente",
+                principalTable: "AspNetUsers",
+                principalColumn: "Id");
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Curso_AspNetUsers_IdDocente",
+                table: "Curso");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_MedallaEstudiante_AspNetUsers_IdDocente",
+                table: "MedallaEstudiante");
+
+            migrationBuilder.DropTable(
+                name: "CursoDocente");
+
+            migrationBuilder.DropTable(
+                name: "IncentivoEstudiante");
+
+            migrationBuilder.DropTable(
+                name: "Incentivo");
+
+            migrationBuilder.DropIndex(
+                name: "IX_MedallaEstudiante_IdDocente",
+                table: "MedallaEstudiante");
+
+            migrationBuilder.DropColumn(
+                name: "IdDocente",
+                table: "MedallaEstudiante");
+
+            migrationBuilder.DropColumn(
+                name: "UrlDocumento",
+                table: "ActividadEstudiante");
+
+            migrationBuilder.DropColumn(
+                name: "ArchivoUrl",
+                table: "Actividad");
+
+            migrationBuilder.DropColumn(
+                name: "FechaLimite",
+                table: "Actividad");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "IdDocente",
+                table: "Curso",
+                type: "nvarchar(450)",
+                nullable: false,
+                defaultValue: "",
+                oldClrType: typeof(string),
+                oldType: "nvarchar(450)",
+                oldNullable: true);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Curso_AspNetUsers_IdDocente",
+                table: "Curso",
+                column: "IdDocente",
+                principalTable: "AspNetUsers",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
+        }
+    }
+}

@@ -1,0 +1,176 @@
+@model RunaTalento.Models.Medalla
+
+@{
+    ViewData["Title"] = "Eliminar Medalla";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="admin-header">
+    <div class="admin-header-content">
+        <div>
+            <h1 class="admin-title">
+                <i class="bi bi-trash-fill text-danger"></i>
+                Eliminar Medalla
+            </h1>
+            <p class="admin-subtitle text-danger fw-bold">¿Estás seguro de que deseas eliminar esta medalla?</p>
+        </div>
+        <a asp-action="Index" class="btn-secondary-admin">
+            <i class="bi bi-arrow-left"></i>
+            Cancelar
+        </a>
+    </div>
+</div>
+
+<div class="admin-content">
+    <!-- Advertencia principal -->
+    <div class="alert alert-danger" role="alert">
+        <div class="d-flex align-items-start">
+            <i class="bi bi-exclamation-triangle-fill me-3" style="font-size: 2rem;"></i>
+            <div>
+                <h5 class="alert-heading mb-2">?? Acción Irreversible</h5>
+                <p class="mb-2">
+                    Esta acción eliminará permanentemente la medalla <strong>"@Model.Nombre"</strong> del sistema.
+                </p>
+                <ul class="mb-0">
+                    <li>Las medallas ya otorgadas a estudiantes <strong>se conservarán</strong> en sus perfiles</li>
+                    <li>No se podrá volver a otorgar esta medalla en el futuro</li>
+                    <li>Esta acción no se puede deshacer</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preview de la medalla -->
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="text-center p-4" style="background: white; border: 2px solid #fee2e2; border-radius: 16px;">
+                @if (!string.IsNullOrEmpty(Model.ImagenUrl))
+                {
+                    <img src="@Model.ImagenUrl" 
+                         alt="@Model.Nombre" 
+                         class="img-fluid mb-3" 
+                         style="max-height: 200px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+                }
+                else
+                {
+                    <div style="display: inline-flex; align-items: center; justify-content: center; width: 180px; height: 180px; background: linear-gradient(135deg, #fee2e2, #fecaca); border-radius: 50%; margin-bottom: 1rem;">
+                        <i class="bi bi-award-fill" style="font-size: 6rem; color: #dc2626;"></i>
+                    </div>
+                }
+                <h5 class="fw-bold mb-0">@Model.Nombre</h5>
+                @if (!string.IsNullOrEmpty(Model.Descripcion))
+                {
+                    <p class="text-muted small mt-2 mb-0">@Model.Descripcion</p>
+                }
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <!-- Información detallada -->
+            <div class="detail-card">
+                <h4 class="detail-card-title">
+                    <i class="bi bi-info-circle-fill"></i>
+                    Información de la Medalla a Eliminar
+                </h4>
+                <div class="detail-card-body">
+                    <div class="detail-item">
+                        <span class="detail-label">
+                            <i class="bi bi-award me-2"></i>
+                            Nombre:
+                        </span>
+                        <span class="detail-value fw-bold">@Model.Nombre</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">
+                            <i class="bi bi-text-paragraph me-2"></i>
+                            Descripción:
+                        </span>
+                        <span class="detail-value">@(Model.Descripcion ?? "Sin descripción")</span>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.ImagenUrl))
+                    {
+                        <div class="detail-item">
+                            <span class="detail-label">
+                                <i class="bi bi-image me-2"></i>
+                                URL de Imagen:
+                            </span>
+                            <span class="detail-value">
+                                <code style="font-size: 0.875rem; background: #f1f5f9; padding: 4px 8px; border-radius: 4px;">@Model.ImagenUrl</code>
+                            </span>
+                        </div>
+                    }
+                    <div class="detail-item">
+                        <span class="detail-label">
+                            <i class="bi bi-people-fill me-2"></i>
+                            Estudiantes con esta medalla:
+                        </span>
+                        <span class="detail-value">
+                            @if (Model.MedallasEstudiantes != null && Model.MedallasEstudiantes.Any())
+                            {
+                                <span class="badge" style="background: #fee2e2; color: #991b1b; padding: 6px 12px; border-radius: 6px; font-size: 0.875rem;">
+                                    @Model.MedallasEstudiantes.Count estudiante(s)
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Ningún estudiante tiene esta medalla</span>
+                            }
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulario de confirmación -->
+    <form asp-action="Delete" method="post" class="mt-4" id="deleteForm">
+        <input type="hidden" asp-for="IdMedalla" />
+        
+        <!-- Confirmación adicional -->
+        <div class="p-4 mb-4" style="background: #fef3c7; border: 1.5px solid #fbbf24; border-radius: 12px;">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="confirmDelete" required>
+                <label class="form-check-label fw-bold" for="confirmDelete">
+                    Confirmo que deseo eliminar permanentemente esta medalla
+                </label>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <a asp-action="Index" class="btn-secondary-admin">
+                <i class="bi bi-x-circle"></i>
+                No, Cancelar
+            </a>
+            <button type="submit" class="btn btn-danger" id="deleteButton" disabled style="padding: 10px 28px; border-radius: 10px; font-weight: 600; font-size: 0.9rem; transition: all 0.3s ease;">
+                <i class="bi bi-trash-fill"></i>
+                Sí, Eliminar Medalla
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        // Habilitar botón solo si el checkbox está marcado
+        document.getElementById('confirmDelete').addEventListener('change', function(e) {
+            const deleteButton = document.getElementById('deleteButton');
+            deleteButton.disabled = !e.target.checked;
+            
+            if (e.target.checked) {
+                deleteButton.style.opacity = '1';
+                deleteButton.style.cursor = 'pointer';
+            } else {
+                deleteButton.style.opacity = '0.5';
+                deleteButton.style.cursor = 'not-allowed';
+            }
+        });
+
+        // Confirmación adicional antes de enviar
+        document.getElementById('deleteForm').addEventListener('submit', function(e) {
+            const confirmed = confirm('?? ÚLTIMA CONFIRMACIÓN\n\n¿Estás absolutamente seguro de que deseas eliminar esta medalla?\n\nEsta acción no se puede deshacer.');
+            if (!confirmed) {
+                e.preventDefault();
+            }
+        });
+    </script>
+}

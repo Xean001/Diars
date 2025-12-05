@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - RunaTalento</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/estudiante.css" asp-append-version="true" />
+</head>
+<body class="estudiante-layout">
+    <!-- Header con información del estudiante -->
+    <header class="estudiante-header">
+        <div class="container-fluid">
+            <div class="row align-items-center py-3">
+                <div class="col-md-3">
+                    <div class="logo-section">
+                        <i class="bi bi-trophy-fill"></i>
+                        <div>
+                            <strong>RunaTalento</strong>
+                            <small>Panel de Estudiante</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <!-- Espacio para navegación o búsqueda -->
+                </div>
+                <div class="col-md-3">
+                    <div class="user-info">
+                        <div class="user-stats">
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <span>@ViewBag.PuntajeTotal pts</span>
+                        </div>
+                        <div class="user-profile">
+                            <span class="user-name">@User.Identity?.Name</span>
+                            <span class="user-level">Nivel @ViewBag.NivelActual</span>
+                        </div>
+                        <div class="user-avatar">
+                            <div class="avatar-circle">@ViewBag.Iniciales</div>
+                        </div>
+                        <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home")" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-link text-decoration-none">
+                                <i class="bi bi-box-arrow-right"></i> Salir
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navegación tipo tabs -->
+    <nav class="estudiante-nav">
+        <div class="container-fluid">
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Perfil" ? "active" : "")" 
+                       asp-controller="Perfil" asp-action="Index">
+                        <i class="bi bi-person-circle"></i> Mi Perfil
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "ActividadesEstudiante" ? "active" : "")" 
+                       asp-controller="ActividadesEstudiante" asp-action="Index">
+                        <i class="bi bi-clipboard-check"></i> Actividades
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Ranking" ? "active" : "")" 
+                       asp-controller="Ranking" asp-action="Index">
+                        <i class="bi bi-graph-up-arrow"></i> Ranking
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Contenido principal -->
+    <main class="estudiante-main">
+        <div class="container-fluid py-4">
+            <!-- Mensajes de notificación -->
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="bi bi-check-circle-fill"></i> @TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill"></i> @TempData["Error"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+            @if (TempData["Warning"] != null)
+            {
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-circle-fill"></i> @TempData["Warning"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            @RenderBody()
+        </div>
+    </main>
+
+    <footer class="estudiante-footer">
+        <div class="container text-center">
+            &copy; 2025 - RunaTalento - <a asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

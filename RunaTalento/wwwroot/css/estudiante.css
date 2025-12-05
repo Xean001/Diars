@@ -1,0 +1,667 @@
+/* ====================================
+   LAYOUT DE ESTUDIANTE - RunaTalento
+   ==================================== */
+
+/* Variables de color según las imágenes */
+:root {
+    --purple-primary: #9810FA;
+    --pink-primary: #E6007E;
+    --purple-dark: #7c0dd9;
+    --purple-light: #b554ff;
+    --green-success: #22c55e;
+    --blue-info: #3b82f6;
+    --orange-warning: #fb923c;
+    --red-danger: #ef4444;
+    --gray-bg: #f8fafc;
+    --gray-light: #f1f5f9;
+    --gray-border: #e2e8f0;
+    --gray-text: #64748b;
+}
+
+/* Body con fondo claro */
+body.estudiante-layout {
+    background-color: var(--gray-bg);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* ====== HEADER ====== */
+.estudiante-header {
+    background: white;
+    border-bottom: 1px solid var(--gray-border);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #1e293b;
+}
+
+.logo-section i {
+    font-size: 2rem;
+    background: linear-gradient(135deg, var(--purple-primary), var(--pink-primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.logo-section strong {
+    display: block;
+    font-size: 1.3rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--purple-primary), var(--pink-primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.logo-section small {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--gray-text);
+    font-weight: 400;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+.user-stats {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    color: #92400e;
+}
+
+.user-stats i {
+    color: #f59e0b;
+}
+
+.user-profile {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #1e293b;
+}
+
+.user-level {
+    font-size: 0.8rem;
+    background: linear-gradient(135deg, var(--purple-primary), var(--pink-primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 600;
+}
+
+.user-avatar .avatar-circle {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--purple-primary), var(--pink-primary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1rem;
+    color: white;
+    border: 2px solid var(--gray-border);
+}
+
+.user-info form button {
+    color: var(--gray-text);
+    font-size: 0.9rem;
+    padding: 5px 10px;
+}
+
+.user-info form button:hover {
+    background: linear-gradient(135deg, var(--purple-primary), var(--pink-primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ====== NAVEGACIÓN ====== */
+.estudiante-nav {
+    background: white;
+    border-bottom: 1px solid var(--gray-border);
+    margin-bottom: 0;
+}
+
+.estudiante-nav .nav-tabs {
+    border-bottom: none;
+    padding-left: 40px;
+    gap: 10px;
+}
+
+.estudiante-nav .nav-link {
+    border: none;
+    color: var(--gray-text);
+    font-weight: 500;
+    padding: 16px 24px;
+    transition: all 0.3s ease;
+    border-radius: 12px 12px 0 0;
+    background: transparent;
+}
+
+.estudiante-nav .nav-link:hover {
+    color: #1e293b;
+    background: var(--gray-light);
+}
+
+.estudiante-nav .nav-link.active {
+    color: white;
+    background: linear-gradient(135deg, var(--purple-primary), var(--pink-primary));
+    font-weight: 600;
+}
+
+.estudiante-nav .nav-link i {
+    margin-right: 8px;
+    font-size: 1.1rem;
+}
+
+/* ====== MAIN CONTENT ====== */
+.estudiante-main {
+    min-height: calc(100vh - 200px);
+    padding: 30px 40px;
+}
+
+/* ====== CARDS DE ACTIVIDADES ====== */
+.actividad-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    padding: 24px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.actividad-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    transform: translateY(-2px);
+}
+
+.actividad-card.completada {
+    border-color: var(--green-success);
+    background: linear-gradient(to bottom, #f0fdf4 0%, white 100%);
+}
+
+.actividad-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 12px;
+}
+
+.actividad-titulo {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 4px;
+}
+
+.actividad-descripcion {
+    color: var(--gray-text);
+    font-size: 0.875rem;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.actividad-badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.badge-basico {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.badge-intermedio {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.badge-avanzado {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.actividad-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--gray-border);
+}
+
+.actividad-puntos {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    color: #f59e0b;
+    font-size: 1rem;
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    padding: 8px 16px;
+    border-radius: 20px;
+}
+
+.actividad-puntos i {
+    font-size: 1.1rem;
+}
+
+.btn-realizar {
+    background: linear-gradient(135deg, var(--purple-primary), var(--pink-primary));
+    color: white;
+    border: none;
+    padding: 10px 28px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.btn-realizar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(152, 16, 250, 0.4);
+    color: white;
+}
+
+.btn-completada {
+    background: var(--green-success);
+    color: white;
+    border: none;
+    padding: 10px 28px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: not-allowed;
+}
+
+/* ====== PERFIL CARDS ====== */
+.perfil-section {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    padding: 28px;
+    margin-bottom: 20px;
+}
+
+.perfil-section h4 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    color: #0f172a;
+    font-weight: 700;
+    font-size: 1.125rem;
+}
+
+.perfil-section h4 i.text-purple {
+    font-size: 1.5rem;
+    background: linear-gradient(135deg, var(--purple-primary), var(--pink-primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.perfil-section > p.text-muted {
+    color: var(--gray-text);
+    font-size: 0.875rem;
+    margin-bottom: 24px;
+}
+
+.progreso-card {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-radius: 16px;
+    padding: 32px;
+    text-align: center;
+}
+
+.puntos-totales {
+    font-size: 3.5rem;
+    font-weight: bold;
+    color: #92400e;
+    margin: 10px 0;
+    line-height: 1;
+}
+
+.nivel-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(135deg, var(--purple-primary), var(--pink-primary));
+    color: white;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.nivel-badge .nivel-numero {
+    width: 40px;
+    height: 40px;
+    background: white;
+    color: var(--purple-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.progress-bar-custom {
+    height: 32px;
+    border-radius: 16px;
+    background: #e2e8f0;
+    overflow: hidden;
+    margin: 15px 0;
+}
+
+.progress-bar-custom .progress {
+    height: 100%;
+    background: linear-gradient(90deg, var(--purple-primary), var(--pink-primary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: width 0.6s ease;
+}
+
+/* ====== MEDALLAS ====== */
+.medallas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+}
+
+.medalla-item {
+    background: linear-gradient(135deg, #fef9e7, #fef3c7);
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.medalla-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    border-color: #fbbf24;
+}
+
+.medalla-icon {
+    font-size: 3.5rem;
+    margin-bottom: 12px;
+    color: #f59e0b;
+}
+
+.medalla-nombre {
+    font-weight: 600;
+    color: #92400e;
+    margin-bottom: 6px;
+    font-size: 0.95rem;
+}
+
+.medalla-fecha {
+    font-size: 0.75rem;
+    color: #78716c;
+}
+
+.medalla-tipo {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 14px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.medalla-oro {
+    background: #fbbf24;
+    color: #78350f;
+}
+
+.medalla-plata {
+    background: #d1d5db;
+    color: #374151;
+}
+
+.medalla-bronce {
+    background: #f97316;
+    color: white;
+}
+
+/* ====== LOGROS ====== */
+.logros-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.logro-item {
+    background: linear-gradient(to right, #f0fdf4, white);
+    border-left: 4px solid var(--green-success);
+    padding: 16px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.logro-item i {
+    font-size: 1.5rem;
+    color: var(--green-success);
+}
+
+.logro-item strong {
+    color: #047857;
+    font-size: 0.95rem;
+}
+
+.logro-item small {
+    color: var(--gray-text);
+    font-size: 0.8rem;
+}
+
+/* ====== SECCIÓN DE ACTIVIDADES DISPONIBLES ====== */
+.seccion-header {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.seccion-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #0f172a;
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+}
+
+.seccion-header h2 i {
+    color: #3b82f6;
+    font-size: 2rem;
+}
+
+.seccion-header p {
+    color: var(--gray-text);
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* ====== FOOTER ====== */
+.estudiante-footer {
+    background: white;
+    padding: 24px 0;
+    margin-top: 40px;
+    border-top: 1px solid var(--gray-border);
+    color: var(--gray-text);
+    font-size: 0.875rem;
+}
+
+/* ====== RANKING ====== */
+.avatar-sm .rounded-circle {
+    width: 40px;
+    height: 40px;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.table > tbody > tr:hover {
+    background-color: var(--gray-light);
+}
+
+/* Fila del usuario actual en el ranking */
+.table-active {
+    background: linear-gradient(to right, rgba(152, 16, 250, 0.1), rgba(230, 0, 126, 0.1)) !important;
+}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 768px) {
+    .estudiante-main {
+        padding: 20px 16px;
+    }
+
+    .user-info {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 8px;
+    }
+    
+    .estudiante-nav .nav-tabs {
+        padding-left: 16px;
+        gap: 4px;
+    }
+
+    .estudiante-nav .nav-link {
+        padding: 12px 16px;
+        font-size: 0.875rem;
+    }
+    
+    .medallas-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+
+    .actividad-card {
+        padding: 20px;
+    }
+}
+
+/* ====== ANIMACIONES ====== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.actividad-card, .perfil-section {
+    animation: fadeIn 0.4s ease-out;
+}
+
+/* ====== UTILIDADES ====== */
+.text-purple {
+    background: linear-gradient(135deg, var(--purple-primary), var(--pink-primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.bg-purple {
+    background: linear-gradient(135deg, var(--purple-primary), var(--pink-primary)) !important;
+}
+
+.border-purple {
+    border-color: var(--purple-primary) !important;
+}
+
+.bg-gradient-purple {
+    background: linear-gradient(135deg, var(--purple-primary), var(--pink-primary)) !important;
+}
+
+/* ====== ALERTAS Y MENSAJES ====== */
+.alert {
+    border-radius: 12px;
+    border: none;
+    padding: 16px 20px;
+}
+
+.alert-success {
+    background: #f0fdf4;
+    color: #166534;
+}
+
+.alert-info {
+    background: #eff6ff;
+    color: #1e40af;
+}
+
+.alert-warning {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.alert-danger {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* ====== CARDS GENERALES ====== */
+.card {
+    border-radius: 16px;
+    border: 1px solid var(--gray-border);
+}
+
+.card-header {
+    border-radius: 16px 16px 0 0 !important;
+    border-bottom: 1px solid var(--gray-border);
+    padding: 20px 24px;
+}
+
+.card-body {
+    padding: 24px;
+}
+
+/* ====== GRADIENTES PARA HEADERS Y BADGES ====== */
+.bg-gradient {
+    background: linear-gradient(135deg, var(--purple-primary), var(--pink-primary)) !important;
+}
+
+/* Íconos con gradiente */
+.icon-gradient {
+    background: linear-gradient(135deg, var(--purple-primary), var(--pink-primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}

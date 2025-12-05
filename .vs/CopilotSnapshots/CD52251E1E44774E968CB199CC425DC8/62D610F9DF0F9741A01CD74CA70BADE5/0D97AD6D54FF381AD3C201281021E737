@@ -1,0 +1,109 @@
+﻿@model List<dynamic>
+
+@{
+    ViewData["Title"] = "Gestión de Usuarios";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<!-- Header de la sección -->
+<div class="seccion-header">
+    <div class="seccion-header-content">
+        <div class="seccion-header-icon">
+            <i class="bi bi-people-fill"></i>
+        </div>
+        <div>
+            <h2>Gestión de Usuarios</h2>
+            <p>Administra cuentas de estudiantes, docentes y administradores</p>
+        </div>
+    </div>
+    <a asp-action="Create" class="btn btn-primary-admin">
+        <i class="bi bi-person-plus-fill"></i> Nuevo Usuario
+    </a>
+</div>
+
+<!-- Tabla de usuarios -->
+<div class="admin-table-container">
+    <table class="admin-table table">
+        <thead>
+            <tr>
+                <th>Usuario</th>
+                <th>Correo</th>
+                <th>Rol</th>
+                <th>Estado</th>
+                <th class="text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                var usuario = item.Usuario as RunaTalento.Models.ApplicationUser;
+                var rolPrincipal = item.RolPrincipal as string;
+                
+                // Determinar color del avatar según el rol
+                var avatarClass = rolPrincipal switch
+                {
+                    "Admin" => "bg-blue",
+                    "Docente" => "bg-orange",
+                    "Estudiante" => "bg-purple",
+                    _ => "bg-blue"
+                };
+
+                var nombres = usuario.Nombres?.Split(' ');
+                var apellidos = usuario.Apellidos?.Split(' ');
+                var iniciales = $"{nombres?[0]?.Substring(0, 1)}{apellidos?[0]?.Substring(0, 1)}";
+
+                <tr>
+                    <td>
+                        <div class="user-info-cell">
+                            <div class="table-avatar @avatarClass">@iniciales</div>
+                            <div class="user-details">
+                                <strong>@usuario.Nombres @usuario.Apellidos</strong>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <small>@usuario.Email</small>
+                    </td>
+                    <td>
+                        @if (rolPrincipal == "Admin" || rolPrincipal == "Administrador")
+                        {
+                            <span class="badge-role badge-admin">Administrador</span>
+                        }
+                        else if (rolPrincipal == "Docente")
+                        {
+                            <span class="badge-role badge-docente">Docente</span>
+                        }
+                        else
+                        {
+                            <span class="badge-role badge-estudiante">Estudiante</span>
+                        }
+                    </td>
+                    <td>
+                        @if (usuario.Estado == "Activo")
+                        {
+                            <span class="badge-status badge-activo">
+                                <i class="bi bi-check-circle-fill"></i> Activo
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge-status badge-inactivo">
+                                <i class="bi bi-x-circle-fill"></i> Inactivo
+                            </span>
+                        }
+                    </td>
+                    <td class="text-center">
+                        <a asp-action="Edit" asp-route-id="@usuario.Id" 
+                           class="btn btn-edit-admin" title="Editar">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@usuario.Id" 
+                           class="btn btn-danger-admin" title="Eliminar">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,32 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Registrarse - RunaTalento";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0"><i class="bi bi-person-plus-fill"></i> Crear Nueva Cuenta</h3>
+                </div>
+                <div class="card-body">
+                    <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Input.Nombres" class="form-label">Nombres *</label>
+                                <input asp-for="Input.Nombres" class="form-control" placeholder="Ingrese sus nombres" />
+                                <span asp-validation-for="Input.Nombres" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Input.Apellidos" class="form-label">Apellidos *</label>
+                                <input asp-for="Input.Apellidos" class="form-control" placeholder="Ingrese sus apellidos" />
+                                <span asp-validation-for="Input.Apellidos" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.Email" class="form-label

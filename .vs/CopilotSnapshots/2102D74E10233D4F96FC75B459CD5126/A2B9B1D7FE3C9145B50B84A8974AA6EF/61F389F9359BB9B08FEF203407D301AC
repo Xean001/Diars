@@ -1,0 +1,157 @@
+﻿@{
+    ViewData["Title"] = "Gestión de Incentivos";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var medallas = ViewBag.Medallas as List<RunaTalento.Models.Medalla>;
+    var niveles = ViewBag.Niveles as List<RunaTalento.Models.Nivel>;
+}
+
+<!-- Header de la sección -->
+<div class="seccion-header">
+    <div class="seccion-header-content">
+        <div class="seccion-header-icon" style="background: linear-gradient(135deg, #9810FA, #E6007E);">
+            <i class="bi bi-gift-fill"></i>
+        </div>
+        <div>
+            <h2>Gestión de Incentivos</h2>
+            <p>Administra certificados, premios y reconocimientos</p>
+        </div>
+    </div>
+    <a asp-controller="Medalla" asp-action="Create" class="btn btn-primary-admin">
+        <i class="bi bi-plus-circle-fill"></i> Nuevo Incentivo
+    </a>
+</div>
+
+<!-- Grid de incentivos (Medallas) -->
+@if (medallas != null && medallas.Any())
+{
+    <div class="incentivos-grid">
+        @foreach (var medalla in medallas)
+        {
+            // Determinar color según nombre de la medalla
+            var iconoEmoji = medalla.Nombre.Contains("Excelencia") ? "??" :
+                            medalla.Nombre.Contains("Digital") || medalla.Nombre.Contains("Libro") ? "??" :
+                            medalla.Nombre.Contains("Público") || medalla.Nombre.Contains("Reconocimiento") ? "??" : "???";
+
+            var puntosRequeridos = medalla.Nombre.Contains("Excelencia") ? "5000 pts" :
+                                  medalla.Nombre.Contains("Digital") ? "3000 pts" :
+                                  medalla.Nombre.Contains("Público") ? "2000 pts" : "1000 pts";
+
+            <div class="incentivo-card">
+                <div class="incentivo-card-header">
+                    <div class="incentivo-icon">
+                        @iconoEmoji
+                    </div>
+                    <div style="flex: 1;">
+                        <h5>@medalla.Nombre</h5>
+                        <p>@(medalla.Descripcion ?? "Sin descripción")</p>
+                    </div>
+                </div>
+
+                <div class="incentivo-badge">@puntosRequeridos</div>
+
+                <div class="d-flex justify-content-between align-items-center" style="padding-top: 16px; border-top: 1px solid var(--gray-border);">
+                    <small class="text-muted">Puntos requeridos:</small>
+                    <div>
+                        <a asp-controller="Medalla" asp-action="Edit" asp-route-id="@medalla.IdMedalla" 
+                           class="btn btn-edit-admin btn-sm">
+                            <i class="bi bi-pencil"></i> Editar
+                        </a>
+                        <a asp-controller="Medalla" asp-action="Delete" asp-route-id="@medalla.IdMedalla" 
+                           class="btn btn-danger-admin btn-sm">
+                            <i class="bi bi-trash"></i> Eliminar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="admin-table-container">
+        <div class="text-center py-5">
+            <i class="bi bi-gift" style="font-size: 4rem; color: var(--gray-text);"></i>
+            <h4 class="mt-4 mb-2">No hay incentivos creados</h4>
+            <p class="text-muted mb-4">Comienza creando medallas y reconocimientos para tus estudiantes</p>
+            <a asp-controller="Medalla" asp-action="Create" class="btn btn-primary-admin">
+                <i class="bi bi-plus-circle-fill"></i> Crear Primer Incentivo
+            </a>
+        </div>
+    </div>
+}
+
+<!-- Sección de Niveles -->
+<div class="seccion-header mt-5">
+    <div class="seccion-header-content">
+        <div class="seccion-header-icon">
+            <i class="bi bi-bar-chart-steps"></i>
+        </div>
+        <div>
+            <h2>Niveles de Progreso</h2>
+            <p>Configura los niveles y rangos de puntaje</p>
+        </div>
+    </div>
+    <a asp-controller="Nivel" asp-action="Create" class="btn btn-primary-admin">
+        <i class="bi bi-plus-circle-fill"></i> Nuevo Nivel
+    </a>
+</div>
+
+@if (niveles != null && niveles.Any())
+{
+    <div class="admin-table-container">
+        <table class="admin-table table">
+            <thead>
+                <tr>
+                    <th>Nivel</th>
+                    <th>Nombre</th>
+                    <th>Rango de Puntaje</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var nivel in niveles)
+                {
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="table-avatar" style="background: linear-gradient(135deg, #2563eb, #3b82f6);">
+                                    @nivel.IdNivel
+                                </div>
+                                <strong>Nivel @nivel.IdNivel</strong>
+                            </div>
+                        </td>
+                        <td>@nivel.Nombre</td>
+                        <td>
+                            <span class="badge-status" style="background: #e0e7ff; color: #3730a3;">
+                                @nivel.PuntajeMinimo - @nivel.PuntajeMaximo pts
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <a asp-controller="Nivel" asp-action="Edit" asp-route-id="@nivel.IdNivel" 
+                               class="btn btn-edit-admin">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a asp-controller="Nivel" asp-action="Delete" asp-route-id="@nivel.IdNivel" 
+                               class="btn btn-danger-admin">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="admin-table-container">
+        <div class="text-center py-5">
+            <i class="bi bi-bar-chart-steps" style="font-size: 4rem; color: var(--gray-text);"></i>
+            <h4 class="mt-4 mb-2">No hay niveles configurados</h4>
+            <p class="text-muted mb-4">Crea niveles para organizar el progreso de los estudiantes</p>
+            <a asp-controller="Nivel" asp-action="Create" class="btn btn-primary-admin">
+                <i class="bi bi-plus-circle-fill"></i> Crear Primer Nivel
+            </a>
+        </div>
+    </div>
+}

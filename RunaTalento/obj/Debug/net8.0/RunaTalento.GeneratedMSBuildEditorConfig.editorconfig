@@ -1,0 +1,281 @@
+is_global = true
+build_property.TargetFramework = net8.0
+build_property.TargetFramework = net8.0
+build_property.TargetPlatformMinVersion = 
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = RunaTalento
+build_property.RootNamespace = RunaTalento
+build_property.ProjectDir = C:\Users\Piero\Downloads\ProyectoFinalDiars\ProyectoFinalDiars\RunaTalento\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\Piero\Downloads\ProyectoFinalDiars\ProyectoFinalDiars\RunaTalento
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 8.0
+build_property.EnableCodeStyleSeverity = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Areas/Identity/Pages/Account/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxMb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Areas/Identity/Pages/Account/Logout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxMb2dvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Areas/Identity/Pages/Account/Register.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Areas/Identity/Pages/Account/RegisterConfirmation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxSZWdpc3RlckNvbmZpcm1hdGlvbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Areas/Identity/Pages/Account/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxfVmlld0ltcG9ydHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Areas/Identity/Pages/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZhbGlkYXRpb25TY3JpcHRzUGFydGlhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Areas/Identity/Pages/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Areas/Identity/Pages/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/ActividadesEstudiante/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWN0aXZpZGFkZXNFc3R1ZGlhbnRlXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/ActividadesEstudiante/Realizar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWN0aXZpZGFkZXNFc3R1ZGlhbnRlXFJlYWxpemFyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Actividad/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWN0aXZpZGFkXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Actividad/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWN0aXZpZGFkXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Actividad/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWN0aXZpZGFkXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Actividad/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWN0aXZpZGFkXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Actividad/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWN0aXZpZGFkXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Curso/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3Vyc29cQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Curso/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3Vyc29cRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Curso/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3Vyc29cRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Curso/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3Vyc29cRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Curso/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3Vyc29cSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Docente/CalificarActividades.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9jZW50ZVxDYWxpZmljYXJBY3RpdmlkYWRlcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Docente/CrearActividad.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9jZW50ZVxDcmVhckFjdGl2aWRhZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Docente/EditarMedallaOtorgada.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9jZW50ZVxFZGl0YXJNZWRhbGxhT3RvcmdhZGEuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Docente/EliminarMedallaOtorgada.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9jZW50ZVxFbGltaW5hck1lZGFsbGFPdG9yZ2FkYS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Docente/OtorgarMedallas.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9jZW50ZVxPdG9yZ2FyTWVkYWxsYXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Docente/VerRanking.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9jZW50ZVxWZXJSYW5raW5nLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Docente/VistaDocumento.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9jZW50ZVxWaXN0YURvY3VtZW50by5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Home/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Incentivos/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5jZW50aXZvc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Incentivo/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5jZW50aXZvXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Incentivo/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5jZW50aXZvXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Incentivo/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5jZW50aXZvXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/MedallaEstudiante/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVkYWxsYUVzdHVkaWFudGVcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/MedallaEstudiante/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVkYWxsYUVzdHVkaWFudGVcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/MedallaEstudiante/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVkYWxsYUVzdHVkaWFudGVcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/MedallaEstudiante/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVkYWxsYUVzdHVkaWFudGVcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Medalla/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVkYWxsYVxDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Medalla/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVkYWxsYVxEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Medalla/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVkYWxsYVxEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Medalla/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVkYWxsYVxFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Medalla/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVkYWxsYVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Nivel/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTml2ZWxcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Nivel/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTml2ZWxcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Nivel/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTml2ZWxcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Nivel/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTml2ZWxcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Nivel/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTml2ZWxcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Perfil/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGVyZmlsXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Ranking/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmFua2luZ1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Shared/_LayoutAdmin.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXRBZG1pbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Shared/_LayoutDocente.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXREb2NlbnRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Shared/_LayoutEstudiante.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXRFc3R1ZGlhbnRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Shared/_LoginPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Mb2dpblBhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Usuarios/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb3NcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Usuarios/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb3NcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Usuarios/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb3NcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Usuarios/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb3NcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Usuarios/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb3NcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Piero/Downloads/ProyectoFinalDiars/ProyectoFinalDiars/RunaTalento/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-lmf703mgqp

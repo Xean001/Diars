@@ -1,0 +1,128 @@
+﻿@model RunaTalento.Models.Incentivo
+
+@{
+    ViewData["Title"] = "Eliminar Incentivo";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="admin-header">
+    <div class="admin-header-content">
+        <div>
+            <h1 class="admin-title">
+                <i class="bi bi-trash-fill text-danger"></i>
+                Eliminar Incentivo
+            </h1>
+            <p class="admin-subtitle">¿Estás seguro de eliminar este incentivo?</p>
+        </div>
+        <a asp-controller="Incentivos" asp-action="Index" class="btn-secondary-admin">
+            <i class="bi bi-arrow-left"></i>
+            Volver a Incentivos
+        </a>
+    </div>
+</div>
+
+<div class="admin-content">
+    <div class="alert alert-danger">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <strong>¡Atención!</strong> Esta acción no se puede deshacer.
+        @if (Model.IncentivoEstudiantes != null && Model.IncentivoEstudiantes.Any())
+        {
+            <br>
+            <strong>@Model.IncentivoEstudiantes.Count estudiante(s)</strong> ya han obtenido este incentivo y perderán el registro.
+        }
+    </div>
+
+    <div class="delete-card">
+        <div class="delete-item">
+            <div class="incentivo-icon-preview">
+                @if (!string.IsNullOrEmpty(Model.IconoUrl))
+                {
+                    <i class="@Model.IconoUrl"></i>
+                }
+                else
+                {
+                    <i class="bi bi-gift-fill"></i>
+                }
+            </div>
+            <div class="delete-info">
+                <h4>@Model.Nombre</h4>
+                <p class="text-muted mb-2">@(Model.Descripcion ?? "Sin descripción")</p>
+                <div class="delete-details">
+                    <span class="badge bg-primary">
+                        <i class="bi bi-star-fill"></i> @Model.PuntosRequeridos puntos
+                    </span>
+                    <span class="badge @(Model.Activo ? "bg-success" : "bg-secondary")">
+                        @(Model.Activo ? "Activo" : "Inactivo")
+                    </span>
+                    @if (Model.IncentivoEstudiantes != null && Model.IncentivoEstudiantes.Any())
+                    {
+                        <span class="badge bg-info">
+                            <i class="bi bi-people-fill"></i> @Model.IncentivoEstudiantes.Count estudiante(s)
+                        </span>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <form asp-action="Delete" method="post" class="mt-4">
+            <input type="hidden" asp-for="IdIncentivo" />
+            <div class="form-actions">
+                <a asp-controller="Incentivos" asp-action="Index" class="btn-secondary-admin">
+                    <i class="bi bi-x-circle"></i>
+                    Cancelar
+                </a>
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-trash-fill"></i>
+                    Sí, Eliminar Incentivo
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .delete-card {
+        background: white;
+        border: 1px solid var(--gray-border);
+        border-radius: 12px;
+        padding: 30px;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .delete-item {
+        display: flex;
+        gap: 20px;
+        align-items: start;
+    }
+
+    .incentivo-icon-preview {
+        width: 80px;
+        height: 80px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #fef3c7, #fde68a);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        color: #f59e0b;
+        flex-shrink: 0;
+    }
+
+    .delete-info {
+        flex: 1;
+    }
+
+    .delete-info h4 {
+        color: #0f172a;
+        margin-bottom: 8px;
+        font-weight: 700;
+    }
+
+    .delete-details {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 12px;
+    }
+</style>

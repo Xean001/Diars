@@ -1,0 +1,16 @@
+namespace RunaTalento.Services.Decorators
+{
+    /// <summary>
+    /// Patrón DECORATOR (GoF) - Interfaz base para decoradores de actividad
+    /// Permite añadir funcionalidades adicionales a las actividades de forma dinámica
+    /// </summary>
+    public interface IActividadComponent
+    {
+        int IdActividad { get; }
+        string Titulo { get; }
+        string Descripcion { get; }
+        int Puntaje { get; }
+        string ObtenerDescripcionCompleta();
+        int CalcularPuntajeConModificadores();
+    }
+}

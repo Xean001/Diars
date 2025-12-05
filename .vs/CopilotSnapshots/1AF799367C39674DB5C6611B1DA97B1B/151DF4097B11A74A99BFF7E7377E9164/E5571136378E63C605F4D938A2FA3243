@@ -1,0 +1,112 @@
+﻿@model IEnumerable<dynamic>
+
+@{
+    ViewData["Title"] = "Ranking de Estudiantes";
+    Layout = "~/Views/Shared/_LayoutDocente.cshtml";
+}
+
+<div class="ranking-section">
+    <div class="ranking-header">
+        <i class="bi bi-graph-up-arrow"></i>
+        <h3>Ranking de Estudiantes</h3>
+    </div>
+    <p>Visualiza el desempeño general de tus estudiantes</p>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="ranking-list">
+            @{
+                int posicion = 1;
+                foreach (var estudiante in Model)
+                {
+                    // Determinar la clase CSS para la posición
+                    string posicionClass = "normal";
+                    string posicionBg = "#e2e8f0";
+                    if (posicion == 1) 
+                    { 
+                        posicionClass = "gold"; 
+                        posicionBg = "linear-gradient(135deg, #fbbf24, #f59e0b)";
+                    }
+                    else if (posicion == 2) 
+                    { 
+                        posicionClass = "silver"; 
+                        posicionBg = "linear-gradient(135deg, #e5e7eb, #d1d5db)";
+                    }
+                    else if (posicion == 3) 
+                    { 
+                        posicionClass = "bronze"; 
+                        posicionBg = "linear-gradient(135deg, #f97316, #ea580c)";
+                    }
+
+                    // Generar iniciales
+                    var nombres = estudiante.Nombres?.ToString().Split(' ');
+                    var apellidos = estudiante.Apellidos?.ToString().Split(' ');
+                    var iniciales = $"{nombres?[0]?.Substring(0, 1)}{apellidos?[0]?.Substring(0, 1)}";
+
+                    <div class="ranking-card">
+                        <div class="ranking-card-position" style="background: @posicionBg;">
+                            @if (posicion == 1)
+                            {
+                                <span style="font-size: 1.5rem;">🥇</span>
+                            }
+                            else if (posicion == 2)
+                            {
+                                <span style="font-size: 1.5rem;">🥈</span>
+                            }
+                            else if (posicion == 3)
+                            {
+                                <span style="font-size: 1.5rem;">🥉</span>
+                            }
+                            else
+                            {
+                                <span>@posicion</span>
+                            }
+                        </div>
+
+                        <div class="ranking-card-content">
+                            <div class="ranking-card-left">
+                                <div class="student-avatar-large" style="background: @(posicion == 1 ? "linear-gradient(135deg, #fbbf24, #f59e0b)" : posicion == 2 ? "linear-gradient(135deg, #e5e7eb, #d1d5db)" : posicion == 3 ? "linear-gradient(135deg, #f97316, #ea580c)" : "var(--teal-primary)")">
+                                    @iniciales
+                                </div>
+                                <div class="student-name-section">
+                                    <strong>@estudiante.Nombres @estudiante.Apellidos</strong>
+                                </div>
+                            </div>
+
+                            <div class="ranking-card-stats">
+                                <div class="stat-item">
+                                    <span class="nivel-badge-inline">
+                                        <span class="nivel-numero-inline">@(estudiante.IdNivel ?? 0)</span>
+                                        <span>Nivel @(estudiante.IdNivel ?? 0)</span>
+                                    </span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="medallas-count-inline">
+                                        <i class="bi bi-award-fill"></i> @estudiante.MedallasCount
+                                    </span>
+                                    <small class="text-muted">medallas</small>
+                                </div>
+                            </div>
+
+                            <div class="ranking-card-points">
+                                <span class="puntos-badge-large">
+                                    @estudiante.PuntajeTotal
+                                </span>
+                                <small class="text-muted">puntos</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    posicion++;
+                }
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle-fill"></i> 
+            No hay estudiantes que hayan realizado actividades de tus cursos aún.
+        </div>
+    }
+</div>

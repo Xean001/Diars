@@ -1,0 +1,35 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace RunaTalento.Models
+{
+    /// <summary>
+    /// Representa un curso en el sistema
+    /// </summary>
+    public class Curso
+    {
+        [Key]
+        public int IdCurso { get; set; }
+
+        [Required(ErrorMessage = "El nombre del curso es obligatorio")]
+        [StringLength(100)]
+        public string Nombre { get; set; }
+
+        [StringLength(255)]
+        public string? Descripcion { get; set; }
+
+        // ?? DEPRECATED: Mantener por compatibilidad pero ya no se usa
+        [Obsolete("Usar CursoDocentes para múltiples docentes")]
+        public string? IdDocente { get; set; }
+
+        // Navegación hacia el docente principal (por compatibilidad)
+        [ForeignKey("IdDocente")]
+        public virtual ApplicationUser? Docente { get; set; }
+
+        // ? NUEVA: Relación Muchos a Muchos con Docentes
+        public virtual ICollection<CursoDocente>? CursoDocentes { get; set; }
+
+        // Navegación hacia actividades del curso
+        public virtual ICollection<Actividad>? Actividades { get; set; }
+    }
+}

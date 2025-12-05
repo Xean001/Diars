@@ -1,0 +1,71 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using RunaTalento.Data;
+using RunaTalento.Models;
+
+namespace RunaTalento.Controllers
+{
+    /// <summary>
+    /// Controlador para mostrar el ranking de estudiantes
+    /// </summary>
+    [Authorize]
+    public class RankingController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public RankingController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        {
+            _context = context;
+            _userManager = userManager;
+        }
+
+        // GET: Ranking
+        public async Task<IActionResult> Index()
+        {
+            // Obtener solo los IDs de usuarios con rol "Estudiante"
+            var estudiantesIds = (await _userManager.GetUsersInRoleAsync("Estudiante"))
+                .Select(u => u.Id)
+                .ToList();
+
+            // Obtener solo estudiantes ordenados por puntaje
+            var estudiantes = await _context.Users
+                .Where(u => estudiantesIds.Contains(u.Id))
+                .OrderByDescending(u => u.PuntajeTotal)
+                .ThenBy(u => u.Nombres)
+                .Take(100)
+                .Select(u => new
+                {
+                    u.Id,
+                    u.Nombres,
+                    u.Apellidos,
+                    u.Email,
+                    u.PuntajeTotal,
+                    u.IdNivel,
+                    MedallasCount = _context.MedallaEstudiante.Count(me => me.IdEstudiante == u.Id)
+                })
+                .ToListAsync();
+
+            // Si es estudiante, cargar datos para el header
+            if (User.IsInRole("Estudiante"))
+            {
+                var userId = _userManager.GetUserId(User);
+                var estudiante = await _context.Users.FindAsync(userId);
+                if (estudiante != null)
+                {
+                    ViewBag.PuntajeTotal = estudiante.PuntajeTotal;
+                    ViewBag.NivelActual = estudiante.Nivel?.Nombre ?? "Sin nivel"; // ✅ Nombre del nivel
+                    ViewBag.NivelId = estudiante.IdNivel ?? 0;
+                    ViewBag.NombreCompleto = $"{estudiante.Nombres} {estudiante.Apellidos}";
+                    var nombres = estudiante.Nombres?.Split(' ');
+                    var apellidos = estudiante.Apellidos?.Split(' ');
+                    ViewBag.Iniciales = $"{nombres?[0]?.Substring(0, 1)}{apellidos?[0]?.Substring(0, 1)}";
+                }
+            }
+
+            return View(estudiantes);
+        }
+    }
+}

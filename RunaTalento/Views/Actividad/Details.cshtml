@@ -1,0 +1,108 @@
+@model RunaTalento.Models.Actividad
+
+@{
+    ViewData["Title"] = "Detalles de Actividad";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0"><i class="bi bi-clipboard-check"></i> @Model.Titulo</h4>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">Descripción:</dt>
+                        <dd class="col-sm-9">@(Model.Descripcion ?? "Sin descripción")</dd>
+
+                        <dt class="col-sm-3">Curso:</dt>
+                        <dd class="col-sm-9">
+                            <i class="bi bi-book-fill"></i> @Model.Curso?.Nombre
+                        </dd>
+
+                        <dt class="col-sm-3">Docente:</dt>
+                        <dd class="col-sm-9">
+                            <i class="bi bi-person-fill"></i> @Model.Curso?.Docente?.Nombres @Model.Curso?.Docente?.Apellidos
+                        </dd>
+
+                        <dt class="col-sm-3">Puntaje:</dt>
+                        <dd class="col-sm-9">
+                            <span class="badge bg-warning text-dark fs-6">
+                                <i class="bi bi-star-fill"></i> @Model.Puntaje puntos
+                            </span>
+                        </dd>
+
+                        <dt class="col-sm-3">Fecha de Creación:</dt>
+                        <dd class="col-sm-9">
+                            <i class="bi bi-calendar"></i> @Model.FechaCreacion.ToString("dd/MM/yyyy HH:mm")
+                        </dd>
+                    </dl>
+
+                    <hr />
+
+                    <h5 class="mb-3"><i class="bi bi-people-fill"></i> Entregas de Estudiantes</h5>
+                    
+                    @if (Model.ActividadesEstudiantes != null && Model.ActividadesEstudiantes.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Estudiante</th>
+                                        <th>Fecha de Entrega</th>
+                                        <th>Puntaje Obtenido</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var entrega in Model.ActividadesEstudiantes)
+                                    {
+                                        <tr>
+                                            <td>@entrega.Estudiante?.Nombres @entrega.Estudiante?.Apellidos</td>
+                                            <td>@entrega.FechaEntrega.ToString("dd/MM/yyyy HH:mm")</td>
+                                            <td>
+                                                @if (entrega.PuntajeObtenido.HasValue)
+                                                {
+                                                    <span class="badge bg-success">@entrega.PuntajeObtenido pts</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary">Pendiente</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i> No hay entregas registradas para esta actividad.
+                        </div>
+                    }
+
+                    <hr />
+
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Volver al listado
+                        </a>
+                        <div>
+                            @if (User.IsInRole("Admin") || User.IsInRole("Docente"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@Model.IdActividad" class="btn btn-warning">
+                                    <i class="bi bi-pencil"></i> Editar
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@Model.IdActividad" class="btn btn-danger">
+                                    <i class="bi bi-trash"></i> Eliminar
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,106 @@
+﻿using RunaTalento.Models;
+using RunaTalento.Services.Strategies;
+using RunaTalento.Services.Observers;
+
+namespace RunaTalento.Services.Controllers
+{
+    /// <summary>
+    /// Patrón CONTROLLER (GRASP) - Controlador de lógica de negocio para calificaciones
+    /// Coordina las operaciones de calificación sin acoplarse a la UI
+    /// Implementa el principio de CONTROLLER: delegar responsabilidades al primer objeto
+    /// más allá de la capa de presentación que recibe o maneja un mensaje de sistema
+    /// </summary>
+    public class CalificacionBusinessController
+    {
+        private readonly ICalificacionStrategy _strategy;
+        private readonly CalificacionNotifier _notifier;
+
+        public CalificacionBusinessController(
+            ICalificacionStrategy strategy,
+            CalificacionNotifier notifier)
+        {
+            _strategy = strategy;
+            _notifier = notifier;
+        }
+
+        /// <summary>
+        /// Procesa la calificación de una actividad estudiante
+        /// Aplica la estrategia configurada y notifica a los observadores
+        /// </summary>
+        public ResultadoCalificacion ProcesarCalificacion(
+            ActividadEstudiante actividadEstudiante,
+            int puntajeAsignado,
+            DateTime? fechaLimite)
+        {
+            // Validar datos de entrada
+            if (actividadEstudiante == null)
+                throw new ArgumentNullException(nameof(actividadEstudiante));
+
+            if (puntajeAsignado < 0)
+                throw new ArgumentException("El puntaje no puede ser negativo", nameof(puntajeAsignado));
+
+            // Determinar si se entregó a tiempo
+            bool entregadoATiempo = !fechaLimite.HasValue || 
+                                   actividadEstudiante.FechaEntrega <= fechaLimite.Value;
+
+            // Aplicar estrategia de calificación
+            int puntajeFinal = _strategy.CalcularPuntaje(
+                actividadEstudiante.Actividad.Puntaje,
+                puntajeAsignado,
+                entregadoATiempo);
+
+            // Actualizar la actividad estudiante
+            actividadEstudiante.PuntajeObtenido = puntajeFinal;
+
+            // Notificar a los observadores
+            _notifier.NotificarCalificacion(
+                actividadEstudiante.IdEstudiante,
+                actividadEstudiante.IdActividad,
+                puntajeFinal);
+
+            // Retornar resultado
+            return new ResultadoCalificacion
+            {
+                PuntajeOriginal = puntajeAsignado,
+                PuntajeFinal = puntajeFinal,
+                EstrategiaAplicada = _strategy.NombreEstrategia,
+                EntregadoATiempo = entregadoATiempo,
+                Mensaje = GenerarMensajeResultado(puntajeAsignado, puntajeFinal, entregadoATiempo)
+            };
+        }
+
+        /// <summary>
+        /// Genera un mensaje descriptivo del resultado de la calificación
+        /// </summary>
+        private string GenerarMensajeResultado(int puntajeAsignado, int puntajeFinal, bool entregadoATiempo)
+        {
+            if (puntajeFinal > puntajeAsignado)
+            {
+                int diferencia = puntajeFinal - puntajeAsignado;
+                return $"Puntaje bonificado: {puntajeAsignado} + {diferencia} = {puntajeFinal} puntos (Entrega puntual)";
+            }
+            else if (puntajeFinal < puntajeAsignado)
+            {
+                int diferencia = puntajeAsignado - puntajeFinal;
+                return $"Puntaje con penalización: {puntajeAsignado} - {diferencia} = {puntajeFinal} puntos (Entrega tardía)";
+            }
+            else
+            {
+                return $"Puntaje estándar: {puntajeFinal} puntos";
+            }
+        }
+    }
+
+    /// <summary>
+    /// Clase que encapsula el resultado de una calificación
+    /// Implementa HIGH COHESION manteniendo datos relacionados juntos
+    /// </summary>
+    public class ResultadoCalificacion
+    {
+        public int PuntajeOriginal { get; set; }
+        public int PuntajeFinal { get; set; }
+        public string EstrategiaAplicada { get; set; }
+        public bool EntregadoATiempo { get; set; }
+        public string Mensaje { get; set; }
+    }
+}

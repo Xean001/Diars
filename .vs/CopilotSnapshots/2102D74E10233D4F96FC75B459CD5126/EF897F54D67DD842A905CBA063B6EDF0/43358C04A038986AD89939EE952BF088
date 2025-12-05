@@ -1,0 +1,63 @@
+﻿@model RunaTalento.Models.ApplicationUser
+
+@{
+    ViewData["Title"] = "Eliminar Usuario";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0"><i class="bi bi-exclamation-triangle"></i> Confirmar Eliminación de Usuario</h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-danger">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <strong>¡ADVERTENCIA!</strong> Esta acción es irreversible.
+                        <p class="mb-0">Se eliminarán todos los datos asociados a este usuario incluyendo:</p>
+                        <ul class="mb-0 mt-2">
+                            <li>Actividades completadas</li>
+                            <li>Medallas obtenidas</li>
+                            <li>Progreso y puntajes</li>
+                        </ul>
+                    </div>
+
+                    <dl class="row">
+                        <dt class="col-sm-4">Nombre Completo:</dt>
+                        <dd class="col-sm-8">@Model.Nombres @Model.Apellidos</dd>
+
+                        <dt class="col-sm-4">Email:</dt>
+                        <dd class="col-sm-8">@Model.Email</dd>
+
+                        <dt class="col-sm-4">Roles:</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge bg-info">@ViewBag.Roles</span>
+                        </dd>
+
+                        <dt class="col-sm-4">Estado:</dt>
+                        <dd class="col-sm-8">@Model.Estado</dd>
+
+                        <dt class="col-sm-4">Fecha de Registro:</dt>
+                        <dd class="col-sm-8">@Model.FechaRegistro.ToString("dd/MM/yyyy")</dd>
+
+                        <dt class="col-sm-4">Puntaje Total:</dt>
+                        <dd class="col-sm-8">@Model.PuntajeTotal puntos</dd>
+                    </dl>
+
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-trash"></i> Eliminar Definitivamente
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

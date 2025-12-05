@@ -1,0 +1,33 @@
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace RunaTalento.Models
+{
+    /// <summary>
+    /// Representa la entrega de una actividad por un estudiante
+    /// </summary>
+    public class ActividadEstudiante
+    {
+        [Key]
+        public int IdActividadEstudiante { get; set; }
+
+        [Required(ErrorMessage = "La actividad es obligatoria")]
+        public int IdActividad { get; set; }
+
+        [Required(ErrorMessage = "El estudiante es obligatorio")]
+        public string IdEstudiante { get; set; }
+
+        public DateTime FechaEntrega { get; set; } = DateTime.Now;
+
+        [Range(0, 100, ErrorMessage = "El puntaje debe estar entre 0 y 100")]
+        public int? PuntajeObtenido { get; set; }
+
+        // Navegación hacia la actividad
+        [ForeignKey("IdActividad")]
+        public virtual Actividad? Actividad { get; set; }
+
+        // Navegación hacia el estudiante
+        [ForeignKey("IdEstudiante")]
+        public virtual ApplicationUser? Estudiante { get; set; }
+    }
+}

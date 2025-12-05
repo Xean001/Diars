@@ -1,0 +1,143 @@
+﻿@model IEnumerable<RunaTalento.Models.ActividadEstudiante>
+@{
+    ViewData["Title"] = "Calificar Actividades";
+    Layout = "~/Views/Shared/_LayoutDocente.cshtml";
+}
+
+<div class="docente-card">
+    <div class="card-header-custom">
+        <i class="bi bi-clipboard-check"></i>
+        <h3>Calificar Actividades Entregadas</h3>
+    </div>
+    <p class="card-subtitle">Revisa y califica las actividades entregadas por tus estudiantes</p>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Estudiante</th>
+                        <th>Actividad</th>
+                        <th>Curso</th>
+                        <th>Fecha Entrega</th>
+                        <th>Puntaje Máximo</th>
+                        <th>Calificación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="ranking-avatar" style="width: 40px; height: 40px; font-size: 0.9rem;">
+                                        @{
+                                            var nombres = item.Estudiante?.Nombres?.Split(' ');
+                                            var apellidos = item.Estudiante?.Apellidos?.Split(' ');
+                                            var iniciales = $"{nombres?[0]?.Substring(0, 1)}{apellidos?[0]?.Substring(0, 1)}";
+                                        }
+                                        @iniciales
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold">@item.Estudiante?.Nombres @item.Estudiante?.Apellidos</div>
+                                        <small class="text-muted">@item.Estudiante?.Email</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <strong>@item.Actividad?.Titulo</strong>
+                                @if (!string.IsNullOrEmpty(item.Actividad?.Descripcion))
+                                {
+                                    <br />
+                                    <small class="text-muted">@(item.Actividad.Descripcion.Length > 50 ? item.Actividad.Descripcion.Substring(0, 50) + "..." : item.Actividad.Descripcion)</small>
+                                }
+                            </td>
+                            <td>
+                                <span class="badge bg-info">@item.Actividad?.Curso?.Nombre</span>
+                            </td>
+                            <td>
+                                <small>@item.FechaEntrega.ToString("dd/MM/yyyy HH:mm")</small>
+                            </td>
+                            <td>
+                                <span class="badge" style="background: linear-gradient(135deg, #fef3c7, #fde68a); color: #92400e; font-size: 0.9rem;">
+                                    <i class="bi bi-star-fill"></i> @item.Actividad?.Puntaje pts
+                                </span>
+                            </td>
+                            <td>
+                                <form asp-action="Calificar" method="post" class="d-flex align-items-center gap-2">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="idActividadEstudiante" value="@item.IdActividadEstudiante" />
+                                    <input type="number" 
+                                           name="puntajeObtenido" 
+                                           class="form-control form-control-sm" 
+                                           style="width: 80px;"
+                                           min="0" 
+                                           max="@item.Actividad?.Puntaje"
+                                           placeholder="0-@item.Actividad?.Puntaje"
+                                           required />
+                                    <button type="submit" class="btn btn-sm btn-primary-custom">
+                                        <i class="bi bi-check-circle-fill"></i> Calificar
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-inbox" style="font-size: 4rem; color: #cbd5e1;"></i>
+            <h4 class="mt-3 text-muted">No hay actividades pendientes de calificación</h4>
+            <p class="text-muted">Las actividades entregadas por los estudiantes aparecerán aquí</p>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        // Validación del puntaje en tiempo real
+        document.querySelectorAll('input[name="puntajeObtenido"]').forEach(input => {
+            input.addEventListener('input', function(e) {
+                const max = parseInt(e.target.max);
+                const value = parseInt(e.target.value);
+                
+                if (value > max) {
+                    e.target.value = max;
+                }
+                
+                if (value < 0) {
+                    e.target.value = 0;
+                }
+                
+                // Cambiar color del borde según el puntaje
+                if (value >= 0 && value <= max) {
+                    if (value === max) {
+                        e.target.style.borderColor = '#22c55e';
+                    } else if (value >= max * 0.7) {
+                        e.target.style.borderColor = '#14b8a6';
+                    } else if (value >= max * 0.5) {
+                        e.target.style.borderColor = '#fbbf24';
+                    } else {
+                        e.target.style.borderColor = '#fb923c';
+                    }
+                }
+            });
+        });
+
+        // Confirmación antes de calificar
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                const puntaje = this.querySelector('input[name="puntajeObtenido"]').value;
+                if (!puntaje || puntaje === '') {
+                    e.preventDefault();
+                    alert('Por favor ingresa un puntaje');
+                    return false;
+                }
+            });
+        });
+    </script>
+}

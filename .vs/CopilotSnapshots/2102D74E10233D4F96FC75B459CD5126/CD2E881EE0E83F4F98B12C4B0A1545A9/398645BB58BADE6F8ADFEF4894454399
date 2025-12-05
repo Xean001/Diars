@@ -1,0 +1,260 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using RunaTalento.Data;
+using RunaTalento.Models;
+
+namespace RunaTalento.Controllers
+{
+    /// <summary>
+    /// Controlador para gestionar cursos
+    /// </summary>
+    [Authorize(Roles = "Admin,Docente")]
+    public class CursoController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public CursoController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        {
+            _context = context;
+            _userManager = userManager;
+        }
+
+        // GET: Curso
+        public async Task<IActionResult> Index()
+        {
+            var cursos = await _context.Curso
+                .Include(c => c.CursoDocentes)
+                .ThenInclude(cd => cd.Docente)
+                .ToListAsync();
+            return View(cursos);
+        }
+
+        // GET: Curso/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var curso = await _context.Curso
+                .Include(c => c.Docente)
+                .Include(c => c.Actividades)
+                .FirstOrDefaultAsync(m => m.IdCurso == id);
+
+            if (curso == null)
+            {
+                return NotFound();
+            }
+
+            return View(curso);
+        }
+
+        // GET: Curso/Create
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Create()
+        {
+            var docentes = await _userManager.GetUsersInRoleAsync("Docente");
+            ViewBag.Docentes = docentes.Select(d => new {
+                d.Id,
+                NombreCompleto = $"{d.Nombres} {d.Apellidos} ({d.Email})"
+            }).ToList();
+            return View();
+        }
+
+        // POST: Curso/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Create([Bind("Nombre,Descripcion")] Curso curso, List<string> docentesSeleccionados)
+        {
+            // ✅ Validación 1: Verificar que se seleccionó al menos un docente
+            if (docentesSeleccionados == null || !docentesSeleccionados.Any())
+            {
+                ModelState.AddModelError("", "Debes seleccionar al menos un docente para el curso");
+            }
+
+            // ✅ Validación 2: Verificar que no existe un curso con el mismo nombre
+            var cursoExistente = await _context.Curso
+                .FirstOrDefaultAsync(c => c.Nombre.ToLower() == curso.Nombre.ToLower());
+
+            if (cursoExistente != null)
+            {
+                ModelState.AddModelError("Nombre", "Ya existe un curso con este nombre");
+            }
+
+            if (ModelState.IsValid)
+            {
+                // Crear el curso
+                _context.Add(curso);
+                await _context.SaveChangesAsync();
+
+                // Asignar docentes seleccionados
+                if (docentesSeleccionados != null && docentesSeleccionados.Any())
+                {
+                    foreach (var docenteId in docentesSeleccionados)
+                    {
+                        var cursoDocente = new CursoDocente
+                        {
+                            IdCurso = curso.IdCurso,
+                            IdDocente = docenteId,
+                            FechaAsignacion = DateTime.Now
+                        };
+                        _context.CursoDocente.Add(cursoDocente);
+                    }
+                    await _context.SaveChangesAsync();
+                }
+
+                TempData["Success"] = $"Curso '{curso.Nombre}' creado exitosamente con {docentesSeleccionados?.Count ?? 0} docente(s) asignado(s)";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var docentes = await _userManager.GetUsersInRoleAsync("Docente");
+            ViewBag.Docentes = docentes.Select(d => new {
+                d.Id,
+                NombreCompleto = $"{d.Nombres} {d.Apellidos} ({d.Email})"
+            }).ToList();
+            return View(curso);
+        }
+
+        // GET: Curso/Edit/5
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var curso = await _context.Curso
+                .Include(c => c.CursoDocentes)
+                .FirstOrDefaultAsync(c => c.IdCurso == id);
+
+            if (curso == null)
+            {
+                return NotFound();
+            }
+
+            var docentes = await _userManager.GetUsersInRoleAsync("Docente");
+            ViewBag.Docentes = docentes.Select(d => new {
+                d.Id,
+                NombreCompleto = $"{d.Nombres} {d.Apellidos} ({d.Email})"
+            }).ToList();
+
+            ViewBag.DocentesAsignados = curso.CursoDocentes?.Select(cd => cd.IdDocente).ToList() ?? new List<string>();
+
+            return View(curso);
+        }
+
+        // POST: Curso/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit(int id, [Bind("IdCurso,Nombre,Descripcion")] Curso curso, List<string> docentesSeleccionados)
+        {
+            if (id != curso.IdCurso)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    // Actualizar curso
+                    _context.Update(curso);
+
+                    // Eliminar asignaciones anteriores
+                    var asignacionesAnteriores = await _context.CursoDocente
+                        .Where(cd => cd.IdCurso == id)
+                        .ToListAsync();
+                    _context.CursoDocente.RemoveRange(asignacionesAnteriores);
+
+                    // Agregar nuevas asignaciones
+                    if (docentesSeleccionados != null && docentesSeleccionados.Any())
+                    {
+                        foreach (var docenteId in docentesSeleccionados)
+                        {
+                            var cursoDocente = new CursoDocente
+                            {
+                                IdCurso = curso.IdCurso,
+                                IdDocente = docenteId,
+                                FechaAsignacion = DateTime.Now
+                            };
+                            _context.CursoDocente.Add(cursoDocente);
+                        }
+                    }
+
+                    await _context.SaveChangesAsync();
+                    TempData["Success"] = $"Curso actualizado exitosamente con {docentesSeleccionados?.Count ?? 0} docente(s)";
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!CursoExists(curso.IdCurso))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+
+            var docentes = await _userManager.GetUsersInRoleAsync("Docente");
+            ViewBag.Docentes = docentes.Select(d => new {
+                d.Id,
+                NombreCompleto = $"{d.Nombres} {d.Apellidos} ({d.Email})"
+            }).ToList();
+            return View(curso);
+        }
+
+        // GET: Curso/Delete/5
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var curso = await _context.Curso
+                .Include(c => c.Docente)
+                .FirstOrDefaultAsync(m => m.IdCurso == id);
+
+            if (curso == null)
+            {
+                return NotFound();
+            }
+
+            return View(curso);
+        }
+
+        // POST: Curso/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var curso = await _context.Curso.FindAsync(id);
+            if (curso != null)
+            {
+                _context.Curso.Remove(curso);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Curso eliminado exitosamente";
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool CursoExists(int id)
+        {
+            return _context.Curso.Any(e => e.IdCurso == id);
+        }
+    }
+}

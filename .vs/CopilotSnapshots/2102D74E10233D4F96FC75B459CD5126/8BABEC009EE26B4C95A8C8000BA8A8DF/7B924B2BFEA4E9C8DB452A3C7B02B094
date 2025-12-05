@@ -1,0 +1,549 @@
+﻿@{
+    ViewData["Title"] = "Gestión de Incentivos";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var medallas = ViewBag.Medallas as List<RunaTalento.Models.Medalla>;
+    var niveles = ViewBag.Niveles as List<RunaTalento.Models.Nivel>;
+    var incentivos = ViewBag.Incentivos as List<RunaTalento.Models.Incentivo>;
+}
+
+<!-- ============================================ -->
+<!-- SECCIÓN: INCENTIVOS AUTOMÁTICOS -->
+<!-- ============================================ -->
+<div class="admin-header">
+    <div class="admin-header-content">
+        <div>
+            <h1 class="admin-title">
+                <i class="bi bi-gift-fill"></i>
+                Incentivos Automáticos
+            </h1>
+            <p class="admin-subtitle">Recompensas que se otorgan automáticamente al alcanzar puntos</p>
+        </div>
+        <a asp-controller="Incentivo" asp-action="Create" class="btn-primary-admin">
+            <i class="bi bi-plus-circle-fill"></i>
+            Nuevo Incentivo
+        </a>
+    </div>
+</div>
+
+<div class="admin-content">
+    @if (incentivos != null && incentivos.Any())
+    {
+        <div class="incentivos-grid">
+            @foreach (var incentivo in incentivos)
+            {
+                var cantidadOtorgados = incentivo.IncentivoEstudiantes?.Count ?? 0;
+                <div class="incentivo-card @(incentivo.Activo ? "" : "incentivo-inactive")">
+                    <div class="incentivo-header">
+                        <div class="incentivo-icon-container">
+                            @if (!string.IsNullOrEmpty(incentivo.IconoUrl))
+                            {
+                                <i class="@incentivo.IconoUrl"></i>
+                            }
+                            else
+                            {
+                                <i class="bi bi-gift-fill"></i>
+                            }
+                        </div>
+                        <div class="incentivo-info">
+                            <h5 class="incentivo-nombre">@incentivo.Nombre</h5>
+                            <p class="incentivo-descripcion">@(incentivo.Descripcion ?? "Recompensa especial")</p>
+                        </div>
+                        
+                        @if (incentivo.Activo)
+                        {
+                            <span class="badge bg-success">
+                                <i class="bi bi-check-circle-fill"></i> Activo
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">
+                                <i class="bi bi-pause-circle-fill"></i> Inactivo
+                            </span>
+                        }
+                    </div>
+
+                    <div class="incentivo-stats">
+                        <div class="stat-item">
+                            <i class="bi bi-star-fill"></i>
+                            <div>
+                                <strong>@incentivo.PuntosRequeridos pts</strong>
+                                <small>Puntos requeridos</small>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="bi bi-people-fill"></i>
+                            <div>
+                                <strong>@cantidadOtorgados</strong>
+                                <small>Estudiantes</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="incentivo-actions">
+                        <form asp-controller="Incentivo" asp-action="ToggleActivo" asp-route-id="@incentivo.IdIncentivo" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            @if (incentivo.Activo)
+                            {
+                                <button type="submit" class="btn-action btn-action-secondary" title="Desactivar">
+                                    <i class="bi bi-pause-fill"></i>
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn-action btn-action-success" title="Activar">
+                                    <i class="bi bi-play-fill"></i>
+                                </button>
+                            }
+                        </form>
+                        <a asp-controller="Incentivo" asp-action="Edit" asp-route-id="@incentivo.IdIncentivo" 
+                           class="btn-action btn-action-warning" title="Editar">
+                            <i class="bi bi-pencil-fill"></i>
+                        </a>
+                        <a asp-controller="Incentivo" asp-action="Delete" asp-route-id="@incentivo.IdIncentivo" 
+                           class="btn-action btn-action-danger" title="Eliminar">
+                            <i class="bi bi-trash-fill"></i>
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+            <i class="bi bi-gift"></i>
+            <h3>No hay incentivos automáticos</h3>
+            <p>Crea incentivos que se otorgarán automáticamente cuando los estudiantes alcancen ciertos puntos</p>
+            <a asp-controller="Incentivo" asp-action="Create" class="btn-primary-admin">
+                <i class="bi bi-plus-circle-fill"></i>
+                Crear Primer Incentivo
+            </a>
+        </div>
+    }
+</div>
+
+<!-- ============================================ -->
+<!-- SECCIÓN: MEDALLAS (Manual) -->
+<!-- ============================================ -->
+<div class="admin-header mt-5">
+    <div class="admin-header-content">
+        <div>
+            <h1 class="admin-title">
+                <i class="bi bi-award-fill"></i>
+                Medallas (Otorgamiento Manual)
+            </h1>
+            <p class="admin-subtitle">Medallas que los docentes otorgan manualmente</p>
+        </div>
+        <a asp-controller="Medalla" asp-action="Create" class="btn-primary-admin">
+            <i class="bi bi-plus-circle-fill"></i>
+            Nueva Medalla
+        </a>
+    </div>
+</div>
+
+<!-- Grid de Medallas -->
+<div class="admin-content">
+    @if (medallas != null && medallas.Any())
+    {
+        <div class="medallas-grid">
+            @foreach (var medalla in medallas)
+            {
+                <div class="medalla-card">
+                    <div class="medalla-card-header">
+                        <div class="medalla-icon-container">
+                            @if (!string.IsNullOrEmpty(medalla.ImagenUrl))
+                            {
+                                <img src="@medalla.ImagenUrl" alt="@medalla.Nombre" class="medalla-imagen" 
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                                <div class="medalla-icon-fallback" style="display: none;">
+                                    <i class="bi bi-award-fill"></i>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="medalla-icon-fallback">
+                                    <i class="bi bi-award-fill"></i>
+                                </div>
+                            }
+                        </div>
+                        <div class="medalla-info">
+                            <h5 class="medalla-nombre">@medalla.Nombre</h5>
+                            <p class="medalla-descripcion">@(medalla.Descripcion ?? "Sin descripción")</p>
+                        </div>
+                    </div>
+
+                    <div class="medalla-actions">
+                        <a asp-controller="Medalla" asp-action="Edit" asp-route-id="@medalla.IdMedalla" 
+                           class="btn-action btn-action-warning" title="Editar">
+                            <i class="bi bi-pencil-fill"></i>
+                        </a>
+                        <a asp-controller="Medalla" asp-action="Delete" asp-route-id="@medalla.IdMedalla" 
+                           class="btn-action btn-action-danger" title="Eliminar">
+                            <i class="bi bi-trash-fill"></i>
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+            <i class="bi bi-award"></i>
+            <h3>No hay medallas creadas</h3>
+            <p>Comienza creando medallas y reconocimientos para tus estudiantes</p>
+            <a asp-controller="Medalla" asp-action="Create" class="btn-primary-admin">
+                <i class="bi bi-plus-circle-fill"></i>
+                Crear Primera Medalla
+            </a>
+        </div>
+    }
+</div>
+
+<!-- Header de la sección Niveles -->
+<div class="admin-header mt-5">
+    <div class="admin-header-content">
+        <div>
+            <h1 class="admin-title">
+                <i class="bi bi-bar-chart-steps"></i>
+                Niveles de Progreso
+            </h1>
+            <p class="admin-subtitle">Configura los niveles y rangos de puntaje para los estudiantes</p>
+        </div>
+        <a asp-controller="Nivel" asp-action="Create" class="btn-primary-admin">
+            <i class="bi bi-plus-circle-fill"></i>
+            Nuevo Nivel
+        </a>
+    </div>
+</div>
+
+<!-- Tabla de Niveles -->
+<div class="admin-content">
+    @if (niveles != null && niveles.Any())
+    {
+        <div class="table-container">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Nivel</th>
+                        <th>Nombre</th>
+                        <th>Rango de Puntaje</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var nivel in niveles)
+                    {
+                        <tr>
+                            <td>
+                                <div class="table-item-main">
+                                    <div class="nivel-badge">
+                                        @nivel.IdNivel
+                                    </div>
+                                    <strong>Nivel @nivel.IdNivel</strong>
+                                </div>
+                            </td>
+                            <td>
+                                <strong>@nivel.Nombre</strong>
+                            </td>
+                            <td>
+                                <span class="badge bg-primary">
+                                    @nivel.PuntajeMinimo - @nivel.PuntajeMaximo pts
+                                </span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a asp-controller="Nivel" asp-action="Edit" asp-route-id="@nivel.IdNivel" 
+                                       class="btn-action btn-action-warning" title="Editar">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </a>
+                                    <a asp-controller="Nivel" asp-action="Delete" asp-route-id="@nivel.IdNivel" 
+                                       class="btn-action btn-action-danger" title="Eliminar">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+            <i class="bi bi-bar-chart-steps"></i>
+            <h3>No hay niveles configurados</h3>
+            <p>Crea niveles para organizar el progreso de los estudiantes según su puntaje</p>
+            <a asp-controller="Nivel" asp-action="Create" class="btn-primary-admin">
+                <i class="bi bi-plus-circle-fill"></i>
+                Crear Primer Nivel
+            </a>
+        </div>
+    }
+</div>
+
+<style>
+    /* ============================================ */
+    /* ESTILOS PARA INCENTIVOS AUTOMÁTICOS */
+    /* ============================================ */
+    .incentivos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 24px;
+        margin-top: 0;
+    }
+
+    .incentivo-card {
+        background: white;
+        border: 2px solid var(--gray-border);
+        border-radius: 12px;
+        padding: 20px;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .incentivo-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(135deg, #FFC107 0%, #FF9800 100%);
+    }
+
+    .incentivo-card.incentivo-inactive {
+        opacity: 0.6;
+        border-color: #e2e8f0;
+    }
+
+    .incentivo-card.incentivo-inactive::before {
+        background: #94a3b8;
+    }
+
+    .incentivo-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .incentivo-header {
+        display: flex;
+        align-items: start;
+        gap: 16px;
+    }
+
+    .incentivo-icon-container {
+        flex-shrink: 0;
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #fef3c7, #fde68a);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        color: #f59e0b;
+    }
+
+    .incentivo-inactive .incentivo-icon-container {
+        background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+        color: #94a3b8;
+    }
+
+    .incentivo-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .incentivo-nombre {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0 0 6px 0;
+    }
+
+    .incentivo-descripcion {
+        font-size: 0.9rem;
+        color: var(--gray-text);
+        margin: 0;
+        line-height: 1.4;
+    }
+
+    .incentivo-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        padding: 16px;
+        background: #f8fafc;
+        border-radius: 8px;
+    }
+
+    .incentivo-stats .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .incentivo-stats .stat-item i {
+        font-size: 1.5rem;
+        color: #FFC107;
+    }
+
+    .incentivo-inactive .incentivo-stats .stat-item i {
+        color: #94a3b8;
+    }
+
+    .incentivo-stats .stat-item strong {
+        display: block;
+        font-size: 1.1rem;
+        color: #0f172a;
+        font-weight: 700;
+    }
+
+    .incentivo-stats .stat-item small {
+        display: block;
+        font-size: 0.8rem;
+        color: var(--gray-text);
+    }
+
+    .incentivo-actions {
+        display: flex;
+        gap: 8px;
+        padding-top: 16px;
+        border-top: 1px solid var(--gray-border);
+        justify-content: flex-end;
+    }
+
+    /* ============================================ */
+    /* ESTILOS PARA MEDALLAS (EXISTENTES) */
+    /* ============================================ */
+    .medallas-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 24px;
+        margin-top: 0;
+    }
+
+    .medalla-card {
+        background: white;
+        border: 1.5px solid var(--gray-border);
+        border-radius: 12px;
+        padding: 20px;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .medalla-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .medalla-card-header {
+        display: flex;
+        align-items: start;
+        gap: 16px;
+    }
+
+    .medalla-icon-container {
+        flex-shrink: 0;
+        width: 80px;
+        height: 80px;
+        border-radius: 12px;
+        overflow: hidden;
+        background: linear-gradient(135deg, #fef3c7, #fde68a);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .medalla-imagen {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .medalla-icon-fallback {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        color: #f59e0b;
+    }
+
+    .medalla-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .medalla-nombre {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0 0 8px 0;
+    }
+
+    .medalla-descripcion {
+        font-size: 0.9rem;
+        color: var(--gray-text);
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    .medalla-actions {
+        display: flex;
+        gap: 8px;
+        padding-top: 16px;
+        border-top: 1px solid var(--gray-border);
+        justify-content: flex-end;
+    }
+
+    /* Badge para niveles */
+    .nivel-badge {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #2563eb, #3b82f6);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-right: 12px;
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .incentivos-grid,
+        .medallas-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .incentivo-stats {
+            grid-template-columns: 1fr;
+        }
+
+        .medalla-card-header,
+        .incentivo-header {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .medalla-icon-container,
+        .incentivo-icon-container {
+            width: 100px;
+            height: 100px;
+        }
+    }
+</style>

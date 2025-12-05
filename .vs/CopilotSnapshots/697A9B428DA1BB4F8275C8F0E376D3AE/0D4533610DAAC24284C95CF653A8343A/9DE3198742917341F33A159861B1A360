@@ -1,0 +1,163 @@
+﻿@model RunaTalento.Models.Actividad
+@{
+    ViewData["Title"] = "Realizar Actividad";
+    Layout = "~/Views/Shared/_LayoutEstudiante.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-lg border-0">
+            <div class="card-header bg-gradient text-white" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+                <h3 class="mb-0">
+                    <i class="bi bi-clipboard-check-fill"></i> Realizar Actividad
+                </h3>
+            </div>
+            <div class="card-body p-4">
+                <!-- Información de la actividad -->
+                <div class="mb-4">
+                    @* ✅ PATRÓN DECORATOR - Mostrar título con modificadores *@
+                    <h4 class="text-purple">@Model.DescripcionConModificadores</h4>
+                    
+                    <p class="text-muted mb-2">
+                        <i class="bi bi-book"></i> <strong>Curso:</strong> @Model.Curso?.Nombre
+                    </p>
+                    <p class="text-muted mb-2">
+                        <i class="bi bi-person"></i> <strong>Docente:</strong> 
+                        @Model.Curso?.Docente?.Nombres @Model.Curso?.Docente?.Apellidos
+                    </p>
+                    <p class="text-muted mb-2">
+                        <i class="bi bi-calendar"></i> <strong>Fecha de creación:</strong> 
+                        @Model.FechaCreacion.ToString("dd/MM/yyyy HH:mm")
+                    </p>
+                </div>
+
+                @* ✅ PATRÓN DECORATOR - Mostrar puntaje con modificadores *@
+                @if (Model.PuntajeConModificadores > Model.Puntaje)
+                {
+                    <div class="alert alert-success">
+                        <i class="bi bi-trophy-fill"></i>
+                        <strong>Puntaje Especial:</strong> Esta actividad otorga 
+                        <strong class="text-decoration-line-through">@Model.Puntaje</strong> 
+                        <strong class="fs-5">@Model.PuntajeConModificadores puntos</strong>
+                        
+                        @if (Model.EsUrgente)
+                        {
+                            <br/><small>⚡ Bonificación por urgencia: +15%</small>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.NivelDificultad) && Model.NivelDificultad != "normal")
+                        {
+                            <br/><small>🔥 Bonificación por dificultad (@Model.NivelDificultad): 
+                            @(Model.NivelDificultad == "dificil" ? "+20%" : "+35%")</small>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle-fill"></i>
+                        <strong>Puntaje:</strong> Al completar esta actividad ganarás <strong>@Model.Puntaje puntos</strong>.
+                    </div>
+                }
+
+                <!-- Descripción -->
+                <div class="mb-4">
+                    <h5><i class="bi bi-file-text"></i> Descripción</h5>
+                    <div class="p-3 bg-light rounded">
+                        @(Model.Descripcion ?? "No hay descripción disponible para esta actividad.")
+                    </div>
+                </div>
+
+                @* ✅ Mostrar fecha límite si existe *@
+                @if (Model.FechaLimite.HasValue)
+                {
+                    var diasRestantes = (Model.FechaLimite.Value - DateTime.Now).TotalDays;
+                    var horasRestantes = (Model.FechaLimite.Value - DateTime.Now).TotalHours;
+                    
+                    <div class="alert @(Model.EsUrgente ? "alert-warning" : "alert-secondary")">
+                        <i class="bi bi-clock-history"></i>
+                        <strong>Fecha límite:</strong> @Model.FechaLimite.Value.ToString("dd/MM/yyyy HH:mm")
+                        
+                        @if (!Model.EstaVencida)
+                        {
+                            @if (diasRestantes >= 1)
+                            {
+                                <span> - Quedan <strong>@((int)diasRestantes) días</strong></span>
+                            }
+                            else if (horasRestantes >= 1)
+                            {
+                                <span> - Quedan <strong>@((int)horasRestantes) horas</strong> ⚠️</span>
+                            }
+                            else
+                            {
+                                <span> - <strong class="text-danger">¡Menos de 1 hora!</strong> 🚨</span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="text-danger"> - <strong>VENCIDA</strong></span>
+                        }
+                    </div>
+                }
+
+                <!-- Archivo adjunto del docente (si existe) -->
+                @if (!string.IsNullOrEmpty(Model.ArchivoUrl))
+                {
+                    <div class="mb-4">
+                        <h5><i class="bi bi-download"></i> Material de apoyo</h5>
+                        <a href="@Model.ArchivoUrl" class="btn btn-outline-primary" target="_blank">
+                            <i class="bi bi-file-earmark-arrow-down"></i> Descargar archivo
+                        </a>
+                    </div>
+                }
+
+                <!-- Formulario de entrega -->
+                <form asp-action="Realizar" method="post" enctype="multipart/form-data">
+                    <input type="hidden" asp-for="IdActividad" />
+
+                    <div class="mb-4">
+                        <h5><i class="bi bi-upload"></i> Tu entrega</h5>
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle"></i>
+                            Al enviar esta actividad, quedará registrada como completada. 
+                            El docente la calificará posteriormente.
+                        </div>
+
+                        <!-- Campo opcional para subir archivo -->
+                        <div class="mb-3">
+                            <label for="archivoEntrega" class="form-label">
+                                Archivo de entrega (opcional)
+                            </label>
+                            <input type="file" class="form-control" id="archivoEntrega" name="archivoEntrega" accept=".pdf,.doc,.docx,.txt,.zip">
+                            <small class="text-muted">
+                                Formatos aceptados: PDF, DOC, DOCX, TXT, ZIP (máx. 10MB)
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- Botones -->
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Volver
+                        </a>
+                        <button type="submit" class="btn btn-realizar btn-lg">
+                            <i class="bi bi-check-circle-fill"></i> Completar Actividad
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Validar tamaño de archivo
+        document.getElementById('archivoEntrega')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file && file.size > 10 * 1024 * 1024) { // 10MB
+                alert('El archivo no debe superar los 10MB');
+                e.target.value = '';
+            }
+        });
+    </script>
+}

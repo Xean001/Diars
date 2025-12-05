@@ -1,0 +1,23 @@
+﻿namespace RunaTalento.Services.Strategies
+{
+    /// <summary>
+    /// Patrón STRATEGY (GoF) - Interfaz para diferentes estrategias de calificación
+    /// Permite cambiar el algoritmo de calificación sin modificar el código cliente
+    /// </summary>
+    public interface ICalificacionStrategy
+    {
+        /// <summary>
+        /// Calcula el puntaje final según la estrategia implementada
+        /// </summary>
+        /// <param name="puntajeMaximo">Puntaje máximo de la actividad</param>
+        /// <param name="puntajeObtenido">Puntaje obtenido por el estudiante</param>
+        /// <param name="entregadoATiempo">Indica si se entregó antes de la fecha límite</param>
+        /// <returns>Puntaje calculado</returns>
+        int CalcularPuntaje(int puntajeMaximo, int puntajeObtenido, bool entregadoATiempo);
+
+        /// <summary>
+        /// Nombre de la estrategia
+        /// </summary>
+        string NombreEstrategia { get; }
+    }
+}

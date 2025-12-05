@@ -1,0 +1,185 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using RunaTalento.Data;
+using RunaTalento.Models;
+
+namespace RunaTalento.Controllers
+{
+    /// <summary>
+    /// Controlador para gestionar cursos
+    /// </summary>
+    [Authorize]
+    public class CursoController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public CursoController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        {
+            _context = context;
+            _userManager = userManager;
+        }
+
+        // GET: Curso
+        public async Task<IActionResult> Index()
+        {
+            var cursos = await _context.Curso
+                .Include(c => c.Docente)
+                .ToListAsync();
+            return View(cursos);
+        }
+
+        // GET: Curso/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var curso = await _context.Curso
+                .Include(c => c.Docente)
+                .Include(c => c.Actividades)
+                .FirstOrDefaultAsync(m => m.IdCurso == id);
+            
+            if (curso == null)
+            {
+                return NotFound();
+            }
+
+            return View(curso);
+        }
+
+        // GET: Curso/Create
+        [Authorize(Roles = "Admin,Docente")]
+        public async Task<IActionResult> Create()
+        {
+            var docentes = await _userManager.GetUsersInRoleAsync("Docente");
+            ViewData["IdDocente"] = new SelectList(docentes, "Id", "Email");
+            return View();
+        }
+
+        // POST: Curso/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Docente")]
+        public async Task<IActionResult> Create([Bind("IdCurso,Nombre,Descripcion,IdDocente")] Curso curso)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(curso);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Curso creado exitosamente";
+                return RedirectToAction(nameof(Index));
+            }
+            
+            var docentes = await _userManager.GetUsersInRoleAsync("Docente");
+            ViewData["IdDocente"] = new SelectList(docentes, "Id", "Email", curso.IdDocente);
+            return View(curso);
+        }
+
+        // GET: Curso/Edit/5
+        [Authorize(Roles = "Admin,Docente")]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var curso = await _context.Curso.FindAsync(id);
+            if (curso == null)
+            {
+                return NotFound();
+            }
+            
+            var docentes = await _userManager.GetUsersInRoleAsync("Docente");
+            ViewData["IdDocente"] = new SelectList(docentes, "Id", "Email", curso.IdDocente);
+            return View(curso);
+        }
+
+        // POST: Curso/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Docente")]
+        public async Task<IActionResult> Edit(int id, [Bind("IdCurso,Nombre,Descripcion,IdDocente")] Curso curso)
+        {
+            if (id != curso.IdCurso)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(curso);
+                    await _context.SaveChangesAsync();
+                    TempData["Success"] = "Curso actualizado exitosamente";
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!CursoExists(curso.IdCurso))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            
+            var docentes = await _userManager.GetUsersInRoleAsync("Docente");
+            ViewData["IdDocente"] = new SelectList(docentes, "Id", "Email", curso.IdDocente);
+            return View(curso);
+        }
+
+        // GET: Curso/Delete/5
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var curso = await _context.Curso
+                .Include(c => c.Docente)
+                .FirstOrDefaultAsync(m => m.IdCurso == id);
+            
+            if (curso == null)
+            {
+                return NotFound();
+            }
+
+            return View(curso);
+        }
+
+        // POST: Curso/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var curso = await _context.Curso.FindAsync(id);
+            if (curso != null)
+            {
+                _context.Curso.Remove(curso);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Curso eliminado exitosamente";
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool CursoExists(int id)
+        {
+            return _context.Curso.Any(e => e.IdCurso == id);
+        }
+    }
+}

@@ -1,0 +1,141 @@
+﻿@model IEnumerable<dynamic>
+
+@{
+    ViewData["Title"] = "Ranking de Estudiantes";
+    Layout = "~/Views/Shared/_LayoutDocente.cshtml";
+}
+
+<div class="ranking-section">
+    <div class="ranking-header">
+        <i class="bi bi-graph-up-arrow"></i>
+        <h3>Ranking de Estudiantes</h3>
+    </div>
+    <p>Visualiza el desempeño general de tus estudiantes</p>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="ranking-table">
+                <thead>
+                    <tr>
+                        <th style="width: 80px; text-align: center;">Posición</th>
+                        <th>Estudiante</th>
+                        <th>Nivel</th>
+                        <th style="text-align: center;">Actividades</th>
+                        <th style="text-align: center;">Medallas</th>
+                        <th style="text-align: center;">Puntos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int posicion = 1;
+                        foreach (var estudiante in Model)
+                        {
+                            // Determinar la clase CSS para la posición
+                            string posicionClass = "normal";
+                            if (posicion == 1) posicionClass = "gold";
+                            else if (posicion == 2) posicionClass = "silver";
+                            else if (posicion == 3) posicionClass = "bronze";
+
+                            // Generar iniciales
+                            var nombres = estudiante.Nombres?.ToString().Split(' ');
+                            var apellidos = estudiante.Apellidos?.ToString().Split(' ');
+                            var iniciales = $"{nombres?[0]?.Substring(0, 1)}{apellidos?[0]?.Substring(0, 1)}";
+
+                            <tr>
+                                <td style="text-align: center;">
+                                    <div class="ranking-position @posicionClass">
+                                        @if (posicion == 1)
+                                        {
+                                            <span>🥇</span>
+                                        }
+                                        else if (posicion == 2)
+                                        {
+                                            <span>🥈</span>
+                                        }
+                                        else if (posicion == 3)
+                                        {
+                                            <span>🥉</span>
+                                        }
+                                        else
+                                        {
+                                            <span>@posicion</span>
+                                        }
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="student-info">
+                                        <div class="student-avatar">@iniciales</div>
+                                        <div class="student-details">
+                                            <strong>@estudiante.Nombres @estudiante.Apellidos</strong>
+                                            <small>@estudiante.Email</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="nivel-badge">
+                                        <span class="nivel-numero">@(estudiante.IdNivel ?? 0)</span>
+                                        <span>Nivel @(estudiante.IdNivel ?? 0)</span>
+                                    </span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span class="badge bg-info">@estudiante.ActividadesRealizadas</span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span class="medallas-count">
+                                        <i class="bi bi-award-fill"></i> @estudiante.MedallasCount
+                                    </span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span class="puntos-badge">
+                                        <i class="bi bi-star-fill"></i> @estudiante.PuntajeTotal puntos
+                                    </span>
+                                </td>
+                            </tr>
+
+                            posicion++;
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Estadísticas adicionales -->
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="card border-0 bg-light">
+                    <div class="card-body text-center">
+                        <i class="bi bi-people-fill text-primary" style="font-size: 2rem;"></i>
+                        <h4 class="mt-2">@Model.Count()</h4>
+                        <p class="text-muted mb-0">Total de Estudiantes</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 bg-light">
+                    <div class="card-body text-center">
+                        <i class="bi bi-graph-up text-success" style="font-size: 2rem;"></i>
+                        <h4 class="mt-2">@(Model.Any() ? Model.Average(e => (int)e.PuntajeTotal) : 0)</h4>
+                        <p class="text-muted mb-0">Promedio de Puntos</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 bg-light">
+                    <div class="card-body text-center">
+                        <i class="bi bi-award-fill text-warning" style="font-size: 2rem;"></i>
+                        <h4 class="mt-2">@(Model.Any() ? Model.Sum(e => (int)e.MedallasCount) : 0)</h4>
+                        <p class="text-muted mb-0">Total Medallas</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle-fill"></i> 
+            No hay estudiantes que hayan realizado actividades de tus cursos aún.
+        </div>
+    }
+</div>

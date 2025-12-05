@@ -1,0 +1,45 @@
+﻿@model RunaTalento.Models.Nivel
+
+@{
+    ViewData["Title"] = "Detalles del Nivel";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0"><i class="bi bi-info-circle"></i> Detalles del Nivel</h4>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">Nombre:</dt>
+                        <dd class="col-sm-8"><strong class="text-primary">@Model.Nombre</strong></dd>
+
+                        <dt class="col-sm-4">Puntaje Mínimo:</dt>
+                        <dd class="col-sm-8"><span class="badge bg-info">@Model.PuntajeMinimo puntos</span></dd>
+
+                        <dt class="col-sm-4">Puntaje Máximo:</dt>
+                        <dd class="col-sm-8"><span class="badge bg-success">@Model.PuntajeMaximo puntos</span></dd>
+                    </dl>
+
+                    <hr />
+
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Volver al listado
+                        </a>
+                        <div>
+                            <a asp-action="Edit" asp-route-id="@Model.IdNivel" class="btn btn-warning">
+                                <i class="bi bi-pencil"></i> Editar
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@Model.IdNivel" class="btn btn-danger">
+                                <i class="bi bi-trash"></i> Eliminar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
