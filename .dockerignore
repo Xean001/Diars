@@ -1,0 +1,75 @@
+# ==============================================================================
+# .dockerignore - Archivos y carpetas a excluir del contexto de Docker
+# ==============================================================================
+
+# Directorios de compilación y salida
+**/bin/
+**/obj/
+**/out/
+**/publish/
+
+# Archivos de usuario de Visual Studio
+**/.vs/
+**/.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Archivos de NuGet
+*.nupkg
+*.snupkg
+**/packages/
+**/.nuget/
+
+# Archivos de pruebas
+**/TestResults/
+**/*.trx
+**/*.coverage
+**/*.coveragexml
+
+# Archivos de logs
+**/logs/
+**/*.log
+
+# Archivos temporales
+**/tmp/
+**/temp/
+**/.tmp/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Docker
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Documentación
+*.md
+README.md
+LICENSE
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+azure-pipelines.yml
+
+# Node (si usas npm/webpack)
+**/node_modules/
+**/npm-debug.log
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# IDE
+*.swp
+*.swo
+*~
+
+# Archivos de despliegue local
+deploy.ps1
+deploy.sh

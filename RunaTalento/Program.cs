@@ -69,6 +69,10 @@ builder.Services.AddScoped<ICalificacionStrategy>(provider =>
 builder.Services.AddSingleton<CalificacionNotifier>();
 builder.Services.AddScoped<ICalificacionObserver, LogCalificacionObserver>();
 
+// ✅ Health Checks para Coolify
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<ApplicationDbContext>("database");
+
 // Agregar soporte para Razor Pages (necesario para Identity UI)
 builder.Services.AddRazorPages();
 
@@ -111,6 +115,9 @@ if (!app.Environment.IsDevelopment())
     // HSTS: The default HSTS value is 30 days
     app.UseHsts();
 }
+
+// ✅ Health Check Endpoint para Coolify (debe estar antes de UseHttpsRedirection)
+app.MapHealthChecks("/health");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

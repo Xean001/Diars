@@ -1332,7 +1332,6 @@ C:\Users\Piero\Downloads\ProyectoFinalDiars\ProyectoFinalDiars\RunaTalento\obj\D
 C:\Users\Piero\Downloads\ProyectoFinalDiars\ProyectoFinalDiars\RunaTalento\obj\Debug\net8.0\RunaTalento.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\Piero\Downloads\ProyectoFinalDiars\ProyectoFinalDiars\RunaTalento\obj\Debug\net8.0\RunaTalento.RazorAssemblyInfo.cache
 C:\Users\Piero\Downloads\ProyectoFinalDiars\ProyectoFinalDiars\RunaTalento\obj\Debug\net8.0\RunaTalento.RazorAssemblyInfo.cs
-C:\Users\Piero\Downloads\ProyectoFinalDiars\ProyectoFinalDiars\RunaTalento\obj\Debug\net8.0\RunaTalento.sourcelink.json
 C:\Users\Piero\Downloads\ProyectoFinalDiars\ProyectoFinalDiars\RunaTalento\obj\Debug\net8.0\rjimswa.dswa.cache.json
 C:\Users\Piero\Downloads\ProyectoFinalDiars\ProyectoFinalDiars\RunaTalento\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
 C:\Users\Piero\Downloads\ProyectoFinalDiars\ProyectoFinalDiars\RunaTalento\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
@@ -1350,3 +1349,8 @@ C:\Users\Piero\Downloads\ProyectoFinalDiars\ProyectoFinalDiars\RunaTalento\obj\D
 C:\Users\Piero\Downloads\ProyectoFinalDiars\ProyectoFinalDiars\RunaTalento\obj\Debug\net8.0\RunaTalento.pdb
 C:\Users\Piero\Downloads\ProyectoFinalDiars\ProyectoFinalDiars\RunaTalento\obj\Debug\net8.0\RunaTalento.genruntimeconfig.cache
 C:\Users\Piero\Downloads\ProyectoFinalDiars\ProyectoFinalDiars\RunaTalento\obj\Debug\net8.0\ref\RunaTalento.dll
+C:\Users\Piero\Downloads\ProyectoFinalDiars\ProyectoFinalDiars\RunaTalento\bin\Debug\net8.0\Microsoft.Extensions.Diagnostics.Abstractions.dll
+C:\Users\Piero\Downloads\ProyectoFinalDiars\ProyectoFinalDiars\RunaTalento\bin\Debug\net8.0\Microsoft.Extensions.Diagnostics.HealthChecks.dll
+C:\Users\Piero\Downloads\ProyectoFinalDiars\ProyectoFinalDiars\RunaTalento\bin\Debug\net8.0\Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll
+C:\Users\Piero\Downloads\ProyectoFinalDiars\ProyectoFinalDiars\RunaTalento\bin\Debug\net8.0\Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore.dll
+C:\Users\Piero\Downloads\ProyectoFinalDiars\ProyectoFinalDiars\RunaTalento\bin\Debug\net8.0\Microsoft.Extensions.Hosting.Abstractions.dll

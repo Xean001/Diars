@@ -1,0 +1,37 @@
+version: '3.8'
+
+# ==============================================================================
+# Docker Compose para RunaTalento
+# Para pruebas locales antes de desplegar en Coolify
+# ==============================================================================
+
+services:
+  runatalento:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: runatalento-app
+    ports:
+      - "8080:8080"
+    environment:
+      # Variables de entorno (sobrescriben appsettings.json)
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+      # Connection string (usa la BD ya desplegada)
+      - ConnectionStrings__DefaultConnection=Server=142.93.27.239,1433;Database=RunaTalentoDB;User Id=sa;Password=Sqlserver123!;TrustServerCertificate=True;
+    volumes:
+      # Persistir uploads (opcional para desarrollo local)
+      - ./uploads:/app/wwwroot/uploads
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 40s
+    networks:
+      - runatalento-network
+
+networks:
+  runatalento-network:
+    driver: bridge
