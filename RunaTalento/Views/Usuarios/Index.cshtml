@@ -1,18 +1,18 @@
 @model List<dynamic>
 
 @{
-    ViewData["Title"] = "Gestión de Usuarios";
+    ViewData["Title"] = "GestiÃ³n de Usuarios";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<!-- Header de la sección -->
+<!-- Header de la secciÃ³n -->
 <div class="seccion-header">
     <div class="seccion-header-content">
         <div class="seccion-header-icon">
             <i class="bi bi-people-fill"></i>
         </div>
         <div>
-            <h2>Gestión de Usuarios</h2>
+            <h2>GestiÃ³n de Usuarios</h2>
             <p>Administra cuentas de estudiantes, docentes y administradores</p>
         </div>
     </div>
@@ -39,7 +39,7 @@
                 var usuario = item.Usuario as RunaTalento.Models.ApplicationUser;
                 var rolPrincipal = item.RolPrincipal as string;
                 
-                // Determinar color del avatar según el rol
+                // Determinar color del avatar segÃºn el rol
                 var avatarClass = rolPrincipal switch
                 {
                     "Admin" => "bg-blue",

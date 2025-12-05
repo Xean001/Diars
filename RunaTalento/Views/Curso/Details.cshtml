@@ -13,7 +13,7 @@
                 <i class="bi bi-book-fill"></i>
                 Detalles del Curso
             </h1>
-            <p class="@(User.IsInRole("Admin") ? "admin-subtitle" : "text-muted")">Informaci髇 completa del curso</p>
+            <p class="@(User.IsInRole("Admin") ? "admin-subtitle" : "text-muted")">Informaci贸n completa del curso</p>
         </div>
         <a asp-action="Index" class="@(User.IsInRole("Admin") ? "btn-secondary-admin" : "btn btn-secondary")">
             <i class="bi bi-arrow-left"></i>
@@ -26,7 +26,7 @@
     <div class="@(User.IsInRole("Admin") ? "detail-card" : "card")">
         <h4 class="@(User.IsInRole("Admin") ? "detail-card-title" : "card-header")">
             <i class="bi bi-info-circle-fill"></i>
-            Informaci髇 General
+            Informaci贸n General
         </h4>
         <div class="@(User.IsInRole("Admin") ? "detail-card-body" : "card-body")">
             <div class="@(User.IsInRole("Admin") ? "detail-item" : "mb-3")">
@@ -34,8 +34,8 @@
                 <span class="@(User.IsInRole("Admin") ? "detail-value" : "")">@Model.Nombre</span>
             </div>
             <div class="@(User.IsInRole("Admin") ? "detail-item" : "mb-3")">
-                <span class="@(User.IsInRole("Admin") ? "detail-label" : "fw-bold")">Descripci髇:</span>
-                <span class="@(User.IsInRole("Admin") ? "detail-value" : "")">@(Model.Descripcion ?? "Sin descripci髇")</span>
+                <span class="@(User.IsInRole("Admin") ? "detail-label" : "fw-bold")">Descripci贸n:</span>
+                <span class="@(User.IsInRole("Admin") ? "detail-value" : "")">@(Model.Descripcion ?? "Sin descripci贸n")</span>
             </div>
             <div class="@(User.IsInRole("Admin") ? "detail-item" : "mb-3")">
                 <span class="@(User.IsInRole("Admin") ? "detail-label" : "fw-bold")">Docente Asignado:</span>

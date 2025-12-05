@@ -32,14 +32,14 @@
                     Nombre de la Medalla <span class="required">*</span>
                 </label>
                 <input asp-for="Nombre" class="form-control-admin" 
-                       placeholder="Ej: Medalla de Excelencia AcadÈmica" />
+                       placeholder="Ej: Medalla de Excelencia Acad√©mica" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
 
             <div class="form-group-admin">
                 <label asp-for="Descripcion" class="form-label-admin">
                     <i class="bi bi-text-paragraph"></i>
-                    DescripciÛn
+                    Descripci√≥n
                 </label>
                 <textarea asp-for="Descripcion" class="form-control-admin" rows="4" 
                           placeholder="Describe los criterios para obtener esta medalla..."></textarea>
@@ -56,13 +56,13 @@
                 <span asp-validation-for="ImagenUrl" class="text-danger"></span>
                 <small class="form-text text-muted">
                     <i class="bi bi-lightbulb-fill"></i>
-                    Puedes usar una URL externa o una ruta relativa dentro del proyecto. Si no agregas imagen, se usar· un icono predeterminado.
+                    Puedes usar una URL externa o una ruta relativa dentro del proyecto. Si no agregas imagen, se usar√° un icono predeterminado.
                 </small>
             </div>
 
             <div class="alert alert-info">
                 <i class="bi bi-info-circle-fill me-2"></i>
-                <strong>InformaciÛn:</strong> Las medallas ser·n otorgadas manualmente por los docentes como reconocimiento al esfuerzo y logros de los estudiantes.
+                <strong>Informaci√≥n:</strong> Las medallas ser√°n otorgadas manualmente por los docentes como reconocimiento al esfuerzo y logros de los estudiantes.
             </div>
 
             <div class="form-actions">
@@ -90,7 +90,7 @@
             }
         });
 
-        // ValidaciÛn en tiempo real
+        // Validaci√≥n en tiempo real
         document.querySelector('input[name="Nombre"]').addEventListener('input', function(e) {
             if (e.target.value.length > 0) {
                 e.target.style.borderColor = '#22c55e';

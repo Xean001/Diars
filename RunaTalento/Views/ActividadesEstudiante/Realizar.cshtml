@@ -13,9 +13,9 @@
                 </h3>
             </div>
             <div class="card-body p-4">
-                <!-- InformaciÛn de la actividad -->
+                <!-- Informaci√≥n de la actividad -->
                 <div class="mb-4">
-                    @* ? PATR”N DECORATOR - Mostrar tÌtulo con modificadores *@
+                    @* ? PATR√ìN DECORATOR - Mostrar t√≠tulo con modificadores *@
                     <h4 class="text-purple">@Model.DescripcionConModificadores</h4>
                     
                     <p class="text-muted mb-2">
@@ -26,12 +26,12 @@
                         @Model.Curso?.Docente?.Nombres @Model.Curso?.Docente?.Apellidos
                     </p>
                     <p class="text-muted mb-2">
-                        <i class="bi bi-calendar"></i> <strong>Fecha de creaciÛn:</strong> 
+                        <i class="bi bi-calendar"></i> <strong>Fecha de creaci√≥n:</strong> 
                         @Model.FechaCreacion.ToString("dd/MM/yyyy HH:mm")
                     </p>
                 </div>
 
-                @* ? PATR”N DECORATOR - Mostrar puntaje con modificadores *@
+                @* ? PATR√ìN DECORATOR - Mostrar puntaje con modificadores *@
                 @if (Model.PuntajeConModificadores > Model.Puntaje)
                 {
                     <div class="alert alert-success">
@@ -42,11 +42,11 @@
                         
                         @if (Model.EsUrgente)
                         {
-                            <br/><small>? BonificaciÛn por urgencia: +15%</small>
+                            <br/><small>? Bonificaci√≥n por urgencia: +15%</small>
                         }
                         @if (!string.IsNullOrEmpty(Model.NivelDificultad) && Model.NivelDificultad != "normal")
                         {
-                            <br/><small>?? BonificaciÛn por dificultad (@Model.NivelDificultad): 
+                            <br/><small>?? Bonificaci√≥n por dificultad (@Model.NivelDificultad): 
                             @(Model.NivelDificultad == "dificil" ? "+20%" : "+35%")</small>
                         }
                     </div>
@@ -55,19 +55,19 @@
                 {
                     <div class="alert alert-info">
                         <i class="bi bi-info-circle-fill"></i>
-                        <strong>Puntaje:</strong> Al completar esta actividad ganar·s <strong>@Model.Puntaje puntos</strong>.
+                        <strong>Puntaje:</strong> Al completar esta actividad ganar√°s <strong>@Model.Puntaje puntos</strong>.
                     </div>
                 }
 
-                <!-- DescripciÛn -->
+                <!-- Descripci√≥n -->
                 <div class="mb-4">
-                    <h5><i class="bi bi-file-text"></i> DescripciÛn</h5>
+                    <h5><i class="bi bi-file-text"></i> Descripci√≥n</h5>
                     <div class="p-3 bg-light rounded">
-                        @(Model.Descripcion ?? "No hay descripciÛn disponible para esta actividad.")
+                        @(Model.Descripcion ?? "No hay descripci√≥n disponible para esta actividad.")
                     </div>
                 </div>
 
-                @* ? Mostrar fecha lÌmite si existe *@
+                @* ? Mostrar fecha l√≠mite si existe *@
                 @if (Model.FechaLimite.HasValue)
                 {
                     var diasRestantes = (Model.FechaLimite.Value - DateTime.Now).TotalDays;
@@ -75,13 +75,13 @@
                     
                     <div class="alert @(Model.EsUrgente ? "alert-warning" : "alert-secondary")">
                         <i class="bi bi-clock-history"></i>
-                        <strong>Fecha lÌmite:</strong> @Model.FechaLimite.Value.ToString("dd/MM/yyyy HH:mm")
+                        <strong>Fecha l√≠mite:</strong> @Model.FechaLimite.Value.ToString("dd/MM/yyyy HH:mm")
                         
                         @if (!Model.EstaVencida)
                         {
                             @if (diasRestantes >= 1)
                             {
-                                <span> - Quedan <strong>@((int)diasRestantes) dÌas</strong></span>
+                                <span> - Quedan <strong>@((int)diasRestantes) d√≠as</strong></span>
                             }
                             else if (horasRestantes >= 1)
                             {
@@ -89,7 +89,7 @@
                             }
                             else
                             {
-                                <span> - <strong class="text-danger">°Menos de 1 hora!</strong> ??</span>
+                                <span> - <strong class="text-danger">¬°Menos de 1 hora!</strong> ??</span>
                             }
                         }
                         else
@@ -118,8 +118,8 @@
                         <h5><i class="bi bi-upload"></i> Tu entrega</h5>
                         <div class="alert alert-warning">
                             <i class="bi bi-exclamation-triangle"></i>
-                            Al enviar esta actividad, quedar· registrada como completada. 
-                            El docente la calificar· posteriormente.
+                            Al enviar esta actividad, quedar√° registrada como completada. 
+                            El docente la calificar√° posteriormente.
                         </div>
 
                         <!-- Campo opcional para subir archivo -->
@@ -129,7 +129,7 @@
                             </label>
                             <input type="file" class="form-control" id="archivoEntrega" name="archivoEntrega" accept=".pdf,.doc,.docx,.txt,.zip">
                             <small class="text-muted">
-                                Formatos aceptados: PDF, DOC, DOCX, TXT, ZIP (m·x. 10MB)
+                                Formatos aceptados: PDF, DOC, DOCX, TXT, ZIP (m√°x. 10MB)
                             </small>
                         </div>
                     </div>
@@ -151,7 +151,7 @@
 
 @section Scripts {
     <script>
-        // Validar tamaÒo de archivo
+        // Validar tama√±o de archivo
         document.getElementById('archivoEntrega')?.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file && file.size > 10 * 1024 * 1024) { // 10MB

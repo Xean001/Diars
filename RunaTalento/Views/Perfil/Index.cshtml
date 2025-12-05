@@ -13,12 +13,12 @@
 }
 
 <div class="row g-4">
-    <!-- Columna izquierda: Progreso Académico -->
+    <!-- Columna izquierda: Progreso AcadÃ©mico -->
     <div class="col-lg-6">
         <div class="perfil-section">
             <div class="d-flex align-items-center mb-2">
                 <i class="bi bi-star-fill text-purple me-2" style="font-size: 1.5rem;"></i>
-                <h4 class="mb-0">Progreso Académico</h4>
+                <h4 class="mb-0">Progreso AcadÃ©mico</h4>
             </div>
             <p class="text-muted mb-4">Tu avance en el sistema</p>
 
@@ -96,22 +96,22 @@
                             <i class="bi bi-info-circle-fill" style="color: #7c3aed;"></i>
                             @if (porcentajeNivel >= 75)
                             {
-                                <strong style="color: #7c3aed;">¡Casi completas este nivel!</strong>
+                                <strong style="color: #7c3aed;">Â¡Casi completas este nivel!</strong>
                                 <span style="color: #6d28d9;">Te faltan @(nivelActual.PuntajeMaximo - estudiante.PuntajeTotal) puntos para completarlo.</span>
                             }
                             else if (porcentajeNivel >= 50)
                             {
-                                <strong style="color: #7c3aed;">¡Vas por la mitad!</strong>
+                                <strong style="color: #7c3aed;">Â¡Vas por la mitad!</strong>
                                 <span style="color: #6d28d9;">Llevas @puntosEnNivel de @rangoNivel puntos en este nivel.</span>
                             }
                             else if (porcentajeNivel >= 25)
                             {
-                                <strong style="color: #7c3aed;">¡Buen progreso!</strong>
+                                <strong style="color: #7c3aed;">Â¡Buen progreso!</strong>
                                 <span style="color: #6d28d9;">Sigue acumulando puntos para avanzar.</span>
                             }
                             else
                             {
-                                <strong style="color: #7c3aed;">¡Recién comenzando!</strong>
+                                <strong style="color: #7c3aed;">Â¡ReciÃ©n comenzando!</strong>
                                 <span style="color: #6d28d9;">Completa actividades para progresar en este nivel.</span>
                             }
                         </small>
@@ -122,7 +122,7 @@
             {
                 <div class="alert alert-info">
                     <i class="bi bi-info-circle-fill me-2"></i>
-                    Aún no tienes un nivel asignado. ¡Completa actividades para obtener tu primer nivel!
+                    AÃºn no tienes un nivel asignado. Â¡Completa actividades para obtener tu primer nivel!
                 </div>
             }
         </div>
@@ -142,7 +142,7 @@
                         <i class="bi bi-unlock-fill"></i>
                         <div>
                             <strong>10 actividades completadas</strong>
-                            <br><small class="text-muted">¡Excelente dedicación!</small>
+                            <br><small class="text-muted">Â¡Excelente dedicaciÃ³n!</small>
                         </div>
                     </div>
                 }
@@ -151,8 +151,8 @@
                     <div class="logro-item">
                         <i class="bi bi-unlock-fill"></i>
                         <div>
-                            <strong>Racha de 7 días</strong>
-                            <br><small class="text-muted">Mantén tu constancia</small>
+                            <strong>Racha de 7 dÃ­as</strong>
+                            <br><small class="text-muted">MantÃ©n tu constancia</small>
                         </div>
                     </div>
                 }
@@ -162,7 +162,7 @@
                         <i class="bi bi-unlock-fill"></i>
                         <div>
                             <strong>Top 5 del ranking</strong>
-                            <br><small class="text-muted">¡Sigue así!</small>
+                            <br><small class="text-muted">Â¡Sigue asÃ­!</small>
                         </div>
                     </div>
                 }
@@ -217,7 +217,7 @@
             {
                 <div class="text-center py-5">
                     <i class="bi bi-award" style="font-size: 4rem; color: var(--gray-text);"></i>
-                    <h5 class="mt-3 mb-2">Aún no tienes medallas</h5>
+                    <h5 class="mt-3 mb-2">AÃºn no tienes medallas</h5>
                     <p class="text-muted mb-0">Completa actividades y logra objetivos para obtener medallas</p>
                 </div>
             }
@@ -229,7 +229,7 @@
                 <i class="bi bi-gift-fill me-2" style="font-size: 1.5rem; color: #14b8a6;"></i>
                 <h4 class="mb-0">Mis Incentivos</h4>
             </div>
-            <p class="text-muted mb-4">Recompensas automáticas obtenidas</p>
+            <p class="text-muted mb-4">Recompensas automÃ¡ticas obtenidas</p>
 
             @if (incentivos != null && incentivos.Any())
             {
@@ -269,8 +269,8 @@
             {
                 <div class="text-center py-5">
                     <i class="bi bi-gift" style="font-size: 4rem; color: var(--gray-text);"></i>
-                    <h5 class="mt-3 mb-2">Aún no tienes incentivos</h5>
-                    <p class="text-muted mb-0">Los incentivos se otorgan automáticamente al alcanzar ciertos puntos</p>
+                    <h5 class="mt-3 mb-2">AÃºn no tienes incentivos</h5>
+                    <p class="text-muted mb-0">Los incentivos se otorgan automÃ¡ticamente al alcanzar ciertos puntos</p>
                 </div>
             }
         </div>

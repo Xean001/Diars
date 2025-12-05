@@ -12,7 +12,7 @@
                 <i class="bi bi-pencil-fill"></i>
                 Editar Medalla
             </h1>
-            <p class="admin-subtitle">Modifica la informaci髇 de la medalla: <strong>@Model.Nombre</strong></p>
+            <p class="admin-subtitle">Modifica la informaci贸n de la medalla: <strong>@Model.Nombre</strong></p>
         </div>
         <a asp-action="Index" class="btn-secondary-admin">
             <i class="bi bi-arrow-left"></i>
@@ -34,14 +34,14 @@
                     Nombre de la Medalla <span class="required">*</span>
                 </label>
                 <input asp-for="Nombre" class="form-control-admin" 
-                       placeholder="Ej: Medalla de Excelencia Acad閙ica" />
+                       placeholder="Ej: Medalla de Excelencia Acad茅mica" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
 
             <div class="form-group-admin">
                 <label asp-for="Descripcion" class="form-label-admin">
                     <i class="bi bi-text-paragraph"></i>
-                    Descripci髇
+                    Descripci贸n
                 </label>
                 <textarea asp-for="Descripcion" class="form-control-admin" rows="4" 
                           placeholder="Describe los criterios para obtener esta medalla..."></textarea>
@@ -81,7 +81,7 @@
 
             <div class="alert alert-warning">
                 <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                <strong>Atenci髇:</strong> Los cambios afectar醤 a todas las medallas ya otorgadas de este tipo.
+                <strong>Atenci贸n:</strong> Los cambios afectar谩n a todas las medallas ya otorgadas de este tipo.
             </div>
 
             <div class="form-actions">
@@ -140,7 +140,7 @@
             }
         }
 
-        // Validaci髇 en tiempo real del nombre
+        // Validaci贸n en tiempo real del nombre
         document.querySelector('input[name="Nombre"]').addEventListener('input', function(e) {
             if (e.target.value.length > 0) {
                 e.target.style.borderColor = '#22c55e';

@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_LayoutEstudiante.cshtml";
 }
 
-<!-- Header de la secci髇 -->
+<!-- Header de la secci贸n -->
 <div class="seccion-header">
     <div class="d-flex align-items-start">
         <i class="bi bi-clipboard-check-fill text-primary me-3" style="font-size: 2.5rem;"></i>
@@ -25,7 +25,7 @@
             var completada = actividadEstudiante != null;
             
             // Determinar nivel de dificultad basado en puntaje
-            var nivel = actividad.Puntaje < 100 ? "B醩ico" : actividad.Puntaje < 150 ? "Intermedio" : "Avanzado";
+            var nivel = actividad.Puntaje < 100 ? "B谩sico" : actividad.Puntaje < 150 ? "Intermedio" : "Avanzado";
             var nivelClass = actividad.Puntaje < 100 ? "badge-basico" : actividad.Puntaje < 150 ? "badge-intermedio" : "badge-avanzado";
 
             <div class="col-lg-6">
@@ -33,9 +33,9 @@
                     <div class="actividad-card-header">
                         <div>
                             <h5 class="actividad-titulo">@actividad.Titulo</h5>
-                            <small class="text-muted">@(actividad.Descripcion?.Length > 50 ? actividad.Descripcion.Substring(0, 50) + "..." : actividad.Descripcion ?? "Sin descripci髇")</small>
+                            <small class="text-muted">@(actividad.Descripcion?.Length > 50 ? actividad.Descripcion.Substring(0, 50) + "..." : actividad.Descripcion ?? "Sin descripci贸n")</small>
                             
-                            @* ? MOSTRAR FECHA L蚆ITE SI EXISTE *@
+                            @* ? MOSTRAR FECHA L脥MITE SI EXISTE *@
                             @if (actividad.FechaLimite != null)
                             {
                                 DateTime fechaLimite = actividad.FechaLimite;
@@ -48,7 +48,7 @@
                                         <i class="bi bi-clock"></i>
                                         @if (diasRestantes > 0)
                                         {
-                                            <strong>Vence en @diasRestantes d韆(s)</strong>
+                                            <strong>Vence en @diasRestantes d铆a(s)</strong>
                                         }
                                         else if (horasRestantes > 0)
                                         {
@@ -91,7 +91,7 @@
                         <div class="mt-3 p-3 rounded" style="background: #f0fdf4; border-left: 4px solid var(--green-success);">
                             <small class="d-flex align-items-center gap-2">
                                 <i class="bi bi-check-circle-fill text-success"></i>
-                                <strong class="text-success">Calificaci髇: @actividadEstudiante.PuntajeObtenido pts</strong>
+                                <strong class="text-success">Calificaci贸n: @actividadEstudiante.PuntajeObtenido pts</strong>
                             </small>
                         </div>
                     }
@@ -100,7 +100,7 @@
                         <div class="mt-3 p-3 rounded" style="background: #fef3c7; border-left: 4px solid var(--orange-warning);">
                             <small class="d-flex align-items-center gap-2" style="color: #92400e;">
                                 <i class="bi bi-clock"></i>
-                                <span>Pendiente de calificaci髇</span>
+                                <span>Pendiente de calificaci贸n</span>
                             </small>
                         </div>
                     }
@@ -116,7 +116,7 @@ else
             <div class="perfil-section text-center py-5">
                 <i class="bi bi-inbox" style="font-size: 4rem; color: var(--gray-text);"></i>
                 <h4 class="mt-4 mb-2" style="justify-content: center;">No hay actividades disponibles</h4>
-                <p class="text-muted mb-0">A鷑 no se han creado actividades en el sistema. Vuelve m醩 tarde.</p>
+                <p class="text-muted mb-0">A煤n no se han creado actividades en el sistema. Vuelve m谩s tarde.</p>
             </div>
         </div>
     </div>

@@ -31,14 +31,14 @@
                     <i class="bi bi-book"></i>
                     Nombre del Curso <span class="required">*</span>
                 </label>
-                <input asp-for="Nombre" class="form-control-admin" placeholder="Ej: Matemáticas I" />
+                <input asp-for="Nombre" class="form-control-admin" placeholder="Ej: MatemÃ¡ticas I" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
 
             <div class="form-group-admin">
                 <label asp-for="Descripcion" class="form-label-admin">
                     <i class="bi bi-text-paragraph"></i>
-                    Descripción
+                    DescripciÃ³n
                 </label>
                 <textarea asp-for="Descripcion" class="form-control-admin" rows="4" 
                           placeholder="Describe el contenido y objetivos del curso..."></textarea>
@@ -94,7 +94,7 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
-        // Validación en el cliente: al menos un docente debe estar seleccionado
+        // ValidaciÃ³n en el cliente: al menos un docente debe estar seleccionado
         document.querySelector('form').addEventListener('submit', function(e) {
             const checkboxes = document.querySelectorAll('input[name="docentesSeleccionados"]:checked');
             
@@ -132,7 +132,7 @@
             label.appendChild(badge);
         }
 
-        // Actualizar contador al cambiar selección
+        // Actualizar contador al cambiar selecciÃ³n
         document.querySelectorAll('input[name="docentesSeleccionados"]').forEach(checkbox => {
             checkbox.addEventListener('change', actualizarContador);
         });

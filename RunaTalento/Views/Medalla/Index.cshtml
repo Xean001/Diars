@@ -1,18 +1,18 @@
 @model IEnumerable<RunaTalento.Models.Medalla>
 
 @{
-    ViewData["Title"] = "Gesti髇 de Medallas";
+    ViewData["Title"] = "Gesti贸n de Medallas";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<!-- Header de Secci髇 -->
+<!-- Header de Secci贸n -->
 <div class="seccion-header">
     <div class="seccion-header-content">
         <div class="seccion-header-icon">
             <i class="bi bi-award-fill"></i>
         </div>
         <div>
-            <h2>Gesti髇 de Medallas</h2>
+            <h2>Gesti贸n de Medallas</h2>
             <p>Administra y personaliza las medallas de reconocimiento</p>
         </div>
     </div>
@@ -23,12 +23,12 @@
     </div>
 </div>
 
-<!-- Alertas de 閤ito/error -->
+<!-- Alertas de 茅xito/error -->
 @if (TempData["Success"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         <i class="bi bi-check-circle-fill me-2"></i>
-        <strong>∩xito!</strong> @TempData["Success"]
+        <strong>隆脡xito!</strong> @TempData["Success"]
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
@@ -66,7 +66,7 @@
                     }
                 </div>
 
-                <!-- Informaci髇 de la Medalla -->
+                <!-- Informaci贸n de la Medalla -->
                 <div class="text-center mb-3">
                     <h5 class="fw-bold mb-2" style="color: #0f172a;">@medalla.Nombre</h5>
                     <p class="text-muted mb-0" style="font-size: 0.875rem; line-height: 1.5;">
@@ -76,7 +76,7 @@
                         }
                         else
                         {
-                            <span class="text-muted fst-italic">Sin descripci髇</span>
+                            <span class="text-muted fst-italic">Sin descripci贸n</span>
                         }
                     </p>
                 </div>
@@ -114,7 +114,7 @@
 }
 else
 {
-    <!-- Estado vac韔 -->
+    <!-- Estado vac铆o -->
     <div class="admin-content">
         <div class="empty-state">
             <i class="bi bi-award"></i>
@@ -135,7 +135,7 @@ else
             return new bootstrap.Tooltip(tooltipTriggerEl)
         })
 
-        // Auto-cerrar alertas despu閟 de 5 segundos
+        // Auto-cerrar alertas despu茅s de 5 segundos
         setTimeout(function() {
             var alerts = document.querySelectorAll('.alert');
             alerts.forEach(function(alert) {

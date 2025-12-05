@@ -1,7 +1,7 @@
 @model IEnumerable<RunaTalento.Models.Curso>
 
 @{
-    ViewData["Title"] = "Gesti髇 de Cursos";
+    ViewData["Title"] = "Gesti贸n de Cursos";
     Layout = User.IsInRole("Admin") ? "~/Views/Shared/_LayoutAdmin.cshtml" : 
              User.IsInRole("Docente") ? "~/Views/Shared/_LayoutDocente.cshtml" : 
              "~/Views/Shared/_Layout.cshtml";
@@ -15,7 +15,7 @@
             <div>
                 <h1 class="admin-title">
                     <i class="bi bi-book-fill"></i>
-                    Gesti髇 de Cursos
+                    Gesti贸n de Cursos
                 </h1>
                 <p class="admin-subtitle">Administra los cursos y asigna docentes</p>
             </div>
@@ -46,7 +46,7 @@
                     <thead>
                         <tr>
                             <th>Curso</th>
-                            <th>Descripci髇</th>
+                            <th>Descripci贸n</th>
                             <th>Docente Asignado</th>
                             <th>Actividades</th>
                             <th class="text-center">Acciones</th>
@@ -63,7 +63,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <span class="text-muted">@(curso.Descripcion ?? "Sin descripci髇")</span>
+                                    <span class="text-muted">@(curso.Descripcion ?? "Sin descripci贸n")</span>
                                 </td>
                                 <td>
                                     @if (curso.CursoDocentes != null && curso.CursoDocentes.Any())
@@ -133,7 +133,7 @@ else
                             <h5 class="mb-0">@curso.Nombre</h5>
                         </div>
                         <div class="card-body">
-                            <p class="card-text">@(curso.Descripcion ?? "Sin descripci髇")</p>
+                            <p class="card-text">@(curso.Descripcion ?? "Sin descripci贸n")</p>
                             <p class="mb-2">
                                 <strong><i class="bi bi-person-fill"></i> Docente:</strong><br />
                                 <small>@curso.Docente?.Email</small>

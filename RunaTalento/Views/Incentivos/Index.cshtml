@@ -1,5 +1,5 @@
 @{
-    ViewData["Title"] = "GestiÛn de Incentivos";
+    ViewData["Title"] = "Gesti√≥n de Incentivos";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
     var medallas = ViewBag.Medallas as List<RunaTalento.Models.Medalla>;
     var niveles = ViewBag.Niveles as List<RunaTalento.Models.Nivel>;
@@ -7,16 +7,16 @@
 }
 
 <!-- ============================================ -->
-<!-- SECCI”N: INCENTIVOS AUTOM¡TICOS -->
+<!-- SECCI√ìN: INCENTIVOS AUTOM√ÅTICOS -->
 <!-- ============================================ -->
 <div class="admin-header">
     <div class="admin-header-content">
         <div>
             <h1 class="admin-title">
                 <i class="bi bi-gift-fill"></i>
-                Incentivos Autom·ticos
+                Incentivos Autom√°ticos
             </h1>
-            <p class="admin-subtitle">Recompensas que se otorgan autom·ticamente al alcanzar puntos</p>
+            <p class="admin-subtitle">Recompensas que se otorgan autom√°ticamente al alcanzar puntos</p>
         </div>
         <a asp-controller="Incentivo" asp-action="Create" class="btn-primary-admin">
             <i class="bi bi-plus-circle-fill"></i>
@@ -113,8 +113,8 @@
     {
         <div class="empty-state">
             <i class="bi bi-gift"></i>
-            <h3>No hay incentivos autom·ticos</h3>
-            <p>Crea incentivos que se otorgar·n autom·ticamente cuando los estudiantes alcancen ciertos puntos</p>
+            <h3>No hay incentivos autom√°ticos</h3>
+            <p>Crea incentivos que se otorgar√°n autom√°ticamente cuando los estudiantes alcancen ciertos puntos</p>
             <a asp-controller="Incentivo" asp-action="Create" class="btn-primary-admin">
                 <i class="bi bi-plus-circle-fill"></i>
                 Crear Primer Incentivo
@@ -124,7 +124,7 @@
 </div>
 
 <!-- ============================================ -->
-<!-- SECCI”N: MEDALLAS (Manual) -->
+<!-- SECCI√ìN: MEDALLAS (Manual) -->
 <!-- ============================================ -->
 <div class="admin-header mt-5">
     <div class="admin-header-content">
@@ -169,7 +169,7 @@
                         </div>
                         <div class="medalla-info">
                             <h5 class="medalla-nombre">@medalla.Nombre</h5>
-                            <p class="medalla-descripcion">@(medalla.Descripcion ?? "Sin descripciÛn")</p>
+                            <p class="medalla-descripcion">@(medalla.Descripcion ?? "Sin descripci√≥n")</p>
                         </div>
                     </div>
 
@@ -201,7 +201,7 @@
     }
 </div>
 
-<!-- Header de la secciÛn Niveles -->
+<!-- Header de la secci√≥n Niveles -->
 <div class="admin-header mt-5">
     <div class="admin-header-content">
         <div>
@@ -275,7 +275,7 @@
         <div class="empty-state">
             <i class="bi bi-bar-chart-steps"></i>
             <h3>No hay niveles configurados</h3>
-            <p>Crea niveles para organizar el progreso de los estudiantes seg˙n su puntaje</p>
+            <p>Crea niveles para organizar el progreso de los estudiantes seg√∫n su puntaje</p>
             <a asp-controller="Nivel" asp-action="Create" class="btn-primary-admin">
                 <i class="bi bi-plus-circle-fill"></i>
                 Crear Primer Nivel
@@ -286,7 +286,7 @@
 
 <style>
     /* ============================================ */
-    /* ESTILOS PARA INCENTIVOS AUTOM¡TICOS */
+    /* ESTILOS PARA INCENTIVOS AUTOM√ÅTICOS */
     /* ============================================ */
     .incentivos-grid {
         display: grid;

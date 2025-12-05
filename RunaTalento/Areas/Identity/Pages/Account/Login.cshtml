@@ -2,7 +2,7 @@
 @model LoginModel
 
 @{
-    ViewData["Title"] = "Iniciar Sesi髇";
+    ViewData["Title"] = "Iniciar Sesi贸n";
     Layout = null;
 }
 
@@ -222,14 +222,14 @@
         <h1 class="brand-title">RUNA TALENTO</h1>
 
         <div class="login-card">
-            <p class="login-subtitle">INICIAR SESI覰</p>
+            <p class="login-subtitle">INICIAR SESI脫N</p>
 
             @* ? MOSTRAR MENSAJE SI LA CUENTA FUE DESACTIVADA *@
             @if (HttpContext.Request.Query.ContainsKey("mensaje") && HttpContext.Request.Query["mensaje"] == "cuenta-inactiva")
             {
                 <div class="alert alert-warning" role="alert" style="background: rgba(255, 193, 7, 0.2); border-color: rgba(255, 193, 7, 0.4); color: #ffd54f;">
                     <i class="bi bi-exclamation-triangle-fill"></i>
-                    <strong>Tu sesi髇 ha sido cerrada.</strong> Tu cuenta ha sido marcada como inactiva. Por favor, contacta al administrador.
+                    <strong>Tu sesi贸n ha sido cerrada.</strong> Tu cuenta ha sido marcada como inactiva. Por favor, contacta al administrador.
                 </div>
             }
 
@@ -239,20 +239,20 @@
                 <div class="mb-4">
                     <label asp-for="Input.Email" class="form-label">Correo</label>
                     <input asp-for="Input.Email" class="form-control" autocomplete="username"
-                           aria-required="true" placeholder="Ingrese su correo electr髇ico" />
+                           aria-required="true" placeholder="Ingrese su correo electr贸nico" />
                     <span asp-validation-for="Input.Email" class="text-danger"></span>
                 </div>
 
                 <div class="mb-4">
-                    <label asp-for="Input.Password" class="form-label">Contrase馻</label>
+                    <label asp-for="Input.Password" class="form-label">Contrase帽a</label>
                     <input asp-for="Input.Password" class="form-control" type="password"
-                           autocomplete="current-password" aria-required="true" placeholder="Ingrese su contrase馻" />
+                           autocomplete="current-password" aria-required="true" placeholder="Ingrese su contrase帽a" />
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                 </div>
 
                 <div class="form-check mb-3 text-center">
                     <input class="form-check-input" asp-for="Input.RememberMe" />
-                    <label class="form-check-label" asp-for="Input.RememberMe">Recordar sesi髇</label>
+                    <label class="form-check-label" asp-for="Input.RememberMe">Recordar sesi贸n</label>
                 </div>
 
                 <button id="login-submit" type="submit" class="btn-login">

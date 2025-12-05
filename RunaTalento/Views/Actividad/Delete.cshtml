@@ -9,21 +9,21 @@
         <div class="col-md-8">
             <div class="card shadow border-danger">
                 <div class="card-header bg-danger text-white">
-                    <h4 class="mb-0"><i class="bi bi-exclamation-triangle"></i> Confirmar Eliminación</h4>
+                    <h4 class="mb-0"><i class="bi bi-exclamation-triangle"></i> Confirmar EliminaciÃ³n</h4>
                 </div>
                 <div class="card-body">
                     <div class="alert alert-warning">
                         <i class="bi bi-exclamation-triangle-fill"></i>
-                        <strong>¿Está seguro que desea eliminar esta actividad?</strong>
-                        <p class="mb-0">Esta acción también eliminará todas las entregas de estudiantes asociadas.</p>
+                        <strong>Â¿EstÃ¡ seguro que desea eliminar esta actividad?</strong>
+                        <p class="mb-0">Esta acciÃ³n tambiÃ©n eliminarÃ¡ todas las entregas de estudiantes asociadas.</p>
                     </div>
 
                     <dl class="row">
-                        <dt class="col-sm-3">Título:</dt>
+                        <dt class="col-sm-3">TÃ­tulo:</dt>
                         <dd class="col-sm-9">@Model.Titulo</dd>
 
-                        <dt class="col-sm-3">Descripción:</dt>
-                        <dd class="col-sm-9">@(Model.Descripcion ?? "Sin descripción")</dd>
+                        <dt class="col-sm-3">DescripciÃ³n:</dt>
+                        <dd class="col-sm-9">@(Model.Descripcion ?? "Sin descripciÃ³n")</dd>
 
                         <dt class="col-sm-3">Curso:</dt>
                         <dd class="col-sm-9">@Model.Curso?.Nombre</dd>
@@ -31,7 +31,7 @@
                         <dt class="col-sm-3">Puntaje:</dt>
                         <dd class="col-sm-9">@Model.Puntaje puntos</dd>
 
-                        <dt class="col-sm-3">Fecha de Creación:</dt>
+                        <dt class="col-sm-3">Fecha de CreaciÃ³n:</dt>
                         <dd class="col-sm-9">@Model.FechaCreacion.ToString("dd/MM/yyyy")</dd>
                     </dl>
 

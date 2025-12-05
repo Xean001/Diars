@@ -12,7 +12,7 @@
                 <i class="bi bi-trash-fill text-danger"></i>
                 Eliminar Incentivo
             </h1>
-            <p class="admin-subtitle">¿Estás seguro de eliminar este incentivo?</p>
+            <p class="admin-subtitle">Â¿EstÃ¡s seguro de eliminar este incentivo?</p>
         </div>
         <a asp-controller="Incentivos" asp-action="Index" class="btn-secondary-admin">
             <i class="bi bi-arrow-left"></i>
@@ -24,7 +24,7 @@
 <div class="admin-content">
     <div class="alert alert-danger">
         <i class="bi bi-exclamation-triangle-fill"></i>
-        <strong>¡Atención!</strong> Esta acción no se puede deshacer.
+        <strong>Â¡AtenciÃ³n!</strong> Esta acciÃ³n no se puede deshacer.
         @if (Model.IncentivoEstudiantes != null && Model.IncentivoEstudiantes.Any())
         {
             var cantidadEstudiantes = Model.IncentivoEstudiantes.Count;
@@ -47,7 +47,7 @@
             </div>
             <div class="delete-info">
                 <h4>@Model.Nombre</h4>
-                <p class="text-muted mb-2">@(Model.Descripcion ?? "Sin descripción")</p>
+                <p class="text-muted mb-2">@(Model.Descripcion ?? "Sin descripciÃ³n")</p>
                 <div class="delete-details">
                     <span class="badge bg-primary">
                         <i class="bi bi-star-fill"></i> @Model.PuntosRequeridos puntos
@@ -75,7 +75,7 @@
                 </a>
                 <button type="submit" class="btn btn-danger">
                     <i class="bi bi-trash-fill"></i>
-                    Sí, Eliminar Incentivo
+                    SÃ­, Eliminar Incentivo
                 </button>
             </div>
         </form>

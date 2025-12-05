@@ -9,17 +9,17 @@
         <i class="bi bi-plus-circle-fill"></i>
         <h3>Registrar Nueva Actividad</h3>
     </div>
-    <p class="card-subtitle">Crea actividades acadÈmicas para que los estudiantes puedan realizar</p>
+    <p class="card-subtitle">Crea actividades acad√©micas para que los estudiantes puedan realizar</p>
 
     <form asp-action="CrearActividad" method="post">
         <div class="row">
             <div class="col-md-6 mb-4">
                 <label asp-for="Titulo" class="form-label">
-                    TÌtulo de la Actividad <span class="text-danger">*</span>
+                    T√≠tulo de la Actividad <span class="text-danger">*</span>
                 </label>
                 <input asp-for="Titulo"
                        class="form-control"
-                       placeholder="Ej: ResoluciÛn de Problemas Matem·ticos"
+                       placeholder="Ej: Resoluci√≥n de Problemas Matem√°ticos"
                        required />
                 <span asp-validation-for="Titulo" class="text-danger"></span>
             </div>
@@ -37,7 +37,7 @@
                        required />
                 <small class="form-text">
                     <i class="bi bi-lightbulb-fill"></i>
-                    Puntos que recibir· el estudiante al completar la actividad
+                    Puntos que recibir√° el estudiante al completar la actividad
                 </small>
                 <span asp-validation-for="Puntaje" class="text-danger"></span>
             </div>
@@ -59,7 +59,7 @@
 
             <div class="col-md-6 mb-4">
                 <label asp-for="FechaLimite" class="form-label">
-                    Fecha LÌmite de Entrega
+                    Fecha L√≠mite de Entrega
                 </label>
                 <input asp-for="FechaLimite"
                        type="datetime-local"
@@ -67,7 +67,7 @@
                        id="fechaLimite" />
                 <small class="form-text">
                     <i class="bi bi-info-circle"></i>
-                    Opcional. Si no se define, la actividad no tendr· fecha de vencimiento.
+                    Opcional. Si no se define, la actividad no tendr√° fecha de vencimiento.
                 </small>
                 <span asp-validation-for="FechaLimite" class="text-danger"></span>
             </div>
@@ -75,7 +75,7 @@
 
         <div class="mb-4">
             <label asp-for="Descripcion" class="form-label">
-                DescripciÛn de la Actividad <span class="text-danger">*</span>
+                Descripci√≥n de la Actividad <span class="text-danger">*</span>
             </label>
             <textarea asp-for="Descripcion"
                       class="form-control"
@@ -113,7 +113,7 @@
             const ahora = new Date();
 
             if (fechaSeleccionada <= ahora) {
-                alert('?? La fecha lÌmite debe ser posterior a la fecha actual');
+                alert('?? La fecha l√≠mite debe ser posterior a la fecha actual');
                 e.target.value = '';
             }
         });
